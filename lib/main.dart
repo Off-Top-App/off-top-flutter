@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
       title: 'OFF TOP',
       home: Scaffold(
         floatingActionButton: Container(
-            width: 200,
-            height: 200,
+            width: 100,
+            height: 100,
             child: FittedBox(
                 child: FloatingActionButton(
               onPressed: () {
@@ -18,45 +18,56 @@ class MyApp extends StatelessWidget {
               },
               child: Icon(
                 Icons.play_arrow,
-                color: Colors.blueGrey,
+                color: Colors.black,
               ),
-              backgroundColor: Colors.orange,
-              hoverColor: Colors.orangeAccent,
+              backgroundColor: Colors.white,
             ))),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white70,
         appBar: AppBar(
-          title: Text('OFF TOP'),
-          backgroundColor: Colors.orange,
+          title: Text(
+            'OFF-TOP',
+            style: TextStyle(
+                color: Colors.black45,
+                fontSize: 30,
+                fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
         ),
-        body: Center(
-          child: Image.asset('assets/placeholderWave.gif'),
-          // Align(alignment: Alignment.topCenter, child:Image.asset('assets/placeholderMeter.'))
-          // child: new Image(image: new AssetImage("placeholderWave.gif")),
-          // child: Text('welcome to offTop main page wip!'),
+        body: Column(
+          children: <Widget>[
+            Image.asset('assets/placeholderWave.gif'),
+            Image.asset('assets/placeholderMeter.png'),
+          ],
         ),
-        bottomNavigationBar: new BottomNavigationBar(items: [
+        bottomNavigationBar:
+            new BottomNavigationBar(backgroundColor: Colors.deepPurple, items: [
           new BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
-                color: Colors.green,
+                color: Colors.white,
                 size: 30.0,
               ),
-              title: Text('Home')),
+              title: Text('Home'),
+              backgroundColor: Colors.white),
           new BottomNavigationBarItem(
               icon: Icon(
                 Icons.receipt,
-                color: Colors.grey,
+                color: Colors.white,
                 size: 30.0,
               ),
-              title: Text('Reports')),
+              title: Text('Reports'),
+              backgroundColor: Colors.white),
           new BottomNavigationBarItem(
               icon: Icon(
                 Icons.settings,
-                color: Colors.purple,
+                color: Colors.white,
                 size: 30.0,
               ),
-              title: Text('Settings')),
+              title: Text('Settings'),
+              backgroundColor: Colors.white),
         ]),
       ),
     );
