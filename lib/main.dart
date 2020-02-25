@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final channel = IOWebSocketChannel.connect(
       "ws://localhost:8080/name"
-      //  Uri(scheme: "ws", host: "10.0.2.2", port: 8080, path: "/websocket"),
+      //  Uri(scheme: "ws", host: "10.0.2.2", port: 8080, path: "/name"),
     );
     return MaterialApp(
       title: 'Flutter Demo',
