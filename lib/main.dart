@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gauge/flutter_gauge.dart';
 
 void main() => runApp(MyApp());
 
@@ -53,10 +54,25 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
-          Image.asset('assets/placeholderWave.gif'),
-          Image.asset('assets/placeholderMeter.png'),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: FlutterGauge(
+                    circleColor: Colors.green,
+                    secondsMarker: SecondsMarker.none,
+                    hand: Hand.short,
+                    number: Number.none,
+                    width: 200,
+                    index: 38.0,
+                    fontFamily: "Iran",
+                    counterStyle: TextStyle(color: Colors.black, fontSize: 35),
+                    counterAlign: CounterAlign.bottom,
+                    isDecimal: false),
+              ),
+            ],
+          ),
         ],
       ),
       bottomNavigationBar:
