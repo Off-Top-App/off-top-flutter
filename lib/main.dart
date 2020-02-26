@@ -7,14 +7,12 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final channel = IOWebSocketChannel.connect(
       "ws://localhost:8080/name"
     );
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -28,82 +26,122 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final WebSocketChannel channel;
-  MyHomePage({Key key, this.title, this.channel}) : super(key: key);
   final String title;
+  MyHomePage({Key key, this.title, this.channel}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: Container(
+          width: 100,
+          height: 100,
+          child: FittedBox(
+              child: FloatingActionButton(
+            onPressed: () {
+            },
+            child: Icon(
+              Icons.play_arrow,
+              color: Colors.black,
+            ),
+            backgroundColor: Colors.white,
+          ))),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      backgroundColor: Colors.white70,
+      appBar: AppBar(
+        title: Text(
+          'OFF-TOP',
+          style: TextStyle(
+              color: Colors.black45, fontSize: 30, fontWeight: FontWeight.w600),
+          textAlign: TextAlign.center,
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          Image.asset('assets/placeholderWave.gif'),
+          Image.asset('assets/placeholderMeter.png'),
+          StreamBuilder(
+            stream: widget.channel.stream,
+            builder: (context, snapshot){
+              print("connection state ${snapshot.connectionState}");
+              print("data ${snapshot.data}");
+              print("error ${snapshot.error}");
+              return Text(
+                "Websocket info: " + '${snapshot.data} ',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w300
+                ),
+              );
+            } ,
+          ),
+          FlatButton(
+            child: Text('Send Data To Websocket'),
+            color: Colors.blue,
+            onPressed: _sendMessage,
+          )
+        ],
+      ),
+      bottomNavigationBar:
+        new BottomNavigationBar(
+          backgroundColor: Colors.deepPurple, items: [
+          new BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            title: Text('Home', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.white
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(
+              Icons.receipt,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            title: Text('Reports', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.white
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            title: Text('Settings', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.white
+          ),
+        ]
+      ),
+    );
+  }
+  
   @override
   void dispose() {
     widget.channel.sink.close();
     super.dispose();
   }
-  
+
   @override
   void initState() {
 
     // TODO: implement initState
     super.initState();
   }
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   void _sendMessage() {
     widget.channel.sink.add(
       json.encode({
-        "message": {"data": "hello from flutter"},
+        "message":"data"
       })
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-            StreamBuilder(
-              stream: widget.channel.stream,
-              builder: (context, snapshot){
-                print("connection state ${snapshot.connectionState}");
-                print("data ${snapshot.data}");
-                print("error ${snapshot.error}");
-                return Text("here: " + '${snapshot.data}');
-                // return Text(snapshot.hasData ? "here: " + '${snapshot.data}' : 'Waiting for data');
-              } ,
-            ),
-            FlatButton(
-              child: Text('test websocket'),
-              color: Colors.blue,
-              onPressed: _sendMessage,
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
