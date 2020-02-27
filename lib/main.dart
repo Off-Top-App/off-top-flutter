@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Expanded(
                 child: FlutterGauge(
-                    circleColor: Colors.green,
+                    circleColor: updateMeterColor(),//Colors.green,
                     secondsMarker: SecondsMarker.none,
                     hand: Hand.short,
                     number: Number.none,
@@ -113,6 +113,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-int updateScore() {
+double updateScore() {
   return 37;
+}
+
+Color updateMeterColor() {
+  return Colors.green;
 }
