@@ -59,13 +59,20 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             children: <Widget>[
               Expanded(
+                child: Image.asset('assets/placeholderWave.gif'),
+              )
+            ]
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
                 child: FlutterGauge(
                     circleColor: Colors.green,
                     secondsMarker: SecondsMarker.none,
                     hand: Hand.short,
                     number: Number.none,
                     width: 200,
-                    index: 38.0,
+                    index: updateScore(),
                     fontFamily: "Iran",
                     counterStyle: TextStyle(color: Colors.black, fontSize: 35),
                     counterAlign: CounterAlign.bottom,
@@ -104,4 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ]),
     );
   }
+}
+
+int updateScore() {
+  return 37;
 }
