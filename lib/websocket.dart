@@ -20,7 +20,7 @@ class WebsocketPage extends StatelessWidget {
       */
       "ws://localhost:8080/name"
       // In case you're unable to connect to websocket try uncommenting this string below
-      // "ws://10.0.2.2:8080/name"
+      // "ws://10.0.2.2:8080/name" 
     );
     return new MaterialApp(
       onGenerateRoute: router.generateRoute,
