@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:off_top_mobile/main.dart';
 import 'package:off_top_mobile/routing_constants.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -13,7 +14,12 @@ class WebsocketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final channel = IOWebSocketChannel.connect(
+      /*
+        Might change to port :9000 when kafka branch gets merged into master
+        ex: ws://localhost:9000/name
+      */
       "ws://localhost:8080/name"
+      // In case you're unable to connect to websocket try uncommenting this string below
       // "ws://10.0.2.2:8080/name"
     );
     return new MaterialApp(
@@ -30,7 +36,7 @@ class MyWebSocketPage extends StatefulWidget {
   final WebSocketChannel channel;
   final String title;
 
-  MyWebSocketPage({Key key, this.title, this.channel, onGeneratedRoute}) : super(key: key);
+  MyWebSocketPage({Key key, this.title, this.channel}) : super(key: key);
 
   @override
   _MyWebSocketPage createState() => _MyWebSocketPage();
@@ -56,10 +62,10 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   @override
   void dispose() {
     widget.channel.sink.close();
+    _controller.dispose();
     super.dispose();
   }
 
-  
   @override
   Widget build(BuildContext context){
     return new Scaffold(
@@ -87,7 +93,7 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
                   print("data ${snapshot.data}");
                   print("error ${snapshot.error}");
                   return Text(
-                    snapshot.hasData ? "Websocket info: " + '${snapshot.data} ' : 'waiting for data',
+                    snapshot.hasData ? "Websocket info: " + '${snapshot.data} ' : 'Waiting for connection to establish..',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w300
@@ -98,6 +104,7 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
             ]
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget> [
               FlatButton(
                 child: Text('Send Data To Websocket'),
@@ -106,8 +113,11 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
               ),
               FlatButton(
                 child: Text("Go To Main Page"),
+                color: Colors.green,
                 onPressed: (){
-                  Navigator.pushNamed(context, HomeRoute);
+                  Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => MyApp())
+                  );
                 },
               ),
             ],

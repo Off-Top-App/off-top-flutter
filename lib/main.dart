@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/routing_constants.dart';
 import 'router.dart' as router;
-
+import 'package:flutter_gauge/flutter_gauge.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,8 +10,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: router.generateRoute,
-      initialRoute: HomeRoute,
-      onUnknownRoute: (settings) => MaterialPageRoute(builder: (context) => MyApp()),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -26,7 +22,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final String title;
-  MyHomePage({Key key, this.title, onGeneratedRoute}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -36,9 +32,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   @override
@@ -71,16 +71,45 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: Column(
-        children: [
-          FlatButton(
-            child: Text("Go To Wfebsocket"),
-            onPressed: (){
-              Navigator.pushNamed(context, WebsocketRoute);
-            },
+      body: ListView(
+        children: <Widget>[
+          Row(
+            children: [
+              Expanded(
+              child: FlatButton(
+                child: Text("Go To Websocket"),
+                color: Colors.blue,
+                onPressed: (){
+                  Navigator.pushNamed(context, WebsocketRoute);
+                },
+              ),
+              ),
+            ]
           ),
-          Image.asset('assets/placeholderWave.gif'),
-          Image.asset('assets/placeholderMeter.png'),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Image.asset('assets/placeholderWave.gif'),
+              )
+            ]
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: FlutterGauge(
+                    circleColor: updateMeterColor(),//Colors.green,
+                    secondsMarker: SecondsMarker.none,
+                    hand: Hand.short,
+                    number: Number.none,
+                    width: 200,
+                    index: updateScore(),
+                    fontFamily: "Iran",
+                    counterStyle: TextStyle(color: Colors.black, fontSize: 35),
+                    counterAlign: CounterAlign.bottom,
+                    isDecimal: false),
+              ),
+            ],
+          ),
         ],
       ),
       bottomNavigationBar:
@@ -118,4 +147,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+}
+
+double updateScore() {
+  return 37;
+}
+
+Color updateMeterColor() {
+  return Colors.green;
 }
