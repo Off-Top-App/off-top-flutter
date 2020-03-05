@@ -1,39 +1,45 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:off_top_mobile/routing_constants.dart';
+import 'router.dart' as router;
+
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final channel = IOWebSocketChannel.connect(
-      "ws://localhost:8080/name"
-    );
     return MaterialApp(
+      onGenerateRoute: router.generateRoute,
+      initialRoute: HomeRoute,
+      onUnknownRoute: (settings) => MaterialPageRoute(builder: (context) => MyApp()),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(
         title: 'Flutter Demo Home Page',
-        channel: channel
       ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final WebSocketChannel channel;
   final String title;
-  MyHomePage({Key key, this.title, this.channel}) : super(key: key);
+  MyHomePage({Key key, this.title, onGeneratedRoute}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  void initState() {
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.black,
             ),
             backgroundColor: Colors.white,
-          ))),
+          )
+        )
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: Colors.white70,
       appBar: AppBar(
@@ -65,28 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
+          FlatButton(
+            child: Text("Go To Wfebsocket"),
+            onPressed: (){
+              Navigator.pushNamed(context, WebsocketRoute);
+            },
+          ),
           Image.asset('assets/placeholderWave.gif'),
           Image.asset('assets/placeholderMeter.png'),
-          StreamBuilder(
-            stream: widget.channel.stream,
-            builder: (context, snapshot){
-              print("connection state ${snapshot.connectionState}");
-              print("data ${snapshot.data}");
-              print("error ${snapshot.error}");
-              return Text(
-                "Websocket info: " + '${snapshot.data} ',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w300
-                ),
-              );
-            } ,
-          ),
-          FlatButton(
-            child: Text('Send Data To Websocket'),
-            color: Colors.blue,
-            onPressed: _sendMessage,
-          )
         ],
       ),
       bottomNavigationBar:
@@ -123,25 +117,5 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  
-  @override
-  void dispose() {
-    widget.channel.sink.close();
-    super.dispose();
-  }
 
-  @override
-  void initState() {
-
-    // TODO: implement initState
-    super.initState();
-  }
-
-  void _sendMessage() {
-    widget.channel.sink.add(
-      json.encode({
-        "message":"data"
-      })
-    );
-  }
 }
