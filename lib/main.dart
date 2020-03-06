@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:off_top_mobile/routing_constants.dart';
+import 'router.dart' as router;
 import 'package:flutter_gauge/flutter_gauge.dart';
 
 void main() => runApp(MyApp());
@@ -7,24 +9,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: router.generateRoute,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(
+        title: 'Flutter Demo Home Page',
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
   final String title;
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,14 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child: FittedBox(
               child: FloatingActionButton(
             onPressed: () {
-              //
             },
             child: Icon(
               Icons.play_arrow,
               color: Colors.black,
             ),
             backgroundColor: Colors.white,
-          ))),
+          )
+        )
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: Colors.white70,
       appBar: AppBar(
@@ -56,6 +73,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: <Widget>[
+          Row(
+            children: [
+              Expanded(
+              child: FlatButton(
+                child: Text("Go To Websocket"),
+                color: Colors.blue,
+                onPressed: (){
+                  Navigator.pushNamed(context, WebsocketRoute);
+                },
+              ),
+              ),
+            ]
+          ),
           Row(
             children: <Widget>[
               Expanded(
@@ -83,34 +113,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       bottomNavigationBar:
-          new BottomNavigationBar(backgroundColor: Colors.deepPurple, items: [
-        new BottomNavigationBarItem(
+        new BottomNavigationBar(
+          backgroundColor: Colors.deepPurple, items: [
+          new BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
               color: Colors.white,
               size: 30.0,
             ),
-            title: Text('Home'),
-            backgroundColor: Colors.white),
-        new BottomNavigationBarItem(
+            title: Text('Home', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.white
+          ),
+          new BottomNavigationBarItem(
             icon: Icon(
               Icons.receipt,
               color: Colors.white,
               size: 30.0,
             ),
-            title: Text('Reports'),
-            backgroundColor: Colors.white),
-        new BottomNavigationBarItem(
+            title: Text('Reports', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.white
+          ),
+          new BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,
               color: Colors.white,
               size: 30.0,
             ),
-            title: Text('Settings'),
-            backgroundColor: Colors.white),
-      ]),
+            title: Text('Settings', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.white
+          ),
+        ]
+      ),
     );
   }
+
 }
 
 double updateScore() {
