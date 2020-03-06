@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
 
-//import 'dart:io';
+import 'dart:io';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 
@@ -16,8 +16,8 @@ class AudioRecorder extends StatefulWidget {
 }
 
 class _AudioRecorderState extends State<AudioRecorder> {
-  bool isRecording = false;
-  bool isPlaying = false;
+  bool _isRecording = false;
+  bool _isPlaying = false;
   StreamSubscription _recorderSubscription;
   StreamSubscription _dbPeakSubscription;
   StreamSubscription _playerSubscription;
@@ -33,7 +33,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   @override
   void initState() {
     super.initState();
-    flutterSound = new FlutterSound();
+    FlutterSound flutterSound = new FlutterSound();
     flutterSound.setSubscriptionDuration(0.01);
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
@@ -64,7 +64,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       });
 
       this.setState(() {
-        this.isRecording = true;
+        this._isRecording = true;
       });
     } catch (err) {
       print('startRecorder error: $err');
@@ -86,7 +86,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       }
 
       this.setState(() {
-        this.isRecording = false;
+        this._isRecording = false;
       });
     } catch (err) {
       print('stopRecorder error: $err');
@@ -109,7 +109,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
               isUtc: true);
           String txt = DateFormat('mm:ss:SS', 'pt_BR').format(date);
           this.setState(() {
-            this.isPlaying = true;
+            this._isPlaying = true;
             this._playerTxt = txt.substring(0, 8);
           });
         }
@@ -129,7 +129,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       }
 
       this.setState(() {
-        this.isPlaying = false;
+        this._isPlaying = false;
       });
     } catch (err) {
       print('error: $err');
@@ -154,7 +154,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.pink),
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -176,7 +176,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     ),
                   ),
                 ),
-                isRecording
+                _isRecording
                     ? LinearProgressIndicator(
                         value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
@@ -193,13 +193,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
                   margin: EdgeInsets.all(10.0),
                   child: FloatingActionButton(
                     onPressed: () {
-                      if (!this.isRecording) {
+                      if (!this._isRecording) {
                         return this.startRecorder();
                       }
                       this.stopRecorder();
                     },
                     child:
-                        this.isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
+                        this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
                   ),
                 ),
               ],
