@@ -1,46 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/routing_constants.dart';
-import 'router.dart' as router;
-import 'package:flutter_gauge/flutter_gauge.dart';
+import 'package:flutter/semantics.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MaterialApp(
+    title: 'Login Page',
+    home: LoginPage(),
+  ));
+}
 
-class MyApp extends StatelessWidget {
+final offTopTitle = AppBar(
+  title: Text(
+    'OFF-TOP',
+    style: TextStyle(
+        color: Colors.black45, fontSize: 30, fontWeight: FontWeight.w600),
+    textAlign: TextAlign.center,
+  ),
+  centerTitle: true,
+  backgroundColor: Colors.white,
+);
+
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: router.generateRoute,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+        appBar: offTopTitle,
+        body: Center(
+            child: Container(
+          // color: Colors.white,
+          child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: SingleChildScrollView(
+                  child: Column(children: <Widget>[
+                usernameField,
+                SizedBox(height: 20.0),
+                passwordField,
+                SizedBox(height: 45.0),
+                loginButton(context),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      forgotPassword(context),
+                      createAccount(context),
+                    ]),
+              ]))),
+        )));
+  }
+
+  final usernameField = TextField(
+    obscureText: false,
+    decoration: InputDecoration(
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: "Username",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    // style: ,
+  );
+
+  final passwordField = TextField(
+    obscureText: true,
+    decoration: InputDecoration(
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: "Password",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+  );
+
+//temporarily goes to main page
+  Widget forgotPassword(BuildContext context) {
+    return FlatButton(
+      child: Text('forgot password?'),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      },
+    );
+  }
+
+//temporarily goes to main page
+  Widget createAccount(BuildContext context) {
+    return FlatButton(
+      child: Text('create account'),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      },
+    );
+  }
+
+  Widget loginButton(BuildContext context) {
+    return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: new BorderRadius.circular(18.0),
       ),
-      home: MyHomePage(
-        title: 'Flutter Demo Home Page',
-      ),
+      color: Colors.deepPurple,
+      child: Text('SIGN IN'),
+      textColor: Colors.white,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  final String title;
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose(){
-    super.dispose();
-  }
-
+class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,109 +118,50 @@ class _MyHomePageState extends State<MyHomePage> {
           child: FittedBox(
               child: FloatingActionButton(
             onPressed: () {
+              //
             },
             child: Icon(
               Icons.play_arrow,
               color: Colors.black,
             ),
             backgroundColor: Colors.white,
-          )
-        )
-      ),
+          ))),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: Colors.white70,
-      appBar: AppBar(
-        title: Text(
-          'OFF-TOP',
-          style: TextStyle(
-              color: Colors.black45, fontSize: 30, fontWeight: FontWeight.w600),
-          textAlign: TextAlign.center,
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
-      body: ListView(
+      appBar: offTopTitle,
+      body: Column(
         children: <Widget>[
-          Row(
-            children: [
-              Expanded(
-              child: FlatButton(
-                child: Text("Go To Websocket"),
-                color: Colors.blue,
-                onPressed: (){
-                  Navigator.pushNamed(context, WebsocketRoute);
-                },
-              ),
-              ),
-            ]
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Image.asset('assets/placeholderWave.gif'),
-              )
-            ]
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: FlutterGauge(
-                    circleColor: updateMeterColor(),//Colors.green,
-                    secondsMarker: SecondsMarker.none,
-                    hand: Hand.short,
-                    number: Number.none,
-                    width: 200,
-                    index: updateScore(),
-                    fontFamily: "Iran",
-                    counterStyle: TextStyle(color: Colors.black, fontSize: 35),
-                    counterAlign: CounterAlign.bottom,
-                    isDecimal: false),
-              ),
-            ],
-          ),
+          Image.asset('assets/placeholderWave.gif'),
+          Image.asset('assets/placeholderMeter.png'),
         ],
       ),
       bottomNavigationBar:
-        new BottomNavigationBar(
-          backgroundColor: Colors.deepPurple, items: [
-          new BottomNavigationBarItem(
+          new BottomNavigationBar(backgroundColor: Colors.deepPurple, items: [
+        new BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
               color: Colors.white,
               size: 30.0,
             ),
-            title: Text('Home', style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.white
-          ),
-          new BottomNavigationBarItem(
+            title: Text('Home'),
+            backgroundColor: Colors.white),
+        new BottomNavigationBarItem(
             icon: Icon(
               Icons.receipt,
               color: Colors.white,
               size: 30.0,
             ),
-            title: Text('Reports', style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.white
-          ),
-          new BottomNavigationBarItem(
+            title: Text('Reports'),
+            backgroundColor: Colors.white),
+        new BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,
               color: Colors.white,
               size: 30.0,
             ),
-            title: Text('Settings', style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.white
-          ),
-        ]
-      ),
+            title: Text('Settings'),
+            backgroundColor: Colors.white),
+      ]),
     );
   }
-
-}
-
-double updateScore() {
-  return 37;
-}
-
-Color updateMeterColor() {
-  return Colors.green;
 }
