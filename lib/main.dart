@@ -26,7 +26,6 @@ class LoginPage extends StatelessWidget {
         appBar: offTopTitle,
         body: Center(
             child: Container(
-          // color: Colors.white,
           child: Padding(
               padding: const EdgeInsets.all(36.0),
               child: SingleChildScrollView(
@@ -53,7 +52,6 @@ class LoginPage extends StatelessWidget {
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Username",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    // style: ,
   );
 
   final passwordField = TextField(
