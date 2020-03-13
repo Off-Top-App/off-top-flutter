@@ -1,34 +1,26 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/main.dart';
-import 'package:off_top_mobile/routing_constants.dart';
+import 'package:off_top_mobile/recording.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'router.dart' as router;
-
 
 void main() => runApp(WebsocketPage());
 
 class WebsocketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final channel = IOWebSocketChannel.connect(
-      /*
-        Might change to port :9000 when kafka branch gets merged into master
-        ex: ws://localhost:9000/name
-      */
-      "ws://localhost:8080/name"
-      // In case you're unable to connect to websocket try uncommenting this string below
-      // "ws://10.0.2.2:8080/name" 
-    );
+    final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
+        // In case you're unable to connect to websocket try uncommenting this string below
+        // "ws://10.0.2.2:8080/name"
+        );
     return new MaterialApp(
-      onGenerateRoute: router.generateRoute,
-      home: MyWebSocketPage(
-        title: 'Websocket Page',
-        channel: channel,
-      )
-    );
+        onGenerateRoute: router.generateRoute,
+        home: MyWebSocketPage(
+          title: 'Websocket Page',
+          channel: channel,
+        ));
   }
 }
 
@@ -52,11 +44,7 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   }
 
   void _sendMessage() {
-    widget.channel.sink.add(
-      json.encode({
-        "message":"data"
-      })
-    );
+    widget.channel.sink.add(json.encode({"message": "data"}));
   }
 
   @override
@@ -67,7 +55,7 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
         title: Text(
@@ -79,52 +67,46 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: ListView(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              new Padding(
-                padding: new EdgeInsets.all(20.0),
-              ),
-              StreamBuilder(
-                stream: widget.channel.stream,
-                builder: (context, snapshot){
-                  print("connection state ${snapshot.connectionState}");
-                  print("data ${snapshot.data}");
-                  print("error ${snapshot.error}");
-                  return Text(
-                    snapshot.hasData ? "Websocket info: " + '${snapshot.data} ' : 'Waiting for connection to establish..',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300
-                    ),
-                  );
-                } ,
-              ),
-            ]
+      body: ListView(children: <Widget>[
+        Row(children: <Widget>[
+          new Padding(
+            padding: new EdgeInsets.all(20.0),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
-              FlatButton(
-                child: Text('Send Data To Websocket'),
-                color: Colors.blue,
-                onPressed: _sendMessage,
-              ),
-              FlatButton(
-                child: Text("Go To Main Page"),
-                color: Colors.green,
-                onPressed: (){
-                  Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => MyApp())
-                  );
-                },
-              ),
-            ],
+          StreamBuilder(
+            stream: widget.channel.stream,
+            builder: (context, snapshot) {
+              print("connection state ${snapshot.connectionState}");
+              print("data ${snapshot.data}");
+              print("error ${snapshot.error}");
+              return Text(
+                snapshot.hasData
+                    ? "Websocket info: " + '${snapshot.data} '
+                    : 'Waiting for connection to establish..',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+              );
+            },
           ),
-        ]
-      ),
+        ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FlatButton(
+              child: Text('Send Data To Websocket'),
+              color: Colors.blue,
+              onPressed: _sendMessage,
+            ),
+            FlatButton(
+              child: Text("Go To Main Page"),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => RecordingPage()));
+              },
+            ),
+          ],
+        ),
+      ]),
     );
   }
-  
 }
