@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'routing_constants.dart';
-import 'components.dart';
+import 'package:off_top_mobile/components/offTopTitle.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -13,10 +13,18 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.all(36.0),
               child: SingleChildScrollView(
                   child: Column(children: <Widget>[
-                usernameField,
+                Text(
+                  'Off-Top Login',
+                  style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black54),
+                ),
                 SizedBox(height: 20.0),
+                usernameField,
+                SizedBox(height: 10.0),
                 passwordField,
-                SizedBox(height: 45.0),
+                SizedBox(height: 15.0),
                 loginButton(context),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,

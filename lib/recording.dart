@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'components.dart';
+import 'package:off_top_mobile/components/offTopTitle.dart';
 
 class RecordingPage extends StatelessWidget {
   @override
