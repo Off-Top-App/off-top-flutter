@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'dart:io';
 import 'dart:async';
@@ -16,6 +19,7 @@ class AudioRecorder extends StatefulWidget {
 }
 
 class _AudioRecorderState extends State<AudioRecorder> {
+  Directory directory;
   bool _isRecording = false;
   bool _isPlaying = false;
   StreamSubscription _recorderSubscription;
@@ -33,7 +37,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   @override
   void initState() {
     super.initState();
-    FlutterSound flutterSound = new FlutterSound();
+    flutterSound = new FlutterSound();
     flutterSound.setSubscriptionDuration(0.01);
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
@@ -42,15 +46,24 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   void startRecorder() async {
     try {
-      String path = await flutterSound.startRecorder(null);
+      Directory tempDir = await getTemporaryDirectory();
+      // File filePath = File('${tempDir.path}');
+      // print('FILE: ' + filePath.path);
+      setState((){ 
+        directory = tempDir;
+      });
+      String path = await flutterSound.startRecorder(
+        uri: tempDir.path,
+        codec: t_CODEC.CODEC_AAC
+      );
       print('startRecorder: $path');
 
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             e.currentPosition.toInt(),
             isUtc: true);
-        String txt = DateFormat('mm:ss:SS', 'pt_BR').format(date);
-
+        String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+        print('\nTEXT: ' + txt);
         this.setState(() {
           this._recorderTxt = txt.substring(0, 8);
         });
@@ -72,6 +85,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   void stopRecorder() async {
+    print('STOP RECORDER');
     try {
       String result = await flutterSound.stopRecorder();
       print('stopRecorder: $result');
@@ -87,6 +101,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
       this.setState(() {
         this._isRecording = false;
+
       });
     } catch (err) {
       print('stopRecorder error: $err');
@@ -94,7 +109,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   void startPlayer() async {
-    String path = await flutterSound.startPlayer(null);
+    String path = await flutterSound.startPlayer(directory.path);
     await flutterSound.setVolume(1.0);
     print('startPlayer: $path');
 
@@ -107,7 +122,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
           DateTime date = new DateTime.fromMillisecondsSinceEpoch(
               e.currentPosition.toInt(),
               isUtc: true);
-          String txt = DateFormat('mm:ss:SS', 'pt_BR').format(date);
+          String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
           this.setState(() {
             this._isPlaying = true;
             this._playerTxt = txt.substring(0, 8);
@@ -117,6 +132,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     } catch (err) {
       print('error: $err');
     }
+    setState(() {});
   }
 
   void stopPlayer() async {
@@ -192,8 +208,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
                   height: 56.0,
                   margin: EdgeInsets.all(10.0),
                   child: FloatingActionButton(
-                    onPressed: () {
-                      if (!this._isRecording) {
+                    onPressed: (){
+                      if(!this._isRecording){
                         return this.startRecorder();
                       }
                       this.stopRecorder();
