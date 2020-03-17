@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
+import 'package:off_top_mobile/routing_constants.dart';
 
 class RecordingPage extends StatelessWidget {
   @override
@@ -24,6 +25,19 @@ class RecordingPage extends StatelessWidget {
       appBar: offTopTitle,
       body: Column(
         children: <Widget>[
+          Row(	
+            children: [	
+              Expanded(	
+              child: FlatButton(	
+                child: Text("Go To Websocket"),	
+                color: Colors.blue,	
+                onPressed: (){	
+                  Navigator.pushNamed(context, WebsocketRoute);	
+                },	
+              ),	
+              ),	
+            ]	
+          ),
           Image.asset('assets/placeholderWave.gif'),
           Image.asset('assets/placeholderMeter.png'),
         ],
