@@ -4,22 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:off_top_mobile/recording.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'custom_stomp.dart' as customStomp;
 import 'router.dart' as router;
 
 void main() => runApp(WebsocketPage());
-//Future<StompClient> client = customStomp.connect('ws://10.0.2.2:8080/websocket', ...)
 
 class WebsocketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
-    //     // In case you're unable to connect to websocket try uncommenting this string below
-    //     // "ws://10.0.2.2:8080/name"
-    //     );
-    Future<StompClient> channel =
-        customStomp.connect('ws://10.0.2.2:8080/websocket');
-    //without second arg (object)
+    final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
+        // In case you're unable to connect to websocket try uncommenting this string below
+        // "ws://10.0.2.2:8080/name"
+        );
     return new MaterialApp(
         onGenerateRoute: router.generateRoute,
         home: MyWebSocketPage(
@@ -30,7 +25,7 @@ class WebsocketPage extends StatelessWidget {
 }
 
 class MyWebSocketPage extends StatefulWidget {
-  final Future<StompClient> channel;
+  final WebSocketChannel channel;
   final String title;
 
   MyWebSocketPage({Key key, this.title, this.channel}) : super(key: key);
