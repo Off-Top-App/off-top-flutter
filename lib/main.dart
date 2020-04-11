@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'dart:math';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -44,26 +44,33 @@ class _AudioRecorderState extends State<AudioRecorder> {
     initializeDateFormatting();
   }
 
-  void startRecorder() async {
+  int getRandomValue(){
+    Random rnd;
+    int min = 0;
+    int max = 10;
+    rnd = new Random();
+    var r = min + rnd.nextInt(max - min);
+    return r;
+  }
+
+  void startRecorder(user_id) async {
     try {
+      var now = new DateTime.now();
+      var date = DateFormat("yyyy-MM-ddThh:mm").format(now);
       Directory tempDir = await getTemporaryDirectory();
-      // File filePath = File('${tempDir.path}');
-      // print('FILE: ' + filePath.path);
       setState((){ 
         directory = tempDir;
       });
       String path = await flutterSound.startRecorder(
-        uri: tempDir.path,
+        uri: date.toString() + '_' +user_id.toString()+'_sound.aac',
         codec: t_CODEC.CODEC_AAC
       );
-      print('startRecorder: $path');
 
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             e.currentPosition.toInt(),
             isUtc: true);
-        String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-        print('\nTEXT: ' + txt);
+        String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
         this.setState(() {
           this._recorderTxt = txt.substring(0, 8);
         });
@@ -210,7 +217,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
                   child: FloatingActionButton(
                     onPressed: (){
                       if(!this._isRecording){
-                        return this.startRecorder();
+                        var user_id = getRandomValue();
+                        return this.startRecorder(user_id);
                       }
                       this.stopRecorder();
                     },
