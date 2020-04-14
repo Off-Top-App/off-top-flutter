@@ -61,11 +61,12 @@ class RecordingPage extends StatelessWidget {
             title: Text('Reports'),
             backgroundColor: Colors.white),
         new BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings,
-              color: Colors.white,
-              size: 30.0,
+            icon: IconButton(
+              icon: Icon(Icons.settings, color: Colors.white, size: 30.0,),
+              onPressed: () => Navigator.pushNamed(context, SettingsRoute),
             ),
+            
+            
             title: Text('Settings'),
             backgroundColor: Colors.white),
       ]),
