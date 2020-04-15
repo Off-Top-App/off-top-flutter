@@ -18,7 +18,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case RecordingRoute:
       return MaterialPageRoute(builder: (_) => RecordingPage());
     case SettingsRoute:
-      return MaterialPageRoute(builder: (_) => SettingsPage());
+      return MaterialPageRoute(builder: (_) => MySettingsPage());
     default:
       return MaterialPageRoute(builder: (_) => LoginPage());
   }
