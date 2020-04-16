@@ -28,11 +28,18 @@ class _MySettingsPageState extends State<MySettingsPage> {
   void show1() {
     setState(() {
       _showContainer = !_showContainer;
+      if (_showSettings) {
+        _showSettings = !_showSettings;
+      }
     });
   }
+
   void show2() {
     setState(() {
       _showSettings = !_showSettings;
+      if (_showContainer) {
+        _showContainer = !_showContainer;
+      }
     });
   }
 
@@ -44,7 +51,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
         body: new Container(
             height: MediaQuery.of(context).size.height,
             alignment: Alignment.center,
-            child: new Column(children: <Widget>[
+            child: new SingleChildScrollView(
+                child: new Column(children: <Widget>[
               new Container(
                 height: 90,
                 child: Padding(
@@ -89,26 +97,176 @@ class _MySettingsPageState extends State<MySettingsPage> {
                     ],
                   )),
               Visibility(
-                child:
-                new Container(
-                  color: Colors.black,
-                  height: (MediaQuery.of(context).size.height -
-                      customBar.preferredSize.height -
-                      320),
-                ),
+                child: new Container(
+                    color: Colors.transparent,
+                    height: (MediaQuery.of(context).size.height -
+                        customBar.preferredSize.height -
+                        320),
+                    width: (MediaQuery.of(context).size.width - 50),
+                    child: _buildProfileForm()),
                 visible: _showContainer,
-              )
-              ,Visibility(
-                child:
-                new Container(
-                  color: Colors.yellow,
+              ),
+              Visibility(
+                child: new Container(
                   height: (MediaQuery.of(context).size.height -
                       customBar.preferredSize.height -
                       320),
+                  child: _buildNestedListView(),
                 ),
                 visible: _showSettings,
               )
-            ])));
+            ]))));
+  }
+
+  Widget _buildNestedListView() {
+    return ListView(children: <Widget>[
+      new ExpansionTile(
+        leading: Icon(Icons.line_style),
+        title: Text('DEFAULT CATEGORY',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        
+        children: <Widget>[
+          new ListTile(
+              title: Text('THERAPY',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('WORKOUT',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('STUDYING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('NEGOTIATING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('MEETING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+        ],
+      ),
+      new ExpansionTile(
+        leading: Icon(Icons.color_lens),
+        title: Text('SELECT COLOR',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            children: <Widget>[
+              ListTile(
+              title: Text('BLUE',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('RED',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('YELLOW',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('GREEN',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('MAGENTA',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+            ],
+      ),
+      ExpansionTile(
+        leading: Icon(Icons.ring_volume),
+        title: Text('ALERT TYPE',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        children: <Widget>[
+              ListTile(
+              title: Text('TEXT',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('RINGER',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('EMAIL',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('NOTIFICATION',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('EVERYTHING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+            ]
+        
+      ),
+      ExpansionTile(
+        leading: Icon(Icons.vibration),
+        title: Text('VIBRATION TYPES',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          children: <Widget>[
+              ListTile(
+              title: Text('SIREN',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('PULSE',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('TRIGGER',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('RAPID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('HEARTBEAT',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+            ]
+      )
+    ]);
+  }
+
+  Widget _buildProfileForm() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        _buildNameField(),
+        _buildLocationField(),
+        _buildEmailField(),
+        _buildProfessionField(),
+      ],
+    );
+  }
+
+  Widget _buildNameField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'NAME:'),
+    );
+  }
+
+  Widget _buildLocationField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'LOCATION:'),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'EMAIL:'),
+    );
+  }
+
+  Widget _buildProfessionField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'PROFESSION:'),
+    );
   }
 }
 
