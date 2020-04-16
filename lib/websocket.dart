@@ -63,6 +63,7 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
 
 //     // widget.channel.sink.add(json.encode({"message": "TEST WEBSOCKET TEST"}));
 //   }
+
   void _sendMessage() {
     Future<String> file = processAudioFile();
     // String file = processAudioFile();
@@ -78,14 +79,16 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   }
 
   Future<String> processAudioFile() async {
-    String path = "assets/testAudioFile.m4a";
+    String path = "assets/testAudioFile.aac";
     ByteData file = await rootBundle.load(path);
     Uint8List uint8list =
         file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
     List<int> fileBytes = uint8list.cast<int>();
-    // String fileString = file.toString();
     String base64String = base64Encode(fileBytes);
-    final fileString = 'data:audio/m4a;base64,$base64String';
+
+    print("1992 Our base64String: " + base64String);
+
+    final fileString = 'data:audio/aac;base64,$base64String';
     print("PRAISE THE LORD 1742");
     return fileString;
   }
