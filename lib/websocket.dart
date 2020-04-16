@@ -50,76 +50,25 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
     super.initState();
   }
 
-// void _sendMessage() {
-//     // Future<String> file = processAudioFile();
-//     // String file = processAudioFile();
-//     var file = processAudioFile();
-//     // file.then((val) {
-//     //   print("file being sent: $file");
-//     // });
-//     print("file being sent: $file");
-//     // print("file being sent: " + file);
-//     widget.channel.sink.add(json.encode({"audio": "$file"}));
-
-//     // widget.channel.sink.add(json.encode({"message": "TEST WEBSOCKET TEST"}));
-//   }
-
   void _sendMessage() {
-    Future<String> file = processAudioFile();
-    // String file = processAudioFile();
-    // var file = processAudioFile();
-    // file.then((val) {
-    //   print("file being sent: $file");
-    // });
-    print("file being sent: $file");
-    // print("file being sent: " + file);
-    widget.channel.sink.add(json.encode({"audio": "$file"}));
-
-    // widget.channel.sink.add(json.encode({"message": "TEST WEBSOCKET TEST"}));
+    processAudioFile().then((gift) {
+      print("gift being sent: " + gift);
+      widget.channel.sink.add(json.encode({"audio": "$gift"}));
+    });
   }
 
   Future<String> processAudioFile() async {
     String path = "assets/testAudioFile.aac";
     ByteData file = await rootBundle.load(path);
+
     Uint8List uint8list =
         file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
     List<int> fileBytes = uint8list.cast<int>();
     String base64String = base64Encode(fileBytes);
 
-    print("1992 Our base64String: " + base64String);
-
     final fileString = 'data:audio/aac;base64,$base64String';
-    print("PRAISE THE LORD 1742");
     return fileString;
   }
-
-//to use this function, we will pass the file path in as an argument
-  // Future<List<int>> processAudioFile() async {
-  // String processAudioFile() {
-  // Future<String> processAudioFile() async {
-  //   String path = "assets/testAudioFile.m4a";
-  //   ByteData file = await rootBundle.load(path);
-  //   Uint8List uint8list =
-  //       file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
-  //   List<int> fileBytes = uint8list.cast<int>();
-  //   // String fileString = file.toString();
-  //   String base64String = base64Encode(fileBytes);
-  //   final fileString = 'data:audio/m4a;base64,$base64String';
-  //   print("PRAISE THE LORD 1742");
-  //   return fileString;
-  // }
-  // Future<String> processAudioFile() async {
-  //   String path = "assets/testAudioFile.m4a";
-  //   ByteData file = await rootBundle.load(path);
-  //   Uint8List uint8list =
-  //       file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
-  //   List<int> fileBytes = uint8list.cast<int>();
-  //   // String fileString = file.toString();
-  //   String base64String = base64Encode(fileBytes);
-  //   final fileString = 'data:audio/mp3;base64,$base64String';
-  //   print("PRAISE THE LORD 1742");
-  //   return fileString;
-  // }
 
   @override
   void dispose() {
@@ -184,22 +133,3 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
     );
   }
 }
-
-//to use this function, we will pass the file path in as an argument
-// Future<String> processAudioFile() async {
-//   String path = "assets/testAudioFile.m4a";
-//   // String path = "Users/auhbon/off-top-flutter/assets/testAudioFile.m4a";
-
-//   // Future<ByteData> file = await rootBundle.load(path);
-//   File file = File(path);
-//   // file.openRead();
-
-//   print("We can make it here");
-//   List<int> fileBytes = await file.readAsBytes();
-//   print("PRAISE THE LORD 133");
-//   String base64 = base64Encode(fileBytes);
-//   print("PRAISE THE LORD 135");
-//   final fileString = 'data:audio/m4a;base64,$base64';
-//   print("PRAISE THE LORD 137");
-//   return fileString;
-// }
