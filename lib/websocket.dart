@@ -1,17 +1,24 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:off_top_mobile/recording.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'router.dart' as router;
+
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:io';
 
 void main() => runApp(WebsocketPage());
 
 class WebsocketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
+    final channel = IOWebSocketChannel.connect("ws://10.0.2.2:9000/name"
+        // final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
+        // final channel = IOWebSocketChannel.connect("ws://10.0.2.2:8080/name"
         // In case you're unable to connect to websocket try uncommenting this string below
         // "ws://10.0.2.2:8080/name"
         );
@@ -43,9 +50,73 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
     super.initState();
   }
 
+// void _sendMessage() {
+//     // Future<String> file = processAudioFile();
+//     // String file = processAudioFile();
+//     var file = processAudioFile();
+//     // file.then((val) {
+//     //   print("file being sent: $file");
+//     // });
+//     print("file being sent: $file");
+//     // print("file being sent: " + file);
+//     widget.channel.sink.add(json.encode({"audio": "$file"}));
+
+//     // widget.channel.sink.add(json.encode({"message": "TEST WEBSOCKET TEST"}));
+//   }
   void _sendMessage() {
-    widget.channel.sink.add(json.encode({"message": "data"}));
+    Future<String> file = processAudioFile();
+    // String file = processAudioFile();
+    // var file = processAudioFile();
+    // file.then((val) {
+    //   print("file being sent: $file");
+    // });
+    print("file being sent: $file");
+    // print("file being sent: " + file);
+    widget.channel.sink.add(json.encode({"audio": "$file"}));
+
+    // widget.channel.sink.add(json.encode({"message": "TEST WEBSOCKET TEST"}));
   }
+
+  Future<String> processAudioFile() async {
+    String path = "assets/testAudioFile.m4a";
+    ByteData file = await rootBundle.load(path);
+    Uint8List uint8list =
+        file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
+    List<int> fileBytes = uint8list.cast<int>();
+    // String fileString = file.toString();
+    String base64String = base64Encode(fileBytes);
+    final fileString = 'data:audio/m4a;base64,$base64String';
+    print("PRAISE THE LORD 1742");
+    return fileString;
+  }
+
+//to use this function, we will pass the file path in as an argument
+  // Future<List<int>> processAudioFile() async {
+  // String processAudioFile() {
+  // Future<String> processAudioFile() async {
+  //   String path = "assets/testAudioFile.m4a";
+  //   ByteData file = await rootBundle.load(path);
+  //   Uint8List uint8list =
+  //       file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
+  //   List<int> fileBytes = uint8list.cast<int>();
+  //   // String fileString = file.toString();
+  //   String base64String = base64Encode(fileBytes);
+  //   final fileString = 'data:audio/m4a;base64,$base64String';
+  //   print("PRAISE THE LORD 1742");
+  //   return fileString;
+  // }
+  // Future<String> processAudioFile() async {
+  //   String path = "assets/testAudioFile.m4a";
+  //   ByteData file = await rootBundle.load(path);
+  //   Uint8List uint8list =
+  //       file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
+  //   List<int> fileBytes = uint8list.cast<int>();
+  //   // String fileString = file.toString();
+  //   String base64String = base64Encode(fileBytes);
+  //   final fileString = 'data:audio/mp3;base64,$base64String';
+  //   print("PRAISE THE LORD 1742");
+  //   return fileString;
+  // }
 
   @override
   void dispose() {
@@ -110,3 +181,22 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
     );
   }
 }
+
+//to use this function, we will pass the file path in as an argument
+// Future<String> processAudioFile() async {
+//   String path = "assets/testAudioFile.m4a";
+//   // String path = "Users/auhbon/off-top-flutter/assets/testAudioFile.m4a";
+
+//   // Future<ByteData> file = await rootBundle.load(path);
+//   File file = File(path);
+//   // file.openRead();
+
+//   print("We can make it here");
+//   List<int> fileBytes = await file.readAsBytes();
+//   print("PRAISE THE LORD 133");
+//   String base64 = base64Encode(fileBytes);
+//   print("PRAISE THE LORD 135");
+//   final fileString = 'data:audio/m4a;base64,$base64';
+//   print("PRAISE THE LORD 137");
+//   return fileString;
+// }
