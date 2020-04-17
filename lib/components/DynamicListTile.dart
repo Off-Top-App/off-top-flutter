@@ -5,8 +5,14 @@ class MyDynamicListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final tileTitles = [ 'DEFAULT CATEGORY', 'SELECT COLOR', 'ALERT TYPE', 'VIBRATION TYPES' ];
     final iconsList = [ Icons.line_style, Icons.color_lens, Icons.ring_volume, Icons.vibration];
-    final subTiles = [ 'FIELD', 'FIELD', 'FIELD', 'FIELD', 'FIELD' ];
-    List<Widget> listTile = getListTileWidget(subTiles);
+
+    
+    final subTiles1 = [ 'FIELD', 'FIELD', 'FIELD', 'FIELD', 'FIELD' ];
+
+
+
+    List<Widget> listTile = getListTileWidget(subTiles1);
+
 
     return ListView.builder(
         itemCount: tileTitles.length,
@@ -16,15 +22,17 @@ class MyDynamicListTile extends StatelessWidget {
             title: new Text(tileTitles[index],
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
             children: <Widget>[
-              listTile[0],
-              listTile[1],
-              listTile[2],
-              listTile[3],
+              listTile[index],
+              listTile[index],
+              listTile[index],
+              listTile[index],
+
+              
               ],
           );
         });
   }
-}
+
 
 List<Widget> getListTileWidget(final subTiles) {
   List<Widget> list = new List<Widget>();
@@ -37,3 +45,7 @@ List<Widget> getListTileWidget(final subTiles) {
   return list;
 }
 
+
+
+
+}

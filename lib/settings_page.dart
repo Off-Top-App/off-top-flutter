@@ -17,19 +17,19 @@ class MySettingsPage extends StatefulWidget {
 
 class _MySettingsPageState extends State<MySettingsPage> {
   //State and Behavior
-  var _showContainer;
+  var _showProfile;
   var _showSettings;
 
   @override
   void initState() {
-    _showContainer = false;
+    _showProfile = false;
     _showSettings = false;
     super.initState();
   }
 
   void showProfile() {
     setState(() {
-      _showContainer = !_showContainer;
+      _showProfile = !_showProfile;
       if (_showSettings) {
         _showSettings = !_showSettings;
       }
@@ -39,8 +39,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
   void showSettings() {
     setState(() {
       _showSettings = !_showSettings;
-      if (_showContainer) {
-        _showContainer = !_showContainer;
+      if (_showProfile) {
+        _showProfile = !_showProfile;
       }
     });
   }
@@ -103,7 +103,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                         440),
                     width: (MediaQuery.of(context).size.width - 50),
                     child: _buildProfileForm()),
-                visible: _showContainer,
+                visible: _showProfile,
               ),
               Visibility(
                 child: new Container(
@@ -122,36 +122,17 @@ class _MySettingsPageState extends State<MySettingsPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        _buildNameField(),
-        _buildLocationField(),
-        _buildEmailField(),
-        _buildProfessionField(),
+        _buildField("NAME"),
+        _buildField("LOCATION"),
+        _buildField("EMAIL"),
+        _buildField("PROFESSION"),
       ],
     );
   }
 
-  Widget _buildNameField() {
+  Widget _buildField(String field) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'NAME:'),
-    );
-  }
-
-  Widget _buildLocationField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'LOCATION:'),
-    );
-  }
-
-  Widget _buildEmailField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'EMAIL:'),
-    );
-  }
-
-  Widget _buildProfessionField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'PROFESSION:'),
+      decoration: InputDecoration(labelText: field),
     );
   }
 }
-
