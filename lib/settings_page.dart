@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:off_top_mobile/components/NavBarClass.dart';
 import 'router.dart' as router;
 import 'package:off_top_mobile/components/offTopTitle.dart';
+import 'package:off_top_mobile/components/DynamicListTile.dart';
 
 void main() => runApp(MySettingsPage());
 
@@ -25,7 +27,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     super.initState();
   }
 
-  void show1() {
+  void showProfile() {
     setState(() {
       _showContainer = !_showContainer;
       if (_showSettings) {
@@ -34,7 +36,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     });
   }
 
-  void show2() {
+  void showSettings() {
     setState(() {
       _showSettings = !_showSettings;
       if (_showContainer) {
@@ -47,9 +49,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         backgroundColor: Colors.white,
-        appBar: customBar,
         body: new Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height-120,
             alignment: Alignment.center,
             child: new SingleChildScrollView(
                 child: new Column(children: <Widget>[
@@ -59,7 +60,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                     padding: EdgeInsets.only(
                       top: 30,
                     ),
-                    child: offTopTitle1),
+                    child: offTopSettingsTitle1),
               ),
               new Container(
                 color: Colors.white24,
@@ -77,7 +78,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                     alignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       new FlatButton(
-                        onPressed: () => show1(),
+                        onPressed: () => showProfile(),
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text("Profile",
                             style: TextStyle(
@@ -86,7 +87,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                                 fontWeight: FontWeight.w400)),
                       ),
                       new FlatButton(
-                        onPressed: () => show2(),
+                        onPressed: () => showSettings(),
                         padding: EdgeInsets.fromLTRB(60, 0, 20, 0),
                         child: Text("Settings",
                             style: TextStyle(
@@ -98,10 +99,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
                   )),
               Visibility(
                 child: new Container(
-                    color: Colors.transparent,
                     height: (MediaQuery.of(context).size.height -
-                        customBar.preferredSize.height -
-                        320),
+                        440),
                     width: (MediaQuery.of(context).size.width - 50),
                     child: _buildProfileForm()),
                 visible: _showContainer,
@@ -109,128 +108,14 @@ class _MySettingsPageState extends State<MySettingsPage> {
               Visibility(
                 child: new Container(
                   height: (MediaQuery.of(context).size.height -
-                      customBar.preferredSize.height -
-                      320),
-                  child: _buildNestedListView(),
+                      440),
+                  child: MyDynamicListTile(),
                 ),
                 visible: _showSettings,
               )
-            ]))));
-  }
-
-  Widget _buildNestedListView() {
-    return ListView(children: <Widget>[
-      new ExpansionTile(
-        leading: Icon(Icons.line_style),
-        title: Text('DEFAULT CATEGORY',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-        
-        children: <Widget>[
-          new ListTile(
-              title: Text('THERAPY',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('WORKOUT',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('STUDYING',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('NEGOTIATING',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('MEETING',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              )
-        ],
-      ),
-      new ExpansionTile(
-        leading: Icon(Icons.color_lens),
-        title: Text('SELECT COLOR',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-            children: <Widget>[
-              ListTile(
-              title: Text('BLUE',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('RED',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('YELLOW',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('GREEN',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('MAGENTA',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              )
-            ],
-      ),
-      ExpansionTile(
-        leading: Icon(Icons.ring_volume),
-        title: Text('ALERT TYPE',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-        children: <Widget>[
-              ListTile(
-              title: Text('TEXT',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('RINGER',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('EMAIL',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('NOTIFICATION',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('EVERYTHING',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              )
-            ]
-        
-      ),
-      ExpansionTile(
-        leading: Icon(Icons.vibration),
-        title: Text('VIBRATION TYPES',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-          children: <Widget>[
-              ListTile(
-              title: Text('SIREN',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('PULSE',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('TRIGGER',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('RAPID',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-              new ListTile(
-              title: Text('HEARTBEAT',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-              )
-            ]
-      )
-    ]);
+            ]))
+            ),
+            bottomNavigationBar: AppBarBuilder(),);
   }
 
   Widget _buildProfileForm() {
@@ -270,9 +155,3 @@ class _MySettingsPageState extends State<MySettingsPage> {
   }
 }
 
-var customBar = AppBar(
-  elevation: 60,
-  brightness: Brightness.light,
-  iconTheme: IconThemeData(color: Colors.black),
-  backgroundColor: Colors.white54,
-);
