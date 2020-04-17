@@ -7,6 +7,8 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'router.dart' as router;
 
+import 'dart:convert';
+import 'package:archive/archive.dart';
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:io';
@@ -43,7 +45,6 @@ class MyWebSocketPage extends StatefulWidget {
 
 class _MyWebSocketPage extends State<MyWebSocketPage> {
   TextEditingController _controller = TextEditingController();
-  // String file;
 
   @override
   void initState() {
@@ -52,21 +53,12 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   }
 
   void _sendMessage() async {
-    // processAudioFile().then((gift) {
-    //   // print("gift being sent: " + gift);
-    //   //  widget.channel.sink.add(json.encode({"message": gift}));
-    //   setState(() async {
-    //     this.file = await gift;
-    //   });
-    // });
-    // String file = this.file;
     final file = await this.processAudioFile();
-    print("file we are sending: " + file);
     widget.channel.sink.add(json.encode({"message": file}));
   }
 
   Future<String> processAudioFile() async {
-    String path = "assets/testAudioFile.aac";
+    String path = "assets/2secondAudio.aac";
     ByteData file = await rootBundle.load(path);
 
     Uint8List uint8list =
@@ -80,7 +72,6 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
 
   @override
   void dispose() {
-    print("WE're outta here");
     widget.channel.sink.close();
     _controller.dispose();
     super.dispose();
