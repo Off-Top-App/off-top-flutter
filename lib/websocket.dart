@@ -54,7 +54,8 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
 
   void _sendMessage() async {
     final file = await this.processAudioFile();
-    widget.channel.sink.add(json.encode({"message": file}));
+    // print("file: " + file);
+    widget.channel.sink.add(json.encode({"audio": file, "user_id": 137}));
   }
 
   Future<String> processAudioFile() async {
@@ -65,9 +66,14 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
         file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
     List<int> fileBytes = uint8list.cast<int>();
     String base64String = base64Encode(fileBytes);
-
-    final fileString = 'data:audio/aac;base64,$base64String';
-    return fileString;
+    //
+    // RegExp('.{1,800}')
+    //     .allMatches(fileBytes.toString())
+    //     .forEach((match) => print(match.group(0)));
+    //
+    return base64String;
+    // final fileString = 'data:audio/aac;base64,$base64String';
+    // return fileString;
   }
 
   @override
