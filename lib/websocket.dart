@@ -58,23 +58,35 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
     widget.channel.sink.add(json.encode({"audio": file, "user_id": 137}));
   }
 
-  Future<String> processAudioFile() async {
+  Future<List<int>> processAudioFile() async {
     String path = "assets/2secondAudio.aac";
     ByteData file = await rootBundle.load(path);
 
     Uint8List uint8list =
         file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
     List<int> fileBytes = uint8list.cast<int>();
-    String base64String = base64Encode(fileBytes);
-    //
-    // RegExp('.{1,800}')
-    //     .allMatches(fileBytes.toString())
-    //     .forEach((match) => print(match.group(0)));
-    //
-    return base64String;
-    // final fileString = 'data:audio/aac;base64,$base64String';
-    // return fileString;
+
+    return fileBytes;
   }
+
+  // Future<String> processAudioFile() async {
+  //   String path = "assets/2secondAudio.aac";
+  //   ByteData file = await rootBundle.load(path);
+
+  //   Uint8List uint8list =
+  //       file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
+  //   List<int> fileBytes = uint8list.cast<int>();
+  //   String base64String = base64Encode(fileBytes);
+  //   //
+  //   // RegExp('.{1,800}')
+  //   //     .allMatches(fileBytes.toString())
+  //   //     .forEach((match) => print(match.group(0)));
+  //   //
+
+  //   return base64String;
+  //   // final fileString = 'data:audio/aac;base64,$base64String';
+  //   // return fileString;
+  // }
 
   @override
   void dispose() {
