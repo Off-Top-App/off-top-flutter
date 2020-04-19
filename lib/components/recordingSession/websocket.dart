@@ -11,10 +11,11 @@ void main() => runApp(WebsocketPage());
 class WebsocketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
+    final channel = IOWebSocketChannel.connect(
+      "ws://localhost:9000/name"
         // In case you're unable to connect to websocket try uncommenting this string below
-        // "ws://10.0.2.2:8080/name"
-        );
+        // "ws://10.0.2.2:9000/name"
+      );
     return new MaterialApp(
         onGenerateRoute: router.generateRoute,
         home: MyWebSocketPage(
@@ -44,7 +45,11 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   }
 
   void _sendMessage() {
-    widget.channel.sink.add(json.encode({"message": "data"}));
+    widget.channel.sink.add(json.encode({
+      "file": "bars",
+      "userId": "12",
+      "timestamp": "2020-04-12T10:15:30"
+    }));
   }
 
   @override

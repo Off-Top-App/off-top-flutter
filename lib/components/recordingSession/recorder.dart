@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
@@ -22,7 +22,7 @@ class _RecorderState extends State<Recorder> {
   StreamSubscription _dbPeakSubscription;
   StreamSubscription _playerSubscription;
   FlutterSound flutterSound;
-
+  int user_id;
   String _recorderTxt = '00:00:00';
   double _dbLevel;
 
@@ -37,6 +37,7 @@ class _RecorderState extends State<Recorder> {
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
+    this.user_id = 3;
   }
 
   int getRandomValue() {
@@ -58,8 +59,12 @@ class _RecorderState extends State<Recorder> {
       });
       print('tempdir: ${tempDir}');
       String path = await flutterSound.startRecorder(
-          // uri: tempDir.path +'/'+date.toString() + '_' + user_id.toString() + '_sound.aac',
-          uri: tempDir.path +'/'+date.toString() + '_' + user_id.toString() + '_sound.aac',
+          uri: tempDir.path +
+              '/' +
+              date.toString() +
+              '_' +
+              user_id.toString() +
+              '_sound.aac',
           codec: t_CODEC.CODEC_AAC);
       print('path: ${path}');
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
@@ -112,61 +117,38 @@ class _RecorderState extends State<Recorder> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(width: 2.0, color:Colors.black)
-        )  
-      ),
-      child: Column(
+    return Expanded(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-      Row(
-        children: <Widget>[
-          Container(
-            width: 56.0,
-            margin: EdgeInsets.only(
-              top: 20.0,
-              bottom: 10.0
-            ),
-            child: FloatingActionButton(
-              heroTag: 'recorder',
-              onPressed: () {
-                if (!this._isRecording) {
-                  return this.startRecorder(3);
-                }
-                this.stopRecorder();
-              },
-              child: this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
-            ),
-          ),
-        ],
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Text(
-              this._recorderTxt,
-              style: TextStyle(
-                fontSize: 25.0,
-                color: Colors.black,
-              ),
+        FloatingActionButton(
+          heroTag: 'recorder',
+          onPressed: () {
+            if (!this._isRecording) {
+              return this.startRecorder(this.user_id);
+            }
+            this.stopRecorder();
+          },
+          child: this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
+        ),
+        Container(
+          child: AutoSizeText(
+            this._recorderTxt,
+            style: TextStyle(
+              fontSize: 22.0,
+              color: Colors.black,
             ),
           ),
-          _isRecording
-              ? LinearProgressIndicator(
-                  value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                  backgroundColor: Colors.red,
-                )
-              : Container()
-        ],
-      ),
-    ])
-    );
+        ),
+        Container(
+            child: _isRecording
+                ? LinearProgressIndicator(
+                    value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                    backgroundColor: Colors.red,
+                  )
+                : Container())
+      ],
+    ));
   }
 }

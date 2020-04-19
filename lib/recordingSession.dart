@@ -12,12 +12,9 @@ class RecordingPage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: Container(
           width: this.yes * 10.0,
-          height: 100,
           child: FittedBox(
               child: FloatingActionButton(
-            onPressed: () {
-              //
-            },
+            onPressed: null,
             backgroundColor: Colors.white,
           ))),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -36,8 +33,16 @@ class RecordingPage extends StatelessWidget {
               ),
             ),
           ]),
-          Image.asset('assets/placeholderWave.gif'),
-          Meter(),
+          Container(
+            height: MediaQuery.of(context).size.height/4,
+            child: Image.asset('assets/placeholderWave.gif'),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 5),
+            height: MediaQuery.of(context).size.height/4,
+            child: Meter(),
+
+          ),
           Recorder()
         ],
       ),
