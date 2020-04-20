@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:off_top_mobile/components/NavBarClass.dart';
-import 'router.dart' as router;
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/components/DynamicListTile.dart';
+import 'package:off_top_mobile/routing/routing_constants.dart';
 
 void main() => runApp(MySettingsPage());
 
@@ -100,7 +100,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
               Visibility(
                 child: new Container(
                     height: (MediaQuery.of(context).size.height -
-                        440),
+                        390),
                     width: (MediaQuery.of(context).size.width - 50),
                     child: _buildProfileForm()),
                 visible: _showProfile,
@@ -109,7 +109,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 child: new Container(
                   height: (MediaQuery.of(context).size.height -
                       440),
-                  child: MyDynamicListTile(),
+                  child: _buildNestedListView(),
                 ),
                 visible: _showSettings,
               )
@@ -126,6 +126,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
         _buildField("LOCATION"),
         _buildField("EMAIL"),
         _buildField("PROFESSION"),
+        Spacer(),
+        _buildFormButtom()
       ],
     );
   }
@@ -136,3 +138,127 @@ class _MySettingsPageState extends State<MySettingsPage> {
     );
   }
 }
+
+Widget _buildFormButtom(){
+  return   RaisedButton(onPressed: () => SettingsRoute,
+  color: Colors.lightBlue,
+  textColor: Colors.white,
+  splashColor: Colors.red,
+  child: Text("SAVE"),
+  );
+
+}
+Widget _buildNestedListView() {
+    return ListView(children: <Widget>[
+      new ExpansionTile(
+        leading: Icon(Icons.line_style),
+        title: Text('DEFAULT CATEGORY',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+
+        children: <Widget>[
+          new ListTile(
+              title: Text('THERAPY',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('WORKOUT',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('STUDYING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('NEGOTIATING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('MEETING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+        ],
+      ),
+      new ExpansionTile(
+        leading: Icon(Icons.color_lens),
+        title: Text('SELECT COLOR',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            children: <Widget>[
+              ListTile(
+              title: Text('BLUE',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('RED',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('YELLOW',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('GREEN',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('MAGENTA',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+            ],
+      ),
+      ExpansionTile(
+        leading: Icon(Icons.ring_volume),
+        title: Text('ALERT TYPE',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        children: <Widget>[
+              ListTile(
+              title: Text('TEXT',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('RINGER',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('EMAIL',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('NOTIFICATION',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('EVERYTHING',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+            ]
+
+      ),
+      ExpansionTile(
+        leading: Icon(Icons.vibration),
+        title: Text('VIBRATION TYPES',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          children: <Widget>[
+              ListTile(
+              title: Text('SIREN',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('PULSE',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('TRIGGER',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('RAPID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              new ListTile(
+              title: Text('HEARTBEAT',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              )
+            ]
+      )
+    ]);
+  }

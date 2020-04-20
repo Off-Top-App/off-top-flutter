@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'routing_constants.dart';
+import 'package:off_top_mobile/routing/routing_constants.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
 
 class LoginPage extends StatelessWidget {
