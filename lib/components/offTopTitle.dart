@@ -10,3 +10,11 @@ final offTopTitle = AppBar(
   centerTitle: true,
   backgroundColor: Colors.white,
 );
+
+
+final offTopSettingsTitle1 = Text(
+    'OFF-TOP',
+    style: TextStyle(
+        color: Colors.black87, fontSize: 40, fontWeight: FontWeight.w600),
+    textAlign: TextAlign.center,
+  );

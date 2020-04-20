@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:off_top_mobile/recording.dart';
+import 'package:off_top_mobile/recordingSession.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'router.dart' as router;
+import 'package:off_top_mobile/routing/router.dart' as router;
 
 import 'dart:async';
 import 'dart:typed_data';
@@ -15,10 +15,9 @@ void main() => runApp(WebsocketPage());
 class WebsocketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final channel = IOWebSocketChannel.connect("ws://10.0.2.2:9000/name"
-        // final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
-        // final channel = IOWebSocketChannel.connect("ws://10.0.2.2:8080/name"
-        );
+    final channel = IOWebSocketChannel.connect(
+        // "ws://10.0.2.2:9000/name"
+        "ws://localhost:9000/name");
     return new MaterialApp(
         onGenerateRoute: router.generateRoute,
         home: MyWebSocketPage(
@@ -48,8 +47,9 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
   }
 
   void _sendMessage() async {
-    final file = await this.processAudioFile();
-    widget.channel.sink.add(json.encode({"audio": file, "user_id": 137}));
+    final audioData = await this.processAudioFile();
+    widget.channel.sink.add(json.encode(
+        {"audio_data": audioData, "user_id": 1.toInt(), "topic": "sports"}));
   }
 
   Future<List<int>> processAudioFile() async {
@@ -93,7 +93,7 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
             builder: (context, snapshot) {
               return Text(
                 snapshot.hasData
-                    ? "Websocket info: " + '${snapshot.data} '
+                    ? "Server is receiving data"
                     : 'Waiting for connection to establish..',
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
