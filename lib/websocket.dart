@@ -7,11 +7,8 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'router.dart' as router;
 
-import 'dart:convert';
-import 'package:archive/archive.dart';
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:io';
 
 void main() => runApp(WebsocketPage());
 
@@ -21,8 +18,6 @@ class WebsocketPage extends StatelessWidget {
     final channel = IOWebSocketChannel.connect("ws://10.0.2.2:9000/name"
         // final channel = IOWebSocketChannel.connect("ws://localhost:9000/name"
         // final channel = IOWebSocketChannel.connect("ws://10.0.2.2:8080/name"
-        // In case you're unable to connect to websocket try uncommenting this string below
-        // "ws://10.0.2.2:8080/name"
         );
     return new MaterialApp(
         onGenerateRoute: router.generateRoute,
@@ -54,7 +49,6 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
 
   void _sendMessage() async {
     final file = await this.processAudioFile();
-    // print("file: " + file);
     widget.channel.sink.add(json.encode({"audio": file, "user_id": 137}));
   }
 
@@ -68,25 +62,6 @@ class _MyWebSocketPage extends State<MyWebSocketPage> {
 
     return fileBytes;
   }
-
-  // Future<String> processAudioFile() async {
-  //   String path = "assets/2secondAudio.aac";
-  //   ByteData file = await rootBundle.load(path);
-
-  //   Uint8List uint8list =
-  //       file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
-  //   List<int> fileBytes = uint8list.cast<int>();
-  //   String base64String = base64Encode(fileBytes);
-  //   //
-  //   // RegExp('.{1,800}')
-  //   //     .allMatches(fileBytes.toString())
-  //   //     .forEach((match) => print(match.group(0)));
-  //   //
-
-  //   return base64String;
-  //   // final fileString = 'data:audio/aac;base64,$base64String';
-  //   // return fileString;
-  // }
 
   @override
   void dispose() {
