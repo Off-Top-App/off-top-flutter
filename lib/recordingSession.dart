@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/components/footer/bottomNavigation.dart';
 import 'package:off_top_mobile/components/recordingSession/meter.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/components/recordingSession/recorder.dart';
 import 'package:off_top_mobile/routing/routing_constants.dart';
+
+import 'components/NavBarClass.dart';
 
 class RecordingPage extends StatelessWidget {
   int yes = 0;
@@ -46,7 +47,7 @@ class RecordingPage extends StatelessWidget {
           Recorder()
         ],
       ),
-      bottomNavigationBar:footer
+      bottomNavigationBar:  AppBarBuilder() 
     );
   }
 }
