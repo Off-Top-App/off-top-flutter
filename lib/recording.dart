@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/routing_constants.dart';
 
+String name;
+
 class RecordingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -36,12 +38,38 @@ class RecordingPage extends StatelessWidget {
                 },	
               ),	
               ),	
+            
             ]	
           ),
+  
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: new Text(name),
+                margin: EdgeInsets.only(top: 10.0),
+              ),
+
+              Container(
+                child: Divider(
+                  height: 2.0,
+                  color: Colors.black,
+                ),
+              ),
+
+              Container(
+                child: new Text('Play'),
+                margin: EdgeInsets.only(top: 10.0),
+              )
+
+            ],
+          ),
+
           Image.asset('assets/placeholderWave.gif'),
           Image.asset('assets/placeholderMeter.png'),
         ],
       ),
+    
       bottomNavigationBar:
           new BottomNavigationBar(backgroundColor: Colors.deepPurple, items: [
         new BottomNavigationBarItem(
