@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:off_top_mobile/components/popup/TopicPopup.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'dart:io';
@@ -29,6 +30,8 @@ class _RecorderState extends State<Recorder> {
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
 
+
+  
   @override
   void initState() {
     super.initState();
@@ -123,11 +126,15 @@ class _RecorderState extends State<Recorder> {
       children: <Widget>[
         FloatingActionButton(
           heroTag: 'recorder',
-          onPressed: () {
+          onPressed: () async {
             if (!this._isRecording) {
+              await showDialog(
+              context: context,
+              builder: (BuildContext context) => MyTopicDialog());
               return this.startRecorder(this.user_id);
             }
             this.stopRecorder();
+            
           },
           child: this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
         ),
@@ -150,5 +157,7 @@ class _RecorderState extends State<Recorder> {
                 : Container())
       ],
     ));
+    
   }
+  
 }
