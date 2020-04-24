@@ -1,15 +1,8 @@
-import 'package:fancy_dialog/FancyAnimation.dart';
-import 'package:fancy_dialog/FancyGif.dart';
-import 'package:fancy_dialog/FancyTheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:off_top_mobile/components/NavBarClass.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
-import 'package:off_top_mobile/components/DynamicListTile.dart';
-import 'package:off_top_mobile/components/popup/TopicPopup.dart';
-import 'package:off_top_mobile/routing/routing_constants.dart';
-import 'package:fancy_dialog/fancy_dialog.dart';
 
 void main() => runApp(MySettingsPage());
 
