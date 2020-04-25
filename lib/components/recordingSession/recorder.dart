@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/components/popup/TopicPopup.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -17,6 +18,7 @@ class Recorder extends StatefulWidget {
 }
 
 class _RecorderState extends State<Recorder> {
+  MyWebSocket ws;
   Directory directory;
   bool _isRecording = false;
   StreamSubscription _recorderSubscription;
@@ -40,7 +42,16 @@ class _RecorderState extends State<Recorder> {
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
-    this.user_id = 3;
+    this.user_id = this.getRandomValue();
+    this.ws = new MyWebSocket("ws://localhost:9000/name"
+        // "ws://10.0.2.2:9000/name"
+        );
+  }
+
+  @override
+  void dispose() {
+    this.ws.channel.sink.close();
+    super.dispose();
   }
 
   int getRandomValue() {
@@ -52,7 +63,7 @@ class _RecorderState extends State<Recorder> {
     return r;
   }
 
-  void startRecorder(user_id) async {
+  void startRecorder(int user_id) async {
     try {
       var now = new DateTime.now();
       var date = DateFormat("yyyy-MM-ddThh:mm").format(now);
@@ -99,7 +110,8 @@ class _RecorderState extends State<Recorder> {
     print('STOP RECORDER');
     try {
       String result = await flutterSound.stopRecorder();
-      print('stopRecorder: $result');
+      final bars = result.replaceRange(0, 7, '');
+      this.ws.sendAudioFile(bars, this.user_id);
 
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();
