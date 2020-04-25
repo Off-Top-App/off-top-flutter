@@ -26,6 +26,7 @@ dependencies:
   flutter_gauge: ^1.0.8
   cupertino_icons: ^0.1.2
   auto_size_text: ^2.1.0
+  fancy_dialog: ^1.0.3
 
 dev_dependencies:
   flutter_test:
