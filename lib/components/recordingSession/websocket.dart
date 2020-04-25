@@ -12,10 +12,10 @@ class MyWebSocket {
     this.channel = IOWebSocketChannel.connect(channel);
   }
 
-  void sendAudioFile(exportedAudioData, userID) async {
+  void sendAudioFile(exportedAudioData, userID, topic) async {
     final audioData = await this.processAudioFile(exportedAudioData);
     this.channel.sink.add(json.encode(
-      {"audio_data": audioData, "user_id": userID.toInt(), "topic": "sports"})
+      {"audio_data": audioData, "user_id": userID.toInt(), "topic": topic})
     );
   }
 

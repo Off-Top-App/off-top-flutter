@@ -6,7 +6,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/components/popup/TopicPopup.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -26,6 +25,7 @@ class _RecorderState extends State<Recorder> {
   StreamSubscription _playerSubscription;
   FlutterSound flutterSound;
   int user_id;
+  String topic;
   String _recorderTxt = '00:00:00';
   double _dbLevel;
 
@@ -45,7 +45,7 @@ class _RecorderState extends State<Recorder> {
     this.user_id = this.getRandomValue();
     this.ws = new MyWebSocket("ws://localhost:9000/name"
         // "ws://10.0.2.2:9000/name"
-        );
+    );
   }
 
   @override
@@ -110,8 +110,8 @@ class _RecorderState extends State<Recorder> {
     print('STOP RECORDER');
     try {
       String result = await flutterSound.stopRecorder();
-      final bars = result.replaceRange(0, 7, '');
-      this.ws.sendAudioFile(bars, this.user_id);
+      final filePath = result.replaceRange(0, 7, '');
+      this.ws.sendAudioFile(filePath, this.user_id, this.topic);
 
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();
@@ -141,10 +141,17 @@ class _RecorderState extends State<Recorder> {
           onPressed: () async {
             if (!this._isRecording) {
               await showDialog(
-              context: context,
-              builder: (BuildContext context) => MyTopicDialog());
+                context: context,
+                builder: (BuildContext context) => 
+                  MyTopicDialog(
+                    onTopicChanged: (childTopic){
+                      this.topic = childTopic;
+                    }
+                  )
+              );
               return this.startRecorder(this.user_id);
             }
+            
             this.stopRecorder();
             
           },
@@ -160,8 +167,7 @@ class _RecorderState extends State<Recorder> {
           ),
         ),
         Container(
-            child: _isRecording
-                ? LinearProgressIndicator(
+            child: _isRecording ? LinearProgressIndicator(
                     value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                     backgroundColor: Colors.red,
