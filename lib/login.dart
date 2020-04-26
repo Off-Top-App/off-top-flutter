@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'routing_constants.dart';
+import 'package:off_top_mobile/recordingSession.dart';
+import 'package:off_top_mobile/routing/routing_constants.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatelessWidget {
   @override
@@ -73,6 +77,17 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  //String url = 'http://localhost:9000/user/john.doe@email.com';
+  String url = "http://10.0.2.2:9000/user/john.doe@email.com/";
+  Future<int> makeLoginRequest() async {
+    var response = await http
+        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+    var userData = json.decode(response.body);
+    int userId = userData['Id'];
+
+    return userId;
+  }
+
   Widget loginButton(BuildContext context) {
     return RaisedButton(
       shape: RoundedRectangleBorder(
@@ -81,8 +96,14 @@ class LoginPage extends StatelessWidget {
       color: Colors.deepPurple,
       child: Text('SIGN IN'),
       textColor: Colors.white,
-      onPressed: () {
-        Navigator.pushNamed(context, RecordingRoute);
+      onPressed: () async {
+        int userId = await makeLoginRequest();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecordingPage(userId: userId),
+          ),
+        );
       },
     );
   }
