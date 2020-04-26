@@ -4,7 +4,6 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-// import 'package:off_top_mobile/components/recordingSession/meter.dart';
 
 import 'dart:io';
 import 'dart:async';
@@ -13,7 +12,6 @@ import 'package:flutter_sound/flutter_sound.dart';
 typedef RecordingCallback = void Function(bool);
 
 class Recorder extends StatefulWidget {
-  // Recorder({Key key}) : super(key: key);
   _RecorderState createState() => _RecorderState();
 
   final RecordingCallback onIsRecording;
@@ -123,24 +121,16 @@ class _RecorderState extends State<Recorder> {
     }
   }
 
-  // final GlobalKey<_MeterState> _meterState = GlobalKey<_MeterState>();
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        // Container(
-        //     margin: EdgeInsets.only(top: 5),
-        //     height: MediaQuery.of(context).size.height / 4,
-        //     child: Meter(
-        //       key: meterState,
-        //     )),
         FloatingActionButton(
           heroTag: 'recorder',
           onPressed: () {
             if (!this._isRecording) {
-              // meterState.currentState.updateScore(true);
               return this.startRecorder(this.user_id);
             }
             this.stopRecorder();

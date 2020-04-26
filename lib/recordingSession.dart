@@ -53,15 +53,6 @@ class _RecordingPageState extends State<RecordingPage> {
             ),
             Recorder((isOnTopic) {
               meterState.currentState.updateScore(isOnTopic);
-              // setState(() {
-              //   // meterState.currentState.setState(() {
-              //   print("------------------ACTIVATED-------------------");
-              //   print(isOnTopic);
-              //   print("----------------------------------------------");
-
-              //   meterState.currentState.updateScore(isOnTopic);
-              //   // meterState.currentState.build(context);
-              // });
             }),
           ],
         ),
