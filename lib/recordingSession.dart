@@ -14,34 +14,31 @@ class RecordingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-          width: this.yes * 10.0,
-          child: FittedBox(
-              child: FloatingActionButton(
-            onPressed: null,
-            backgroundColor: Colors.white,
-          ))),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: Colors.white,
-      appBar: offTopTitle,
-      body: Column(
-        children: <Widget>[
-          //Subnavbar(),
-          Container(
-            height: MediaQuery.of(context).size.height/4,
-            child: Image.asset('assets/placeholderWave.gif'),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 5),
-            height: MediaQuery.of(context).size.height/4,
-            child: Meter(),
-
-          ),
-          Recorder()
-        ],
-      ),
-      bottomNavigationBar:  AppBarBuilder() 
-    );
+        floatingActionButton: Container(
+            width: this.yes * 10.0,
+            child: FittedBox(
+                child: FloatingActionButton(
+              onPressed: null,
+              backgroundColor: Colors.white,
+            ))),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        backgroundColor: Colors.white,
+        appBar: offTopTitle,
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height / 4,
+              child: Image.asset('assets/placeholderWave.gif'),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 45, bottom: 45),
+              height: MediaQuery.of(context).size.height / 4,
+              child: Meter(),
+            ),
+            Recorder()
+          ],
+        ),
+        bottomNavigationBar: AppBarBuilder());
   }
 }
 
