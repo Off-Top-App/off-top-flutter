@@ -35,7 +35,7 @@ class RecordingPage extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 4,
               child: Meter(),
             ),
-            Recorder()
+            Recorder(userId: userId),
           ],
         ),
         bottomNavigationBar: AppBarBuilder());

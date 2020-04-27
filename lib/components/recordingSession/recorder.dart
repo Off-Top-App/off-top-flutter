@@ -11,7 +11,8 @@ import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class Recorder extends StatefulWidget {
-  Recorder({Key key}) : super(key: key);
+  int userId;
+  Recorder({Key key, @required this.userId}) : super(key: key);
 
   _RecorderState createState() => _RecorderState();
 }
@@ -42,7 +43,7 @@ class _RecorderState extends State<Recorder> {
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
-    this.user_id = this.getRandomValue();
+    this.user_id = widget.userId;
     this.ws = new MyWebSocket("ws://localhost:9000/name"
         // "ws://10.0.2.2:9000/name"
     );
@@ -63,7 +64,7 @@ class _RecorderState extends State<Recorder> {
     return r;
   }
 
-  void startRecorder(int user_id) async {
+  void startRecorder() async {
     try {
       var now = new DateTime.now();
       var date = DateFormat("yyyy-MM-ddThh:mm").format(now);
@@ -149,7 +150,7 @@ class _RecorderState extends State<Recorder> {
                     }
                   )
               );
-              return this.startRecorder(this.user_id);
+              return this.startRecorder();
             }
             
             this.stopRecorder();
