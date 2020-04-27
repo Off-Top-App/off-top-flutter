@@ -5,8 +5,11 @@ import 'package:off_top_mobile/components/recordingSession/recorder.dart';
 import 'package:off_top_mobile/routing/routing_constants.dart';
 
 import 'components/NavBarClass.dart';
+import 'components/subnavbar.dart';
 
 class RecordingPage extends StatelessWidget {
+  final int userId;
+  RecordingPage({Key key, @required this.userId}) : super(key: key);
   int yes = 0;
   @override
   Widget build(BuildContext context) {
@@ -38,3 +41,5 @@ class RecordingPage extends StatelessWidget {
         bottomNavigationBar: AppBarBuilder());
   }
 }
+
+
