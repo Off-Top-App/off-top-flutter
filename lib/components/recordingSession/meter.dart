@@ -3,13 +3,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gauge/flutter_gauge.dart';
 
 class Meter extends StatefulWidget {
-  Meter({Key key}) : super(key: key);
+  const Meter({Key key}) : super(key: key);
+
+  @override
   MeterState createState() => MeterState();
 }
 
 class MeterState extends State<Meter> {
   @override
-  initState() {
+  void initState() {
     super.initState();
   }
 
@@ -24,21 +26,24 @@ class MeterState extends State<Meter> {
 
   void updateScore(bool isOnTopic) {
     //for the purposes of testing we won't use isOnTopic (its a hardcoded true anyway)
-    setState(() {
-      meterScore += 15;
-    });
-    print("Score Updated:");
-    print("--------" + meterScore.toString() + "--------");
+    meterScore += 15;
+
+    //moved the setStatback into the parent (RecordingPage)
+    // setState(() {
+    //   meterScore += 15;
+    // });
+    print('Score Updated:');
+    print('--------' + meterScore.toString() + '--------');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('+++++++We\'re building! Using this.meterScore value: ' +
+    print('+++++++We\'re building! Using meterScore value: ' +
         meterScore.toString() +
         '+++++++');
 
     //Replacing my FlutterGauge and return with the line below as a way to isolate the FlutterGauge widget as the problem
-    //return Center(child: Text(this.meterScore.toString()));
+    // return Center(child: Text(meterScore.toString()));
 
     FlutterGauge meter = new FlutterGauge(
         circleColor: meterColor,
@@ -47,19 +52,19 @@ class MeterState extends State<Meter> {
         number: Number.none,
         width: 200,
         index: meterScore,
-        fontFamily: "Iran",
+        fontFamily: 'Iran',
         counterStyle: TextStyle(color: Colors.black, fontSize: 35),
         counterAlign: CounterAlign.center,
         isDecimal: false);
-    print("------------Accessing meter.index: " +
+    print('------------Accessing meter.index: ' +
         meter.index.toString() +
-        "----------------");
+        '----------------');
     return meter;
   }
 
   @override
   void dispose() {
-    print("---------We are disposing (as intended)------------");
+    print('---------We are disposing (as intended)------------');
     super.dispose();
   }
 }

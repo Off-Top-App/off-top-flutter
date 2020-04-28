@@ -7,8 +7,9 @@ import 'package:off_top_mobile/routing/routing_constants.dart';
 import 'components/NavBarClass.dart';
 
 class RecordingPage extends StatefulWidget {
-  RecordingPage({Key key}) : super(key: key);
+  const RecordingPage({Key key}) : super(key: key);
 
+  @override
   _RecordingPageState createState() => _RecordingPageState();
 }
 
@@ -20,7 +21,7 @@ class _RecordingPageState extends State<RecordingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: Container(
-            width: this.yes * 10.0,
+            width: yes * 10.0,
             child: FittedBox(
                 child: FloatingActionButton(
               onPressed: null,
@@ -31,10 +32,10 @@ class _RecordingPageState extends State<RecordingPage> {
         appBar: offTopTitle,
         body: Column(
           children: <Widget>[
-            Row(children: [
+            Row(children: <Widget>[
               Expanded(
                 child: FlatButton(
-                  child: Text("Go To Websocket"),
+                  child: const Text('Go To Websocket'),
                   color: Colors.blue,
                   onPressed: () {
                     Navigator.pushNamed(context, WebsocketRoute);
@@ -47,12 +48,14 @@ class _RecordingPageState extends State<RecordingPage> {
               child: Image.asset('assets/placeholderWave.gif'),
             ),
             Container(
-              margin: EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(top: 5),
               height: MediaQuery.of(context).size.height / 4,
               child: Meter(key: meterState),
             ),
-            Recorder((isOnTopic) {
-              meterState.currentState.updateScore(isOnTopic);
+            Recorder((bool isOnTopic) {
+              setState(() {
+                meterState.currentState.updateScore(isOnTopic);
+              });
             }),
           ],
         ),
