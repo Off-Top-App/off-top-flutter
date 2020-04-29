@@ -31,7 +31,7 @@ class _RecorderState extends State<Recorder> {
   StreamSubscription _dbPeakSubscription;
   StreamSubscription _playerSubscription;
   FlutterSound flutterSound;
-  int user_id;
+  int userId;
   String topic;
   String _recorderTxt = '00:00:00';
   double _dbLevel;
@@ -49,7 +49,7 @@ class _RecorderState extends State<Recorder> {
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
-    this.user_id = widget.userId;
+    this.userId = widget.userId;
     this.ws = widget.ws;
   }
 
@@ -68,6 +68,7 @@ class _RecorderState extends State<Recorder> {
   }
 
   void startRecorder() async {
+    this.ws.sendFirstMessage(this.userId);
     try {
       var now = new DateTime.now();
       var date = DateFormat("yyyy-MM-ddThh:mm").format(now);
@@ -81,7 +82,7 @@ class _RecorderState extends State<Recorder> {
               '/' +
               date.toString() +
               '_' +
-              user_id.toString() +
+              userId.toString() +
               '_sound.aac',
           codec: t_CODEC.CODEC_AAC);
       print('path: ${path}');
@@ -115,7 +116,7 @@ class _RecorderState extends State<Recorder> {
     try {
       String result = await flutterSound.stopRecorder();
       final filePath = result.replaceRange(0, 7, '');
-      this.ws.sendAudioFile(filePath, this.user_id, this.topic);
+      this.ws.sendAudioFile(filePath, this.userId, this.topic);
 
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();

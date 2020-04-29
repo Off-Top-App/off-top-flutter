@@ -25,7 +25,6 @@ class _OffTopState extends State<OffTopVal>{
   void initState() {
     this.userId = widget.userId;
     this.ws = widget.ws;
-    this.ws.sendFirstMessage(this.userId);
     this.ws.channel.stream.listen((data){
       var incomingData = json.decode(data);
       var focusVal = incomingData['focus_score'];
