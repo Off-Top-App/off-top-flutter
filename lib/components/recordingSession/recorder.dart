@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,12 @@ import 'package:flutter_sound/flutter_sound.dart';
 
 class Recorder extends StatefulWidget {
   int userId;
-  Recorder({Key key, @required this.userId}) : super(key: key);
+  MyWebSocket ws;
+  Recorder({
+    Key key, 
+    @required this.userId,
+    @required this.ws
+  }) : super(key: key);
 
   _RecorderState createState() => _RecorderState();
 }
@@ -44,14 +50,11 @@ class _RecorderState extends State<Recorder> {
     flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
     this.user_id = widget.userId;
-    this.ws = new MyWebSocket("ws://localhost:9000/name"
-        // "ws://10.0.2.2:9000/name"
-    );
+    this.ws = widget.ws;
   }
 
   @override
   void dispose() {
-    this.ws.channel.sink.close();
     super.dispose();
   }
 
