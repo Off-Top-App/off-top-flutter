@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gauge/flutter_gauge.dart';
+// import 'package:flutter_gauge/flutter_gauge.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class Meter extends StatefulWidget {
   const Meter({Key key}) : super(key: key);
@@ -42,24 +43,40 @@ class MeterState extends State<Meter> {
         meterScore.toString() +
         '+++++++');
 
-    //Replacing my FlutterGauge and return with the line below as a way to isolate the FlutterGauge widget as the problem
-    // return Center(child: Text(meterScore.toString()));
-
-    FlutterGauge meter = new FlutterGauge(
-        circleColor: meterColor,
-        secondsMarker: SecondsMarker.none,
-        hand: Hand.short,
-        number: Number.none,
-        width: 200,
-        index: meterScore,
-        fontFamily: 'Iran',
-        counterStyle: TextStyle(color: Colors.black, fontSize: 35),
-        counterAlign: CounterAlign.center,
-        isDecimal: false);
-    print('------------Accessing meter.index: ' +
-        meter.index.toString() +
-        '----------------');
-    return meter;
+    return Container(
+      child: SfRadialGauge(axes: <RadialAxis>[
+        RadialAxis(minimum: 0, maximum: 150, ranges: <GaugeRange>[
+          GaugeRange(startValue: 0, endValue: 50, color: Colors.green),
+          GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
+          GaugeRange(startValue: 100, endValue: 150, color: Colors.red)
+        ], pointers: <GaugePointer>[
+          NeedlePointer(value: 90)
+        ], annotations: <GaugeAnnotation>[
+          // GaugeAnnotation(
+          //     widget: Container(
+          //         child: Text('90.0',
+          //             style: TextStyle(
+          //                 fontSize: 25, fontWeight: FontWeight.bold))),
+          //     angle: 90,
+          //     positionFactor: 0.5)
+        ])
+      ]),
+    );
+    // FlutterGauge meter = new FlutterGauge(
+    //     circleColor: meterColor,
+    //     secondsMarker: SecondsMarker.none,
+    //     hand: Hand.short,
+    //     number: Number.none,
+    //     width: 200,
+    //     index: meterScore,
+    //     fontFamily: 'Iran',
+    //     counterStyle: TextStyle(color: Colors.black, fontSize: 35),
+    //     counterAlign: CounterAlign.center,
+    //     isDecimal: false);
+    // print('------------Accessing meter.index: ' +
+    //     meter.index.toString() +
+    //     '----------------');
+    // return meter;
   }
 
   @override

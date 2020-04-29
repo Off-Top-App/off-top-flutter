@@ -23,7 +23,8 @@ dependencies:
   path_provider: ^1.6.5
   web_socket_channel: ^1.1.0
   functional_widget_annotation: ^0.5.0
-  flutter_gauge: ^1.0.8
+  # flutter_gauge: ^1.0.8
+  syncfusion_flutter_gauges: ^18.1.46
   cupertino_icons: ^0.1.2
   auto_size_text: ^2.1.0
 
