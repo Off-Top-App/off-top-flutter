@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:off_top_mobile/components/recordingSession/meter.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/components/recordingSession/recorder.dart';
+import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/routing/routing_constants.dart';
 
 import 'components/NavBarClass.dart';
+import 'components/recordingSession/offTop.dart';
+import 'components/subnavbar.dart';
 
 class RecordingPage extends StatefulWidget {
-  const RecordingPage({Key key}) : super(key: key);
+  RecordingPage({Key key, @required this.userId}) : super(key: key);
+
+  int userId;
 
   @override
   _RecordingPageState createState() => _RecordingPageState();
@@ -16,6 +21,22 @@ class RecordingPage extends StatefulWidget {
 class _RecordingPageState extends State<RecordingPage> {
   final GlobalKey<MeterState> meterState = GlobalKey<MeterState>();
   int yes = 0;
+  MyWebSocket ws;
+  int userId;
+  @override
+  void initState() {
+    userId = widget.userId;
+    super.initState();
+    ws = MyWebSocket('ws://localhost:9000/name'
+        // "ws://10.0.2.2:9000/name"
+        );
+  }
+
+  @override
+  void dispose() {
+    ws.channel.sink.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,31 +53,21 @@ class _RecordingPageState extends State<RecordingPage> {
         appBar: offTopTitle,
         body: Column(
           children: <Widget>[
-            Row(children: <Widget>[
-              Expanded(
-                child: FlatButton(
-                  child: const Text('Go To Websocket'),
-                  color: Colors.blue,
-                  onPressed: () {
-                    Navigator.pushNamed(context, WebsocketRoute);
-                  },
-                ),
-              ),
-            ]),
             Container(
               height: MediaQuery.of(context).size.height / 4,
               child: Image.asset('assets/placeholderWave.gif'),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 5),
               height: MediaQuery.of(context).size.height / 4,
               child: Meter(key: meterState),
             ),
-            Recorder((bool isOnTopic) {
-              setState(() {
-                meterState.currentState.updateScore(isOnTopic);
-              });
-            }),
+            Container(
+                margin: EdgeInsets.only(bottom: 15),
+                child: OffTopVal(userId: userId, ws: ws)),
+            Recorder(
+              ws: ws,
+              userId: userId,
+            ),
           ],
         ),
         bottomNavigationBar: AppBarBuilder());
