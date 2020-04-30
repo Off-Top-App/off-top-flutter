@@ -21,34 +21,13 @@ class MeterState extends State<Meter> {
       dynamic incomingData = json.decode(onData);
       isOnTopic = incomingData['focus_score'];
       updateScore(isOnTopic);
-      updateMeterColor();
     });
     super.initState();
   }
 
   bool isOnTopic;
-
-  MyWebSocket ws;
   double meterScore = 50;
-  Color meterColor = Colors.green;
-
-  void updateMeterColor() {
-    setState(() {
-      // switch () {
-      //   case :
-
-      //     break;
-      //   default:
-      // }
-      if (meterScore < 35) {
-        meterColor = Colors.red;
-      } else if (meterScore >= 35 && meterScore < 65) {
-        meterColor = Colors.orange;
-      } else {
-        meterColor = Colors.green;
-      }
-    });
-  }
+  MyWebSocket ws;
 
   void updateScore(bool isOnTopic) {
     setState(() {
@@ -57,7 +36,6 @@ class MeterState extends State<Meter> {
       } else if (isOnTopic && meterScore <= 95) {
         meterScore += 5;
       }
-      // isOnTopic ? meterScore += 5 : meterScore -=5;
     });
   }
 
@@ -65,30 +43,21 @@ class MeterState extends State<Meter> {
   Widget build(BuildContext context) {
     return Container(
       child: SfRadialGauge(axes: <RadialAxis>[
-        RadialAxis(
-            minimum: 0,
-            maximum: 100,
-            ranges: <GaugeRange>[
-              GaugeRange(startValue: 0, endValue: 100, color: meterColor)
-            ]
-            //, ranges: <GaugeRange>[
-            // GaugeRange(startValue: 0, endValue: 50, color: Colors.green),
-            // GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
-            // GaugeRange(startValue: 100, endValue: 150, color: Colors.red)
-            //]
-            ,
-            pointers: <GaugePointer>[
-              NeedlePointer(value: meterScore)
-            ],
-            annotations: <GaugeAnnotation>[
-              GaugeAnnotation(
-                  widget: Container(
-                      child: Text(meterScore.toString(),
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold))),
-                  angle: 90,
-                  positionFactor: 0.5)
-            ])
+        RadialAxis(minimum: 0, maximum: 100, ranges: <GaugeRange>[
+          GaugeRange(startValue: 0, endValue: 35, color: Colors.red),
+          GaugeRange(startValue: 35, endValue: 65, color: Colors.orange),
+          GaugeRange(startValue: 65, endValue: 100, color: Colors.green)
+        ], pointers: <GaugePointer>[
+          NeedlePointer(value: meterScore)
+        ], annotations: <GaugeAnnotation>[
+          GaugeAnnotation(
+              widget: Container(
+                  child: Text(meterScore.toString(),
+                      style: TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold))),
+              angle: 90,
+              positionFactor: 0.5)
+        ])
       ]),
     );
   }

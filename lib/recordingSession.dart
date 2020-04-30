@@ -6,7 +6,6 @@ import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/routing/routing_constants.dart';
 
 import 'components/NavBarClass.dart';
-import 'components/recordingSession/offTop.dart';
 import 'components/subnavbar.dart';
 
 class RecordingPage extends StatefulWidget {
@@ -62,7 +61,6 @@ class _RecordingPageState extends State<RecordingPage> {
               child: Meter(ws: ws, key: meterState),
             ),
             Container(margin: const EdgeInsets.only(bottom: 15)),
-            // child: OffTopVal(userId: userId, ws: ws)),
             Recorder(
               ws: ws,
               userId: userId,
