@@ -1,25 +1,27 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/components/popup/TopicPopup.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 
-class Recorder extends StatefulWidget {
-  int userId;
-  MyWebSocket ws;
-  Recorder({
-    Key key, 
-    @required this.userId,
-    @required this.ws
-  }) : super(key: key);
+typedef RecordingCallback = void Function(bool);
 
+class Recorder extends StatefulWidget {
+  Recorder({Key key, @required this.userId, @required this.ws})
+      : super(key: key);
+
+  MyWebSocket ws;
+  int userId;
+
+  @override
   _RecorderState createState() => _RecorderState();
 }
 
@@ -39,8 +41,6 @@ class _RecorderState extends State<Recorder> {
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
 
-
-  
   @override
   void initState() {
     super.initState();
@@ -146,19 +146,15 @@ class _RecorderState extends State<Recorder> {
           onPressed: () async {
             if (!this._isRecording) {
               await showDialog(
-                context: context,
-                builder: (BuildContext context) => 
-                  MyTopicDialog(
-                    onTopicChanged: (childTopic){
-                      this.topic = childTopic;
-                    }
-                  )
-              );
+                  context: context,
+                  builder: (BuildContext context) =>
+                      MyTopicDialog(onTopicChanged: (childTopic) {
+                        this.topic = childTopic;
+                      }));
               return this.startRecorder();
             }
-            
+
             this.stopRecorder();
-            
           },
           child: this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
         ),
@@ -172,7 +168,8 @@ class _RecorderState extends State<Recorder> {
           ),
         ),
         Container(
-            child: _isRecording ? LinearProgressIndicator(
+            child: _isRecording
+                ? LinearProgressIndicator(
                     value: 100.0 / 160.0 * (this._dbLevel ?? 1) / 100,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                     backgroundColor: Colors.red,
@@ -180,7 +177,5 @@ class _RecorderState extends State<Recorder> {
                 : Container())
       ],
     ));
-    
   }
-  
 }

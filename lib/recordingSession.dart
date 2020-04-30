@@ -6,29 +6,29 @@ import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/routing/routing_constants.dart';
 
 import 'components/NavBarClass.dart';
-import 'components/recordingSession/offTop.dart';
 import 'components/subnavbar.dart';
 
 class RecordingPage extends StatefulWidget {
-  int userId;
-  RecordingPage({Key key, @required this.userId}): super(key: key);
+  const RecordingPage({Key key, @required this.userId}) : super(key: key);
 
-  _RecordingPage createState()=> _RecordingPage();
+  final int userId;
+
+  @override
+  _RecordingPageState createState() => _RecordingPageState();
 }
 
-
-class _RecordingPage extends State<RecordingPage>{
+class _RecordingPageState extends State<RecordingPage> {
+  final GlobalKey<MeterState> meterState = GlobalKey<MeterState>();
   int yes = 0;
   MyWebSocket ws;
   int userId;
   @override
   void initState() {
-    this.userId = widget.userId;
+    userId = widget.userId;
     super.initState();
-    ws = new MyWebSocket(
-      "ws://localhost:9000/name"
-      // "ws://10.0.2.2:9000/name"
-    );
+    ws = MyWebSocket('ws://localhost:9000/name'
+        // "ws://10.0.2.2:9000/name"
+        );
   }
 
   @override
@@ -38,10 +38,10 @@ class _RecordingPage extends State<RecordingPage>{
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: Container(
-            width: this.yes * 10.0,
+            width: yes * 10.0,
             child: FittedBox(
                 child: FloatingActionButton(
               onPressed: null,
@@ -58,25 +58,15 @@ class _RecordingPage extends State<RecordingPage>{
             ),
             Container(
               height: MediaQuery.of(context).size.height / 4,
-              child: Meter(),
+              child: Meter(ws: ws, key: meterState),
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 15),
-              child: OffTopVal(
-                userId: userId,
-                ws: ws
-              )
-            ),
+            Container(margin: const EdgeInsets.only(bottom: 15)),
             Recorder(
               ws: ws,
-              userId: userId
+              userId: userId,
             ),
           ],
         ),
         bottomNavigationBar: AppBarBuilder());
-  
-    
   }
 }
-
-
