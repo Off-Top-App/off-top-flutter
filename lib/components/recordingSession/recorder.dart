@@ -106,9 +106,6 @@ class _RecorderState extends State<Recorder> {
       this.setState(() {
         this._isRecording = true;
       });
-
-      bool isOnTopic = true;
-      widget.onIsRecording(isOnTopic);
     } catch (err) {
       print('startRecorder error: $err');
     }

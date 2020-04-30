@@ -10,9 +10,9 @@ import 'components/recordingSession/offTop.dart';
 import 'components/subnavbar.dart';
 
 class RecordingPage extends StatefulWidget {
-  RecordingPage({Key key, @required this.userId}) : super(key: key);
+  const RecordingPage({Key key, @required this.userId}) : super(key: key);
 
-  int userId;
+  final int userId;
 
   @override
   _RecordingPageState createState() => _RecordingPageState();
@@ -59,11 +59,10 @@ class _RecordingPageState extends State<RecordingPage> {
             ),
             Container(
               height: MediaQuery.of(context).size.height / 4,
-              child: Meter(key: meterState),
+              child: Meter(ws: ws, key: meterState),
             ),
-            Container(
-                margin: EdgeInsets.only(bottom: 15),
-                child: OffTopVal(userId: userId, ws: ws)),
+            Container(margin: const EdgeInsets.only(bottom: 15)),
+            // child: OffTopVal(userId: userId, ws: ws)),
             Recorder(
               ws: ws,
               userId: userId,

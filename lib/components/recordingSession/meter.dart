@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-// import 'package:flutter_gauge/flutter_gauge.dart';
+import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class Meter extends StatefulWidget {
-  const Meter({Key key}) : super(key: key);
+  const Meter({Key key, @required this.ws}) : super(key: key);
+
+  final MyWebSocket ws;
 
   @override
   MeterState createState() => MeterState();
@@ -13,75 +16,85 @@ class Meter extends StatefulWidget {
 class MeterState extends State<Meter> {
   @override
   void initState() {
+    ws = widget.ws;
+    ws.channel.stream.listen((onData) {
+      dynamic incomingData = json.decode(onData);
+      isOnTopic = incomingData['focus_score'];
+      updateScore(isOnTopic);
+      updateMeterColor();
+    });
     super.initState();
   }
 
-  double meterScore = 75;
+  bool isOnTopic;
+
+  MyWebSocket ws;
+  double meterScore = 50;
   Color meterColor = Colors.green;
 
   void updateMeterColor() {
     setState(() {
-      meterColor = Colors.green;
+      // switch () {
+      //   case :
+
+      //     break;
+      //   default:
+      // }
+      if (meterScore < 35) {
+        meterColor = Colors.red;
+      } else if (meterScore >= 35 && meterScore < 65) {
+        meterColor = Colors.orange;
+      } else {
+        meterColor = Colors.green;
+      }
     });
   }
 
   void updateScore(bool isOnTopic) {
-    //for the purposes of testing we won't use isOnTopic (its a hardcoded true anyway)
-    meterScore += 15;
-
-    //moved the setStatback into the parent (RecordingPage)
-    // setState(() {
-    //   meterScore += 15;
-    // });
-    print('Score Updated:');
-    print('--------' + meterScore.toString() + '--------');
+    setState(() {
+      if (5 <= meterScore && !isOnTopic) {
+        meterScore -= 5;
+      } else if (isOnTopic && meterScore <= 95) {
+        meterScore += 5;
+      }
+      // isOnTopic ? meterScore += 5 : meterScore -=5;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('+++++++We\'re building! Using meterScore value: ' +
-        meterScore.toString() +
-        '+++++++');
-
     return Container(
       child: SfRadialGauge(axes: <RadialAxis>[
-        RadialAxis(minimum: 0, maximum: 150, ranges: <GaugeRange>[
-          GaugeRange(startValue: 0, endValue: 50, color: Colors.green),
-          GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
-          GaugeRange(startValue: 100, endValue: 150, color: Colors.red)
-        ], pointers: <GaugePointer>[
-          NeedlePointer(value: 90)
-        ], annotations: <GaugeAnnotation>[
-          // GaugeAnnotation(
-          //     widget: Container(
-          //         child: Text('90.0',
-          //             style: TextStyle(
-          //                 fontSize: 25, fontWeight: FontWeight.bold))),
-          //     angle: 90,
-          //     positionFactor: 0.5)
-        ])
+        RadialAxis(
+            minimum: 0,
+            maximum: 100,
+            ranges: <GaugeRange>[
+              GaugeRange(startValue: 0, endValue: 100, color: meterColor)
+            ]
+            //, ranges: <GaugeRange>[
+            // GaugeRange(startValue: 0, endValue: 50, color: Colors.green),
+            // GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
+            // GaugeRange(startValue: 100, endValue: 150, color: Colors.red)
+            //]
+            ,
+            pointers: <GaugePointer>[
+              NeedlePointer(value: meterScore)
+            ],
+            annotations: <GaugeAnnotation>[
+              GaugeAnnotation(
+                  widget: Container(
+                      child: Text(meterScore.toString(),
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold))),
+                  angle: 90,
+                  positionFactor: 0.5)
+            ])
       ]),
     );
-    // FlutterGauge meter = new FlutterGauge(
-    //     circleColor: meterColor,
-    //     secondsMarker: SecondsMarker.none,
-    //     hand: Hand.short,
-    //     number: Number.none,
-    //     width: 200,
-    //     index: meterScore,
-    //     fontFamily: 'Iran',
-    //     counterStyle: TextStyle(color: Colors.black, fontSize: 35),
-    //     counterAlign: CounterAlign.center,
-    //     isDecimal: false);
-    // print('------------Accessing meter.index: ' +
-    //     meter.index.toString() +
-    //     '----------------');
-    // return meter;
   }
 
   @override
   void dispose() {
-    print('---------We are disposing (as intended)------------');
     super.dispose();
   }
 }
