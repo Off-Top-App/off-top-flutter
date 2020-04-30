@@ -6,7 +6,29 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+
+  LoginPage({Key key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage>{
+  TextEditingController loginController = new TextEditingController();
+  int userId;
+  int loginAttempts = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,34 +42,54 @@ class LoginPage extends StatelessWidget {
                 Text(
                   'Off-Top Login',
                   style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black54),
+                    fontSize: 35,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black54),
                 ),
                 SizedBox(height: 20.0),
-                usernameField,
+                usernameField(),
                 SizedBox(height: 10.0),
                 passwordField,
+                isEmailValid(),
                 SizedBox(height: 15.0),
                 loginButton(context),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      forgotPassword(context),
-                      createAccount(context),
-                    ]),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    forgotPassword(context),
+                    createAccount(context),
+                  ]
+                ),
               ]))),
         )));
   }
 
-  final usernameField = TextField(
-    obscureText: false,
-    decoration: InputDecoration(
+  Widget isEmailValid(){
+    if (userId == null && loginAttempts > 0){
+      return Padding(
+        padding: EdgeInsets.only(top: 8.0),
+        child: Text(
+          "Invalid Email. Try again!", 
+          style: TextStyle(color: Colors.red)
+        )
+      );
+    }
+    else{
+      return Text("");
+    }
+  }
+  Widget usernameField(){
+    return TextField(
+      controller: this.loginController,
+      obscureText: false,
+      decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Username",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-  );
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
+      ),
+    );
+  }
 
   final passwordField = TextField(
     obscureText: true,
@@ -57,7 +99,6 @@ class LoginPage extends StatelessWidget {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
   );
 
-//temporarily goes to main page
   Widget forgotPassword(BuildContext context) {
     return FlatButton(
       child: Text('forgot password?'),
@@ -67,7 +108,6 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-//temporarily goes to main page
   Widget createAccount(BuildContext context) {
     return FlatButton(
       child: Text('create account'),
@@ -77,15 +117,19 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  //String url = 'http://localhost:9000/user/john.doe@email.com';
-  String url = "http://10.0.2.2:9000/user/john.doe@email.com/";
-  Future<int> makeLoginRequest() async {
+  void makeLoginRequest() async {
+    String userEmail = loginController.text;
+    String url = 'http://localhost:9000/user/${userEmail}';
+    // String url = "http://10.0.2.2:9000/user/john.doe@email.com/";
     var response = await http
-        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+      .get(
+        Uri.encodeFull(url),
+        headers: {"Accept": "application/json"}
+      );
     var userData = json.decode(response.body);
-    int userId = userData['Id'];
-
-    return userId;
+    setState(() {
+      userId = userData['Id'];
+    });
   }
 
   Widget loginButton(BuildContext context) {
@@ -96,14 +140,19 @@ class LoginPage extends StatelessWidget {
       color: Colors.deepPurple,
       child: Text('SIGN IN'),
       textColor: Colors.white,
-      onPressed: () async {
-        int userId = await makeLoginRequest();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecordingPage(userId: userId),
-          ),
-        );
+      onPressed: () {
+        setState(() {
+          loginAttempts +=1;
+        });
+        this.makeLoginRequest();
+        if (userId != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecordingPage(userId: userId),
+            ),
+          );
+        }
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -12,10 +13,17 @@ class MyWebSocket {
     this.channel = IOWebSocketChannel.connect(channel);
   }
 
-  void sendAudioFile(exportedAudioData, userID) async {
+  void sendAudioFile(exportedAudioData, userID, topic) async {
     final audioData = await this.processAudioFile(exportedAudioData);
     this.channel.sink.add(json.encode(
-      {"audio_data": audioData, "user_id": userID.toInt(), "topic": "sports"})
+      {"audio_data": audioData, "user_id": userID.toInt(), "topic": topic})
+    );
+  }
+
+  void sendFirstMessage(user_id){
+    // sleep(const Duration(seconds: 3));
+    this.channel.sink.add(json.encode(
+      {"user_id": user_id.toInt()})
     );
   }
 
