@@ -12,46 +12,77 @@ class Subnavbar extends StatefulWidget {
 }
 
 class SubnavbarState extends State<Subnavbar> {
-String name = 'Henry';
-
+String name = "";
   @override
   initState() {
     super.initState();
+    getNamePreference().then(updateName);
 
   }
 
   @override
   Widget build(BuildContext context) {
     return 
-    Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    
+    Container(
+      color: Colors.deepPurple,
+    child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
+
               Container(
-                child: new Text('Welcome', style: TextStyle(fontWeight: FontWeight.bold)),
-                margin: EdgeInsets.only(top: 10.0),
-              ),
-              
-              Container(
-                child: new Text((name), style: TextStyle(fontWeight: FontWeight.bold)),
-                margin: EdgeInsets.only(top: 10.0),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                    child: new Text('Welcome: ', 
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                  )
               ),
 
               Container(
-                child: new Text('Play', style: TextStyle(fontWeight: FontWeight.bold)),
-                margin: EdgeInsets.only(top: 10.0),
-              )
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                    child: new Text(name, 
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                  
+                  )
+              ),
+
+              Container(
+                height: 20,
+                  child: VerticalDivider(
+                    color: Colors.black,
+                    thickness: 2.0,
+                  )
+              ),
+
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                    child: new Text('Start', 
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                  )
+              ),
 
             ],
+          ),
           );
- 
   }
 
-//Future<bool> Preference (String name) async{
-//  SharedPreferences prefs = await SharedPreferences.getInstance();
-//  prefs.setString("name", name);
 
-//}
+Future<String> getNamePreference() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String name = prefs.getString("name");
 
+  return name;
+}
+
+void updateName(String incomingName) {
+    setState(() {
+      name = incomingName;
+
+    });
+
+}
 
   @override
   void dispose() {

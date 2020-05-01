@@ -26,7 +26,7 @@ class RecordingPage extends StatelessWidget {
       appBar: offTopTitle,
       body: Column(
         children: <Widget>[
-          //Subnavbar(),
+          Subnavbar(),
           Container(
             height: MediaQuery.of(context).size.height/4,
             child: Image.asset('assets/placeholderWave.gif'),

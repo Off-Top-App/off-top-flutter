@@ -5,6 +5,7 @@ import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -83,8 +84,10 @@ class LoginPage extends StatelessWidget {
     var response = await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
     var userData = json.decode(response.body);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("name", userData['firstName']);
     int userId = userData['Id'];
-
+    
     return userId;
   }
 
