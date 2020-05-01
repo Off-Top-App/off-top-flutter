@@ -1,30 +1,44 @@
+import 'dart:convert';
 import 'dart:math';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:off_top_mobile/components/recordingSession/websocket.dart';
+import 'package:off_top_mobile/components/popup/TopicPopup.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+typedef RecordingCallback = void Function(bool);
 
 class Recorder extends StatefulWidget {
-  Recorder({Key key}) : super(key: key);
+  Recorder({Key key, @required this.userId, @required this.ws})
+      : super(key: key);
 
+  MyWebSocket ws;
+  int userId;
+
+  @override
   _RecorderState createState() => _RecorderState();
 }
 
 class _RecorderState extends State<Recorder> {
+  MyWebSocket ws;
   Directory directory;
   bool _isRecording = false;
   StreamSubscription _recorderSubscription;
   StreamSubscription _dbPeakSubscription;
   StreamSubscription _playerSubscription;
   FlutterSound flutterSound;
-  int user_id;
+  int userId;
+  String topic;
   String _recorderTxt = '00:00:00';
   double _dbLevel;
+  int sessionCounter = 0;
 
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
@@ -37,19 +51,17 @@ class _RecorderState extends State<Recorder> {
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
     initializeDateFormatting();
-    this.user_id = 3;
+    this.userId = widget.userId;
+    this.ws = widget.ws;
   }
 
-  int getRandomValue() {
-    Random rnd;
-    int min = 0;
-    int max = 10;
-    rnd = new Random();
-    var r = min + rnd.nextInt(max - min);
-    return r;
+  @override
+  void dispose() {
+    super.dispose();
   }
 
-  void startRecorder(user_id) async {
+  void startRecorder() async {
+    this.ws.sendFirstMessage(this.userId);
     try {
       var now = new DateTime.now();
       var date = DateFormat("yyyy-MM-ddThh:mm").format(now);
@@ -63,7 +75,7 @@ class _RecorderState extends State<Recorder> {
               '/' +
               date.toString() +
               '_' +
-              user_id.toString() +
+              userId.toString() +
               '_sound.aac',
           codec: t_CODEC.CODEC_AAC);
       print('path: ${path}');
@@ -94,9 +106,17 @@ class _RecorderState extends State<Recorder> {
 
   void stopRecorder() async {
     print('STOP RECORDER');
+    setState(() {
+      sessionCounter += 1;
+    });
+    print("Counter here ${sessionCounter}");
+    if(sessionCounter>2){
+    this.setSessionPreferences("Session Complete!");
+    }
     try {
       String result = await flutterSound.stopRecorder();
-      print('stopRecorder: $result');
+      final filePath = result.replaceRange(0, 7, '');
+      this.ws.sendAudioFile(filePath, this.userId, this.topic);
 
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();
@@ -115,6 +135,11 @@ class _RecorderState extends State<Recorder> {
     }
   }
 
+  void setSessionPreferences(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("session", value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -123,11 +148,19 @@ class _RecorderState extends State<Recorder> {
       children: <Widget>[
         FloatingActionButton(
           heroTag: 'recorder',
-          onPressed: () {
+          onPressed: () async {
             if (!this._isRecording) {
-              return this.startRecorder(this.user_id);
+              await showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      MyTopicDialog(onTopicChanged: (childTopic) {
+                        this.topic = childTopic;
+                      }));
+              this.setSessionPreferences("In Session");
+              return this.startRecorder();
+            } else {
+              this.stopRecorder();
             }
-            this.stopRecorder();
           },
           child: this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
         ),

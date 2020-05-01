@@ -1,48 +1,65 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gauge/flutter_gauge.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-
+import 'package:off_top_mobile/components/recordingSession/websocket.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class Meter extends StatefulWidget {
-  Meter({Key key}) : super(key: key);
+  const Meter({Key key, @required this.ws}) : super(key: key);
 
-  _MeterState createState() => _MeterState();
-}
-
-class _MeterState extends State<Meter> {
-  int meterScore;
+  final MyWebSocket ws;
 
   @override
-  initState() {
-    this.updateScore();
+  MeterState createState() => MeterState();
+}
+
+class MeterState extends State<Meter> {
+  @override
+  void initState() {
+    ws = widget.ws;
+    ws.channel.stream.listen((onData) {
+      dynamic incomingData = json.decode(onData);
+      isOnTopic = incomingData['focus_score'];
+      updateScore(isOnTopic);
+    });
     super.initState();
   }
 
-  double updateScore() {
-    setState(() {
-      this.meterScore = 37;
-    });
-  }
+  bool isOnTopic;
+  double meterScore = 50;
+  MyWebSocket ws;
 
-  Color updateMeterColor() {
-    return Colors.green;
+  void updateScore(bool isOnTopic) {
+    setState(() {
+      if (5 <= meterScore && !isOnTopic) {
+        meterScore -= 5;
+      } else if (isOnTopic && meterScore <= 95) {
+        meterScore += 5;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: FlutterGauge(
-            circleColor: updateMeterColor(), //Colors.green,
-            secondsMarker: SecondsMarker.none,
-            hand: Hand.short,
-            number: Number.none,
-            width: 200,
-            index: this.meterScore * 1.0,
-            fontFamily: "Iran",
-            counterStyle: TextStyle(color: Colors.black, fontSize: 35),
-            counterAlign: CounterAlign.center,
-            isDecimal: false));
+    return Container(
+      child: SfRadialGauge(axes: <RadialAxis>[
+        RadialAxis(minimum: 0, maximum: 100, ranges: <GaugeRange>[
+          GaugeRange(startValue: 0, endValue: 35, color: Colors.red),
+          GaugeRange(startValue: 35, endValue: 65, color: Colors.orange),
+          GaugeRange(startValue: 65, endValue: 100, color: Colors.green)
+        ], pointers: <GaugePointer>[
+          NeedlePointer(value: meterScore)
+        ], annotations: <GaugeAnnotation>[
+          GaugeAnnotation(
+              widget: Container(
+                  child: Text(meterScore.toString(),
+                      style: TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold))),
+              angle: 90,
+              positionFactor: 0.5)
+        ])
+      ]),
+    );
   }
 
   @override
