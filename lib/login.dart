@@ -5,6 +5,7 @@ import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -120,15 +121,17 @@ class _LoginPageState extends State<LoginPage>{
   void makeLoginRequest() async {
     String userEmail = loginController.text;
     String url = 'http://localhost:9000/user/${userEmail}';
-    // String url = "http://10.0.2.2:9000/user/john.doe@email.com/";
+    // String url = "http://10.0.2.2:9000/user/${userEmail}/";
     var response = await http
       .get(
         Uri.encodeFull(url),
         headers: {"Accept": "application/json"}
       );
     var userData = json.decode(response.body);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("name", userData['firstName'].toString());
     setState(() {
-      userId = userData['Id'];
+      userId = int.parse(userData['Id'].toString());
     });
   }
 

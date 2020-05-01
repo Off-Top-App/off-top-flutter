@@ -3,8 +3,6 @@ import 'package:off_top_mobile/components/recordingSession/meter.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/components/recordingSession/recorder.dart';
 import 'package:off_top_mobile/components/recordingSession/websocket.dart';
-import 'package:off_top_mobile/routing/routing_constants.dart';
-
 import 'components/NavBarClass.dart';
 import 'components/subnavbar.dart';
 
@@ -26,8 +24,9 @@ class _RecordingPageState extends State<RecordingPage> {
   void initState() {
     userId = widget.userId;
     super.initState();
-    ws = MyWebSocket('ws://localhost:9000/name'
-        // "ws://10.0.2.2:9000/name"
+    ws = MyWebSocket(
+        'ws://localhost:9000/name'
+        //  "ws://10.0.2.2:9000/name"
         );
   }
 
@@ -52,6 +51,7 @@ class _RecordingPageState extends State<RecordingPage> {
         appBar: offTopTitle,
         body: Column(
           children: <Widget>[
+            Subnavbar(),
             Container(
               height: MediaQuery.of(context).size.height / 4,
               child: Image.asset('assets/placeholderWave.gif'),

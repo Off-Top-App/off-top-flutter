@@ -11,6 +11,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 typedef RecordingCallback = void Function(bool);
 
@@ -37,6 +38,7 @@ class _RecorderState extends State<Recorder> {
   String topic;
   String _recorderTxt = '00:00:00';
   double _dbLevel;
+  int sessionCounter = 0;
 
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
@@ -56,15 +58,6 @@ class _RecorderState extends State<Recorder> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  int getRandomValue() {
-    Random rnd;
-    int min = 0;
-    int max = 10;
-    rnd = new Random();
-    var r = min + rnd.nextInt(max - min);
-    return r;
   }
 
   void startRecorder() async {
@@ -113,6 +106,13 @@ class _RecorderState extends State<Recorder> {
 
   void stopRecorder() async {
     print('STOP RECORDER');
+    setState(() {
+      sessionCounter += 1;
+    });
+    print("Counter here ${sessionCounter}");
+    if(sessionCounter>2){
+    // this.setSessionPreferences("Session Complete!");
+    }
     try {
       String result = await flutterSound.stopRecorder();
       final filePath = result.replaceRange(0, 7, '');
@@ -135,6 +135,11 @@ class _RecorderState extends State<Recorder> {
     }
   }
 
+  void setSessionPreferences(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("session", value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -152,9 +157,9 @@ class _RecorderState extends State<Recorder> {
                         this.topic = childTopic;
                       }));
               return this.startRecorder();
+            } else {
+              this.stopRecorder();
             }
-
-            this.stopRecorder();
           },
           child: this._isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
         ),
