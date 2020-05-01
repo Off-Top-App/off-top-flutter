@@ -25,8 +25,8 @@ class _RecordingPageState extends State<RecordingPage> {
     userId = widget.userId;
     super.initState();
     ws = MyWebSocket(
-        //'ws://localhost:9000/name'
-         "ws://10.0.2.2:9000/name"
+        'ws://localhost:9000/name'
+        //  "ws://10.0.2.2:9000/name"
         );
   }
 

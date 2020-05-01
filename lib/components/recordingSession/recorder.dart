@@ -111,7 +111,7 @@ class _RecorderState extends State<Recorder> {
     });
     print("Counter here ${sessionCounter}");
     if(sessionCounter>2){
-    this.setSessionPreferences("Session Complete!");
+    // this.setSessionPreferences("Session Complete!");
     }
     try {
       String result = await flutterSound.stopRecorder();
@@ -156,7 +156,6 @@ class _RecorderState extends State<Recorder> {
                       MyTopicDialog(onTopicChanged: (childTopic) {
                         this.topic = childTopic;
                       }));
-              this.setSessionPreferences("In Session");
               return this.startRecorder();
             } else {
               this.stopRecorder();

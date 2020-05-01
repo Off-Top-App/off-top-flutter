@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:off_top_mobile/components/recordingSession/recorder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyTopicDialog extends StatefulWidget {
   final ValueChanged<String> onTopicChanged;
@@ -25,6 +26,11 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
       }
     });
     super.initState();
+  }
+
+  void setSessionPreferences(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("session", value);
   }
 
   @override
@@ -104,6 +110,7 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
                 child: RaisedButton(
                   color: Colors.deepPurpleAccent,
                   onPressed: () {
+                    setSessionPreferences("In Session");
                     Navigator.of(context).pop();
                   },
                   child: Text(buttonText),

@@ -120,8 +120,8 @@ class _LoginPageState extends State<LoginPage>{
 
   void makeLoginRequest() async {
     String userEmail = loginController.text;
-    //String url = 'http://localhost:9000/user/${userEmail}';
-    String url = "http://10.0.2.2:9000/user/${userEmail}/";
+    String url = 'http://localhost:9000/user/${userEmail}';
+    // String url = "http://10.0.2.2:9000/user/${userEmail}/";
     var response = await http
       .get(
         Uri.encodeFull(url),

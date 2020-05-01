@@ -11,7 +11,7 @@ class Subnavbar extends StatefulWidget {
 
 class SubnavbarState extends State<Subnavbar> {
   String name = "";
-  String session = "Start";
+  String _session = "Start";
   @override
   initState() {
     super.initState();
@@ -53,8 +53,8 @@ class SubnavbarState extends State<Subnavbar> {
           Container(
               child: Padding(
             padding: EdgeInsets.all(16.0),
-            child: new Text(
-              session,
+            child: Text(
+              "Main Page",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
@@ -85,8 +85,9 @@ class SubnavbarState extends State<Subnavbar> {
   }
 
   void updateSession(String incomingSession) {
+    print("updateSession: ${incomingSession}\n\n");
     setState(() {
-      session = incomingSession;
+      _session = incomingSession;
     });
 
   }
