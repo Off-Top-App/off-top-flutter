@@ -111,7 +111,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
               visible: _showSettings,
             )
           ]))),
-      bottomNavigationBar: AppBarBuilder(),
+      //bottomNavigationBar: AppBarBuilder(),
     );
   }
 
@@ -138,39 +138,36 @@ class _MySettingsPageState extends State<MySettingsPage> {
 
 Widget _buildFormButtom(context) {
   return RaisedButton(
-    color: Colors.lightBlue,
-    textColor: Colors.white,
-    splashColor: Colors.red,
-    child: Text("SAVE"),
-    onPressed: () => null
-        
-
-    
-  );
+      color: Colors.lightBlue,
+      textColor: Colors.white,
+      splashColor: Colors.red,
+      child: Text("SAVE"),
+      onPressed: () => null);
 }
 
-
 Widget setupAlertDialoadContainer() {
-    return Container(
-      height: 100.0,
-      width: 100.0, 
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 5,
-        itemBuilder: (BuildContext context, int index) {
+  return Container(
+    height: 100.0,
+    width: 100.0,
+    child: ListView.builder(
+      shrinkWrap: true,
+      itemCount: 5,
+      itemBuilder: (BuildContext context, int index) {
         return ListView(children: <Widget>[
-          new ListTile(title: Text('FOOD',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
-          new ListTile(title: Text('SPORTS',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
-          new ListTile(title: Text('COMPUTER SCIENCE',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)))
-        ]
-          );
-        },
-      ),
-    );
-  }
+          new ListTile(
+              title: Text('FOOD',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+          new ListTile(
+              title: Text('SPORTS',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+          new ListTile(
+              title: Text('COMPUTER SCIENCE',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)))
+        ]);
+      },
+    ),
+  );
+}
 
 Widget _buildSelectionList() {
   return ListView(

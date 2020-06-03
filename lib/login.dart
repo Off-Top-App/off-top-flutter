@@ -5,17 +5,17 @@ import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:off_top_mobile/tabs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-
   LoginPage({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>{
+class _LoginPageState extends State<LoginPage> {
   TextEditingController loginController = new TextEditingController();
   int userId;
   int loginAttempts = 0;
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
@@ -43,9 +43,9 @@ class _LoginPageState extends State<LoginPage>{
                 Text(
                   'Off-Top Login',
                   style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black54),
+                      fontSize: 35,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black54),
                 ),
                 SizedBox(height: 20.0),
                 usernameField(),
@@ -55,40 +55,36 @@ class _LoginPageState extends State<LoginPage>{
                 SizedBox(height: 15.0),
                 loginButton(context),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    forgotPassword(context),
-                    createAccount(context),
-                  ]
-                ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      forgotPassword(context),
+                      createAccount(context),
+                    ]),
               ]))),
         )));
   }
 
-  Widget isEmailValid(){
-    if (userId == null && loginAttempts > 0){
+  Widget isEmailValid() {
+    if (userId == null && loginAttempts > 0) {
       return Padding(
-        padding: EdgeInsets.only(top: 8.0),
-        child: Text(
-          "Invalid Email. Try again!", 
-          style: TextStyle(color: Colors.red)
-        )
-      );
-    }
-    else{
+          padding: EdgeInsets.only(top: 8.0),
+          child: Text("Invalid Email. Try again!",
+              style: TextStyle(color: Colors.red)));
+    } else {
       return Text("");
     }
   }
-  Widget usernameField(){
+
+  Widget usernameField() {
     return TextField(
       controller: this.loginController,
       obscureText: false,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Username",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
-      ),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Username",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
   }
 
@@ -121,12 +117,9 @@ class _LoginPageState extends State<LoginPage>{
   void makeLoginRequest() async {
     String userEmail = loginController.text;
     String url = 'http://localhost:9000/user/${userEmail}';
-    // String url = "http://10.0.2.2:9000/user/${userEmail}/";
+    //String url = "http://10.0.2.2:9000/user/${userEmail}/";
     var response = await http
-      .get(
-        Uri.encodeFull(url),
-        headers: {"Accept": "application/json"}
-      );
+        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
     var userData = json.decode(response.body);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("name", userData['firstName'].toString());
@@ -145,14 +138,15 @@ class _LoginPageState extends State<LoginPage>{
       textColor: Colors.white,
       onPressed: () {
         setState(() {
-          loginAttempts +=1;
+          loginAttempts += 1;
         });
         this.makeLoginRequest();
         if (userId != null) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RecordingPage(userId: userId),
+              builder: (context) => Tabs(RecordingPage(
+                  userId: userId)), //changed route to include initial page
             ),
           );
         }

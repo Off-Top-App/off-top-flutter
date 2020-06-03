@@ -24,10 +24,8 @@ class _RecordingPageState extends State<RecordingPage> {
   void initState() {
     userId = widget.userId;
     super.initState();
-    ws = MyWebSocket(
-        'ws://localhost:9000/name'
-        //  "ws://10.0.2.2:9000/name"
-        );
+    ws = MyWebSocket('ws://localhost:9000/name');
+    //"ws://10.0.2.2:9000/name");
   }
 
   @override
@@ -39,34 +37,35 @@ class _RecordingPageState extends State<RecordingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: Container(
-            width: yes * 10.0,
-            child: FittedBox(
-                child: FloatingActionButton(
-              onPressed: null,
-              backgroundColor: Colors.white,
-            ))),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        backgroundColor: Colors.white,
-        appBar: offTopTitle,
-        body: Column(
-          children: <Widget>[
-            Subnavbar(),
-            Container(
-              height: MediaQuery.of(context).size.height / 4,
-              child: Image.asset('assets/placeholderWave.gif'),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height / 4,
-              child: Meter(ws: ws, key: meterState),
-            ),
-            Container(margin: const EdgeInsets.only(bottom: 15)),
-            Recorder(
-              ws: ws,
-              userId: userId,
-            ),
-          ],
-        ),
-        bottomNavigationBar: AppBarBuilder());
+      floatingActionButton: Container(
+          width: yes * 10.0,
+          child: FittedBox(
+              child: FloatingActionButton(
+            onPressed: null,
+            backgroundColor: Colors.white,
+          ))),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      backgroundColor: Colors.white,
+      appBar: offTopTitle,
+      body: Column(
+        children: <Widget>[
+          Subnavbar(),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: Image.asset('assets/placeholderWave.gif'),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 4,
+            child: Meter(ws: ws, key: meterState),
+          ),
+          Container(margin: const EdgeInsets.only(bottom: 15)),
+          Recorder(
+            ws: ws,
+            userId: userId,
+          ),
+        ],
+      ),
+      //bottomNavigationBar: AppBarBuilder()
+    );
   }
 }
