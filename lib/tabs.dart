@@ -14,6 +14,7 @@ class Tabs extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.deepPurple,
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             homePage,
             RecordingPage(),
