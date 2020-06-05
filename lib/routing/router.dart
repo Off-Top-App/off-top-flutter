@@ -7,6 +7,7 @@ import 'package:off_top_mobile/recordingSession.dart';
 
 import 'routing_constants.dart';
 
+@Deprecated('removed bottomNavigation, this is now un-needed')
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case HomeRoute:
