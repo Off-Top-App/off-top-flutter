@@ -111,7 +111,6 @@ class _MySettingsPageState extends State<MySettingsPage> {
               visible: _showSettings,
             )
           ]))),
-      //bottomNavigationBar: AppBarBuilder(),
     );
   }
 

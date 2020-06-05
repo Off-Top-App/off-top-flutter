@@ -65,7 +65,6 @@ class _RecordingPageState extends State<RecordingPage> {
           ),
         ],
       ),
-      //bottomNavigationBar: AppBarBuilder()
     );
   }
 }

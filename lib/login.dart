@@ -5,7 +5,7 @@ import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:off_top_mobile/tabs.dart';
+import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {

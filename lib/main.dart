@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:off_top_mobile/login.dart';
 import 'package:off_top_mobile/routing/router.dart' as router;
 import 'package:off_top_mobile/routing/routing_constants.dart';
-import 'package:off_top_mobile/tabs.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
 void main() {
