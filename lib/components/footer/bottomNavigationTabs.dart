@@ -3,8 +3,8 @@ import 'package:off_top_mobile/login.dart';
 import 'package:off_top_mobile/recordingSession.dart';
 import 'package:off_top_mobile/settings_page.dart';
 
-class Tabs extends StatelessWidget {
-  Tabs(this.homePage);
+class BottomNavigationTabs extends StatelessWidget {
+  BottomNavigationTabs(this.homePage);
   final Widget homePage;
 
   @override

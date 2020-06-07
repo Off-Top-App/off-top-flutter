@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Tabs(RecordingPage(
+              builder: (context) => BottomNavigationTabs(RecordingPage(
                   userId: userId)), //changed route to include initial page
             ),
           );
