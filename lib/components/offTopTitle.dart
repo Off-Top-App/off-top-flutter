@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final offTopTitle = AppBar(
+final AppBar offTopTitle = AppBar(
   title: Text(
     'OFF-TOP',
     style: TextStyle(
@@ -11,10 +11,9 @@ final offTopTitle = AppBar(
   backgroundColor: Colors.white,
 );
 
-
-final offTopSettingsTitle1 = Text(
-    'OFF-TOP',
-    style: TextStyle(
-        color: Colors.black87, fontSize: 40, fontWeight: FontWeight.w600),
-    textAlign: TextAlign.center,
-  );
+final Text offTopSettingsTitle1 = Text(
+  'OFF-TOP',
+  style: TextStyle(
+      color: Colors.black87, fontSize: 40, fontWeight: FontWeight.w600),
+  textAlign: TextAlign.center,
+);

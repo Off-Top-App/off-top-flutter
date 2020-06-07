@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -9,7 +8,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -20,11 +18,14 @@ class _HomeScreen extends State<HomeScreen> {
     return Material(
       child: ListView.builder(
         itemCount: fields.length,
-        itemBuilder: (context, i) {
-          return new ExpansionTile(
-            title: new Text(fields[i].title, style: new TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),),
+        itemBuilder: (BuildContext context, int i) {
+          return ExpansionTile(
+            title: Text(
+              fields[i].title,
+              style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+            ),
             children: <Widget>[
-              new Column(
+              Column(
                 children: _buildExpandableContent(fields[i]),
               ),
             ],
@@ -34,14 +35,17 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
 
-  _buildExpandableContent(Fields fields) {
-    List<Widget> columnContent = [];
+  List<Widget> _buildExpandableContent(Fields fields) {
+    final List<Widget> columnContent = <Widget>[];
 
-    for (String content in fields.dataList)
+    for (final String content in fields.dataList)
       columnContent.add(
-        new ListTile(
-          title: new Text(content, style: new TextStyle(fontSize: 12.0,fontWeight: FontWeight.bold),),
-          leading: new Icon(fields.icon),
+        ListTile(
+          title: Text(
+            content,
+            style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+          ),
+          leading: Icon(fields.icon),
         ),
       );
 
@@ -49,35 +53,40 @@ class _HomeScreen extends State<HomeScreen> {
   }
 }
 
-
 class Fields {
-  final String title;
-  List<String> dataList = [];
-  final IconData icon;
-
   Fields(this.title, this.dataList, this.icon);
+
+  final String title;
+  List<String> dataList = <String>[];
+  final IconData icon;
 }
 
-
-List<Fields> fields = [
-  new Fields(
+List<Fields> fields = <Fields>[
+  Fields(
     'DEFAULT CATEGORY',
-    ['THERAPY', 'WORKOUT', 'STUDYING', 'FOOD','COMPUTER SCIENCE','SPORTS'],
+    <String>[
+      'THERAPY',
+      'WORKOUT',
+      'STUDYING',
+      'FOOD',
+      'COMPUTER SCIENCE',
+      'SPORTS'
+    ],
     Icons.line_style,
   ),
-  new Fields(
+  Fields(
     'SELECT COLOR',
-    ['BLUE', 'RED', 'YELLOW','GREEN',"PURPLE"],
+    <String>['BLUE', 'RED', 'YELLOW', 'GREEN', 'PURPLE'],
     Icons.color_lens,
   ),
-  new Fields(
+  Fields(
     'ALERT TYPE',
-    ['TEXT', 'RINGER', 'EMAIL','NOTIFICATION','EVERYTHING'],
+    <String>['TEXT', 'RINGER', 'EMAIL', 'NOTIFICATION', 'EVERYTHING'],
     Icons.ring_volume,
   ),
-  new Fields(
+  Fields(
     'VIBRATION TYPES',
-    ['SIREN', 'PULSE', 'TRIGGER','RAPID','HEARTBEAT'],
+    <String>['SIREN', 'PULSE', 'TRIGGER', 'RAPID', 'HEARTBEAT'],
     Icons.vibration,
   ),
 ];

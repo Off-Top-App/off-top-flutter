@@ -4,7 +4,7 @@ import 'package:off_top_mobile/recordingSession.dart';
 import 'package:off_top_mobile/settings_page.dart';
 
 class BottomNavigationTabs extends StatelessWidget {
-  BottomNavigationTabs(this.homePage);
+  const BottomNavigationTabs(this.homePage);
   final Widget homePage;
 
   @override
@@ -14,10 +14,10 @@ class BottomNavigationTabs extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.deepPurple,
         body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
             homePage,
-            RecordingPage(),
+            const RecordingPage(),
             MySettingsPage(),
           ],
         ),

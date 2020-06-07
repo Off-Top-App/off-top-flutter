@@ -11,14 +11,14 @@ import 'routing_constants.dart';
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case HomeRoute:
-      return MaterialPageRoute(builder: (_) => MyApp());
+      return MaterialPageRoute<void>(builder: (_) => MyApp());
     case LoginRoute:
-      return MaterialPageRoute(builder: (_) => LoginPage());
+      return MaterialPageRoute<void>(builder: (_) => const LoginPage());
     case RecordingRoute:
-      return MaterialPageRoute(builder: (_) => RecordingPage());
+      return MaterialPageRoute<void>(builder: (_) => const RecordingPage());
     case SettingsRoute:
-      return MaterialPageRoute(builder: (_) => MySettingsPage());
+      return MaterialPageRoute<void>(builder: (_) => MySettingsPage());
     default:
-      return MaterialPageRoute(builder: (_) => LoginPage());
+      return MaterialPageRoute<void>(builder: (_) => const LoginPage());
   }
 }
