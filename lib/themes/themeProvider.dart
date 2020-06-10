@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/themes/themeShartedPreferences.dart';
+import 'package:off_top_mobile/themes/themeSharedPreferences.dart';
 
 class ThemeProvider with ChangeNotifier {
   ThemePreference themePreference = ThemePreference();

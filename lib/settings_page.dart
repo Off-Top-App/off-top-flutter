@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:off_top_mobile/components/offTopTitle.dart';
-import 'package:off_top_mobile/components/DynamicListTile.dart';
+import 'file:///C:/Users/Tony/Desktop/Off-Top/off-top-flutter/lib/DynamicListTile/DynamicListTile.dart';
 
 void main() => runApp(MySettingsPage());
 
