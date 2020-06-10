@@ -24,7 +24,7 @@ class SubnavbarState extends State<Subnavbar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.deepPurple,
+      color: Theme.of(context).primaryColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -33,8 +33,10 @@ class SubnavbarState extends State<Subnavbar> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Welcome: ',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Theme.of(context).secondaryHeaderColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -43,8 +45,10 @@ class SubnavbarState extends State<Subnavbar> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 name,
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Theme.of(context).secondaryHeaderColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -59,8 +63,10 @@ class SubnavbarState extends State<Subnavbar> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Main Page',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Theme.of(context).secondaryHeaderColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

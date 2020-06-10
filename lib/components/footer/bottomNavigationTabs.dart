@@ -12,7 +12,7 @@ class BottomNavigationTabs extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Theme.of(context).primaryColor,
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
@@ -27,7 +27,7 @@ class BottomNavigationTabs extends StatelessWidget {
               icon: Icon(
                 Icons.home,
                 size: 30.0,
-                color: Colors.white,
+                color: Theme.of(context).secondaryHeaderColor,
               ),
               text: 'Home',
             ),
@@ -35,7 +35,7 @@ class BottomNavigationTabs extends StatelessWidget {
               icon: Icon(
                 Icons.receipt,
                 size: 30.0,
-                color: Colors.white,
+                color: Theme.of(context).secondaryHeaderColor,
               ),
               text: 'Reports',
             ),
@@ -43,14 +43,15 @@ class BottomNavigationTabs extends StatelessWidget {
               icon: Icon(
                 Icons.settings,
                 size: 30.0,
-                color: Colors.white,
+                color: Theme.of(context).secondaryHeaderColor,
               ),
               text: 'Settings',
             ),
           ],
           labelPadding: const EdgeInsets.all(5.0),
-          labelColor: Colors.blue,
-          unselectedLabelColor: Colors.white,
+          labelColor: Theme.of(context).accentColor,
+          indicatorColor: Theme.of(context).accentColor,
+          unselectedLabelColor: Theme.of(context).secondaryHeaderColor,
           //indicatorWeight: 0.00001,
         ),
       ),

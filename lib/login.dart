@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: offTopTitle,
+      appBar: offTopTitle(context),
       body: Center(
         child: Container(
           child: Padding(
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      color: Colors.deepPurple,
+      color: Theme.of(context).primaryColor,
       child: const Text('SIGN IN'),
       textColor: Colors.white,
       onPressed: () {

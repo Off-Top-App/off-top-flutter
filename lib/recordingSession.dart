@@ -47,8 +47,8 @@ class _RecordingPageState extends State<RecordingPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: Colors.white,
-      appBar: offTopTitle,
+      //backgroundColor: Colors.white,
+      appBar: offTopTitle(context),
       body: Column(
         children: <Widget>[
           const Subnavbar(),

@@ -61,10 +61,11 @@ class _MySettingsPageState extends State<MySettingsPage> {
               Container(
                 height: 90,
                 child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 30,
-                    ),
-                    child: offTopSettingsTitle1),
+                  padding: const EdgeInsets.only(
+                    top: 30,
+                  ),
+                  child: offTopSettingsTitle1(context),
+                ),
               ),
               Container(
                 color: Colors.white24,

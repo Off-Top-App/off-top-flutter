@@ -175,7 +175,13 @@ class _RecorderState extends State<Recorder> {
                 stopRecorder();
               }
             },
-            child: _isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
+            child: _isRecording
+                ? Icon(Icons.stop)
+                : Icon(
+                    Icons.mic,
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+            backgroundColor: Theme.of(context).accentColor,
           ),
           Container(
             child: AutoSizeText(
