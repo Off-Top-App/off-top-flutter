@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:off_top_mobile/models/ListTileModel.dart';
 
 class ListTileFields {
-
   List<ListTileModel> fields = <ListTileModel>[
     ListTileModel(
       'DEFAULT TOPIC',
@@ -19,20 +18,14 @@ class ListTileFields {
     ),
     ListTileModel(
       'SELECT COLOR',
-      <String>[
-        'BLUE',
-        'RED',
-        'YELLOW',
-        'GREEN',
-        'PURPLE',
-      ],
+      <String>['BLUE', 'RED', 'YELLOW', 'GREEN', 'PURPLE', 'DARK'],
       Icons.color_lens,
       <Color>[
         const Color(0xFF0074B7),
         const Color(0xFFef3340),
         const Color(0xFFffd600),
         const Color(0xFF18A558),
-        const Color(0xFF9505E3)
+        const Color(0xFF9505E3),
       ],
     ),
     ListTileModel(
@@ -48,5 +41,4 @@ class ListTileFields {
       <Color>[],
     ),
   ];
-
 }

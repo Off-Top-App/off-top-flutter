@@ -12,7 +12,8 @@ AppBar offTopTitle(BuildContext context) {
       textAlign: TextAlign.center,
     ),
     centerTitle: true,
-    backgroundColor: Colors.white,
+    backgroundColor: Theme.of(context).backgroundColor,
+    automaticallyImplyLeading: false,
   );
 }
 

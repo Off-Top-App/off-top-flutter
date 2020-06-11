@@ -5,15 +5,48 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemePreference {
-  static const String THEME = 'THEME';
+  static const String PRIMARY_THEME = 'PRIMARY_THEME';
+  static const String SECONDARY_THEME = 'SECONDARY_THEME';
+  static const String ACCENT_THEME = 'ACCENT_THEME';
+  static const String BACKGROUND_THEME = 'BACKGROUND_THEME';
 
-  Future<bool> setTheme(String theme) async {
+  Future<bool> setPrimaryTheme(int theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(THEME, theme);
+    prefs.setInt(PRIMARY_THEME, theme);
   }
 
-  Future<String> getTheme() async {
+  Future<int> getPrimaryTheme() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(THEME);
+    return prefs.getInt(PRIMARY_THEME);
+  }
+
+  Future<bool> setSecondaryTheme(int theme) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(SECONDARY_THEME, theme);
+  }
+
+  Future<int> getSecondaryTheme() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(SECONDARY_THEME);
+  }
+
+  Future<bool> setAccentTheme(int theme) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(ACCENT_THEME, theme);
+  }
+
+  Future<int> getAccentTheme() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(ACCENT_THEME);
+  }
+
+  Future<bool> setBackgroundTheme(int theme) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(BACKGROUND_THEME, theme);
+  }
+
+  Future<int> getBackgroundTheme() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(BACKGROUND_THEME);
   }
 }
