@@ -37,18 +37,8 @@ class _RecordingPageState extends State<RecordingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        width: yes * 10.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            onPressed: null,
-            backgroundColor: Colors.white,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: Colors.white,
-      appBar: offTopTitle,
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: offTopTitle(context),
       body: Column(
         children: <Widget>[
           const Subnavbar(),
@@ -60,7 +50,9 @@ class _RecordingPageState extends State<RecordingPage> {
             height: MediaQuery.of(context).size.height / 4,
             child: Meter(ws: ws, key: meterState),
           ),
-          Container(margin: const EdgeInsets.only(bottom: 15)),
+          Container(
+            margin: const EdgeInsets.only(bottom: 15),
+          ),
           Recorder(
             ws: ws,
             userId: userId,

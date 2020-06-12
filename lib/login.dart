@@ -35,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: offTopTitle,
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: offTopTitle(context),
       body: Center(
         child: Container(
           child: Padding(
@@ -48,12 +49,12 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.w800,
-                        color: Colors.black54),
+                        color: Theme.of(context).accentColor),
                   ),
                   const SizedBox(height: 20.0),
                   usernameField(),
                   const SizedBox(height: 10.0),
-                  passwordField,
+                  passwordField(),
                   isEmailValid(),
                   const SizedBox(height: 15.0),
                   loginButton(context),
@@ -77,9 +78,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget isEmailValid() {
     if (userId == null && loginAttempts > 0) {
       return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text('Invalid Email. Try again!',
-              style: TextStyle(color: Colors.red)));
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Text(
+          'Invalid Email. Try again!',
+          style: TextStyle(color: Colors.red),
+        ),
+      );
     } else {
       return const Text('');
     }
@@ -87,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget usernameField() {
     return TextField(
+      style: TextStyle(color: Theme.of(context).accentColor),
       controller: loginController,
       obscureText: false,
       decoration: InputDecoration(
@@ -97,17 +102,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget passwordField = TextField(
-    obscureText: true,
-    decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: 'Password',
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-  );
+  Widget passwordField() {
+    return TextField(
+      style: TextStyle(color: Theme.of(context).accentColor),
+      obscureText: true,
+      decoration: InputDecoration(
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: 'Password',
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+  }
 
   Widget forgotPassword(BuildContext context) {
     return FlatButton(
-      child: const Text('forgot password?'),
+      child: Text(
+        'forgot password?',
+        style: TextStyle(color: Theme.of(context).accentColor),
+      ),
       onPressed: () {
         Navigator.pushNamed(context, RecordingRoute);
       },
@@ -116,7 +128,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget createAccount(BuildContext context) {
     return FlatButton(
-      child: const Text('create account'),
+      child: Text(
+        'create account',
+        style: TextStyle(color: Theme.of(context).accentColor),
+      ),
       onPressed: () {
         Navigator.pushNamed(context, RecordingRoute);
       },
@@ -147,9 +162,9 @@ class _LoginPageState extends State<LoginPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      color: Colors.deepPurple,
+      color: Theme.of(context).primaryColor,
       child: const Text('SIGN IN'),
-      textColor: Colors.white,
+      textColor: Theme.of(context).secondaryHeaderColor,
       onPressed: () {
         setState(
           () {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:off_top_mobile/components/offTopTitle.dart';
-import 'package:off_top_mobile/components/DynamicListTile.dart';
+import 'package:off_top_mobile/DynamicListTile/DynamicListTile.dart';
 
 void main() => runApp(MySettingsPage());
 
@@ -51,7 +51,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         height: MediaQuery.of(context).size.height - 120,
         alignment: Alignment.center,
@@ -61,13 +61,14 @@ class _MySettingsPageState extends State<MySettingsPage> {
               Container(
                 height: 90,
                 child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 30,
-                    ),
-                    child: offTopSettingsTitle1),
+                  padding: const EdgeInsets.only(
+                    top: 30,
+                  ),
+                  child: offTopSettingsTitle1(context),
+                ),
               ),
               Container(
-                color: Colors.white24,
+                color: Colors.transparent,
                 height: 100,
                 width: 100,
                 child: const CircleAvatar(
@@ -77,7 +78,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
               Container(
                 height: 100.0,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.white,
+                color: Colors.transparent,
                 child: ButtonBar(
                   alignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -132,23 +133,25 @@ class _MySettingsPageState extends State<MySettingsPage> {
         _buildField('EMAIL'),
         _buildField('PROFESSION'),
         const Spacer(),
-        _buildFormButtom(context)
+        _buildFormButton(context)
       ],
     );
   }
 
   Widget _buildField(String field) {
     return TextFormField(
-      decoration: InputDecoration(labelText: field),
+      decoration: InputDecoration(
+        labelText: field,
+      ),
     );
   }
 }
 
-Widget _buildFormButtom(BuildContext context) {
+Widget _buildFormButton(BuildContext context) {
   return RaisedButton(
-      color: Colors.lightBlue,
-      textColor: Colors.white,
-      splashColor: Colors.red,
+      color: Theme.of(context).primaryColor,
+      textColor: Theme.of(context).secondaryHeaderColor,
+      splashColor: Theme.of(context).accentColor,
       child: const Text('SAVE'),
       onPressed: () => null);
 }

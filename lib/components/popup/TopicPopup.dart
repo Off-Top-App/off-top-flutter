@@ -63,7 +63,7 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
           ),
           margin: const EdgeInsets.only(top: Consts.avatarRadius),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).secondaryHeaderColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(Consts.padding),
             boxShadow: <BoxShadow>[
@@ -82,6 +82,7 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w700,
+                  color: Theme.of(context).accentColor,
                 ),
               ),
               const SizedBox(height: 3.0),
@@ -92,10 +93,15 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
                       itemCount: tileTitles.length,
                       itemBuilder: (BuildContext context, int index) {
                         return CheckboxListTile(
-                            activeColor: Colors.deepPurpleAccent,
-                            title: Text(tileTitles[index],
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 12)),
+                            activeColor: Theme.of(context).primaryColor,
+                            title: Text(
+                              tileTitles[index],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
                             value: listCheck[index],
                             onChanged: (bool value) {
                               widget.onTopicChanged(tileTitles[index]);
@@ -110,12 +116,15 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: RaisedButton(
-                  color: Colors.deepPurpleAccent,
+                  color: Theme.of(context).primaryColor,
                   onPressed: () {
                     setSessionPreferences('In Session');
                     Navigator.of(context).pop();
                   },
-                  child: Text(buttonText),
+                  child: Text(
+                    buttonText,
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
                 ),
               ),
             ],
