@@ -24,11 +24,12 @@ class ListTileBuilder extends StatefulWidget {
 }
 
 class _ListTileBuilderState extends State<ListTileBuilder> {
+  ThemeProvider themeChange;
   final List<ColorModel> color = ColorFields().fields;
 
   @override
   Widget build(BuildContext context) {
-    final ThemeProvider themeChange = Provider.of<ThemeProvider>(context);
+    themeChange = Provider.of<ThemeProvider>(context);
     return Container(
       color: Theme.of(context).backgroundColor,
       child: ListTile(
@@ -41,12 +42,7 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
           color: widget.color,
         ),
         onTap: () {
-          if (widget.isColor) {
-            themeChange.primaryColor = color[widget.index].color[0];
-            themeChange.secondaryColor = color[widget.index].color[1];
-            themeChange.accentColor = color[widget.index].color[2];
-            themeChange.backgroundColor = color[widget.index].color[3];
-          }
+          colorSetter();
           setState(
             () {
               GlobalKey();
@@ -55,5 +51,14 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
         },
       ),
     );
+  }
+
+  void colorSetter() {
+    if (widget.isColor) {
+      themeChange.primaryColor = color[widget.index].color[0];
+      themeChange.secondaryColor = color[widget.index].color[1];
+      themeChange.accentColor = color[widget.index].color[2];
+      themeChange.backgroundColor = color[widget.index].color[3];
+    }
   }
 }

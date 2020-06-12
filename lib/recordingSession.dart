@@ -37,18 +37,6 @@ class _RecordingPageState extends State<RecordingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*floatingActionButton: Container(
-        width: yes * 10.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            onPressed: () {
-              print('Hello World');
-            },
-            backgroundColor: Colors.white,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: offTopTitle(context),
       body: Column(
