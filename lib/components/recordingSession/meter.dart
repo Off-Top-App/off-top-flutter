@@ -23,8 +23,8 @@ class MeterState extends State<Meter> {
     ws = widget.ws;
     ws.channel.stream.listen(
       (dynamic onData) {
-        final dynamic incomingData = json.decode(onData);
-        isOnTopic = incomingData['focus_score'];
+        final dynamic incomingData = json.decode(onData as String);
+        isOnTopic = incomingData['focus_score'] as bool;
         updateScore(isOnTopic);
       },
     );

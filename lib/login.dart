@@ -8,11 +8,11 @@ import 'package:off_top_mobile/components/offTopTitle.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
-import 'package:off_top_mobile/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -22,10 +22,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController loginController = TextEditingController();
   int userId;
-  int loginAttempts = 0;
   String userEmail;
+  String name;
+  bool showLoading = false;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -35,14 +35,9 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<FirebaseUser> _handleSignIn() async {
     FirebaseUser user;
-    bool isSignedIn = await _googleSignIn.isSignedIn();
+    final bool isSignedIn = await _googleSignIn.isSignedIn();
     if (isSignedIn) {
       user = await _auth.currentUser();
     } else {
@@ -59,53 +54,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> onGoogleSignIn(BuildContext context) async {
-    FirebaseUser user = await _handleSignIn();
+    final FirebaseUser user = await _handleSignIn();
     userEmail = user.email;
-    if (userId == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => BottomNavigationTabs(
-          RecordingPage(userId: userId),
-        ), //changed route to include initial page
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(50),
-        child: Align(
-          alignment: Alignment.center,
-          child: FlatButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            onPressed: () {
-              makeLoginRequest();
-              onGoogleSignIn(context);
-            },
-            color: Colors.blueAccent,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.account_circle, color: Colors.white),
-                  SizedBox(width: 10),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    name = user.displayName;
   }
 
   Future<void> makeLoginRequest() async {
@@ -126,61 +77,69 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-  /*
-  Widget loginButton(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18.0),
-      ),
-      color: Theme.of(context).primaryColor,
-      child: const Text('SIGN IN'),
-      textColor: Theme.of(context).secondaryHeaderColor,
-      onPressed: () {
-        setState(
-          () {
-            loginAttempts += 1;
-          },
-        );
-        makeLoginRequest();
-        if (userId != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => BottomNavigationTabs(
-                RecordingPage(userId: userId),
-              ), //changed route to include initial page
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: ModalProgressHUD(
+        inAsyncCall: showLoading,
+        child: Container(
+          padding: const EdgeInsets.all(50),
+          child: Align(
+            alignment: Alignment.center,
+            child: FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              onPressed: () async {
+                setState(() {
+                  showLoading = true;
+                });
+                await onGoogleSignIn(context);
+                await makeLoginRequest();
+                if (userId == null) {
+                  setState(
+                    () {
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => BottomNavigationTabs(
+                      RecordingPage(userId: userId),
+                    ),
+                  ),
+                );
+                setState(() {
+                  showLoading = false;
+                });
+              },
+              color: Colors.lightBlue,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.account_circle, color: Colors.white),
+                    const SizedBox(width: 10),
+                    const Text('Sign in with Google!'),
+                  ],
+                ),
+              ),
             ),
-          );
-        }
-      },
+          ),
+        ),
+      ),
     );
   }
 
-   */
-}
-
-class WelcomeUserWidget extends StatelessWidget {
-  GoogleSignIn _googleSignIn;
-  FirebaseUser _user;
-
-  WelcomeUserWidget(FirebaseUser user, GoogleSignIn signIn) {
-    _user = user;
-    _googleSignIn = signIn;
-  }
   @override
-  Widget build(BuildContext context) {
-    ClipOval(
-        child: Image.network(_user.photoUrl,
-            width: 100, height: 100, fit: BoxFit.cover));
-    Text(_user.displayName,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25));
-
-    FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        onPressed: () {
-          _googleSignIn.signOut();
-          Navigator.pop(context);
-        });
+  void dispose() {
+    super.dispose();
   }
 }

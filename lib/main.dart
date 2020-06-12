@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
             0xFF9505E3;
     themeChangeProvider.secondaryColor =
         await themeChangeProvider.themePreference.getSecondaryTheme() ??
-            0xFFB4FEE7;
+            0xFFFAFAFA;
     themeChangeProvider.accentColor =
         await themeChangeProvider.themePreference.getAccentTheme() ??
             0xFF3D393B;
