@@ -10,6 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
 
@@ -22,6 +25,9 @@ class _LoginPageState extends State<LoginPage> {
   int userId;
   int loginAttempts = 0;
 
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +38,61 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<FirebaseUser> _handleSignIn() async {
+    FirebaseUser user;
+    bool isSignedIn = await _googleSignIn.isSignedIn();
+    if (isSignedIn) {
+      user = await _auth.currentUser();
+    } else {
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+
+      user = (await _auth.signInWithCredential(credential)).user;
+    }
+    return user;
+  }
+
+  void onGoogleSignIn(BuildContext context) async {
+    FirebaseUser user = await _handleSignIn();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => null));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.all(50),
+        child: Align(
+          alignment: Alignment.center,
+          child: FlatButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            onPressed: () {
+              onGoogleSignIn(context);
+            },
+            color: Colors.blueAccent,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.account_circle, color: Colors.white),
+                  SizedBox(width: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+/*
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
+*/
   Future<void> makeLoginRequest() async {
     final String userEmail = loginController.text;
     final String url = 'http://localhost:9000/user/$userEmail';
@@ -156,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
+  /*
   Widget loginButton(BuildContext context) {
     return RaisedButton(
       shape: RoundedRectangleBorder(
@@ -184,5 +245,33 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
     );
+  }
+
+   */
+}
+
+class WelcomeUserWidget extends StatelessWidget {
+  GoogleSignIn _googleSignIn;
+  FirebaseUser _user;
+
+  WelcomeUserWidget(FirebaseUser user, GoogleSignIn signIn) {
+    _user = user;
+    _googleSignIn = signIn;
+  }
+  @override
+  Widget build(BuildContext context) {
+    ClipOval(
+        child: Image.network(_user.photoUrl,
+            width: 100, height: 100, fit: BoxFit.cover));
+    Text(_user.displayName,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25));
+
+    FlatButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        onPressed: () {
+          _googleSignIn.signOut();
+          Navigator.pop(context);
+        });
   }
 }
