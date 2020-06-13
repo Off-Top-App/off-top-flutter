@@ -92,31 +92,37 @@ class _LoginPageState extends State<LoginPage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               onPressed: () async {
-                setState(() {
-                  showLoading = true;
-                });
-                await onGoogleSignIn(context);
-                await makeLoginRequest();
-                if (userId == null) {
+                try {
                   setState(
                     () {
+                      showLoading = true;
+                    },
+                  );
+                  await onGoogleSignIn(context);
+                  await makeLoginRequest();
+                  if (userId == null) {
+                    setState(() {
                       const Center(
                         child: CircularProgressIndicator(),
                       );
-                    },
-                  );
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => BottomNavigationTabs(
-                      RecordingPage(userId: userId),
+                    });
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => BottomNavigationTabs(
+                        RecordingPage(userId: userId),
+                      ),
                     ),
-                  ),
-                );
-                setState(() {
-                  showLoading = false;
-                });
+                  );
+                  setState(() {
+                    showLoading = false;
+                  });
+                } catch (e) {
+                  setState(() {
+                    showLoading = false;
+                  });
+                }
               },
               color: Colors.lightBlue,
               child: Padding(
