@@ -5,32 +5,38 @@ import 'package:off_top_mobile/components/recordingSession/recorder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyTopicDialog extends StatefulWidget {
-  final ValueChanged<String> onTopicChanged;
+  const MyTopicDialog({Key key, this.onTopicChanged}) : super(key: key);
 
-  MyTopicDialog({Key key, this.onTopicChanged}): super(key: key);
+  final ValueChanged<String> onTopicChanged;
 
   @override
   _MyTopicDialogState createState() => _MyTopicDialogState();
 }
 
 class _MyTopicDialogState extends State<MyTopicDialog> {
-  final String title = "Select A Topic", buttonText = "Select";
-  final tileTitles = ['Computer Science', 'Sports', 'Food'];
-  List<bool> listCheck = [];
+  final String title = 'Select A Topic', buttonText = 'Select';
+  final List<String> tileTitles = <String>[
+    'Computer Science',
+    'Sports',
+    'Food'
+  ];
+  List<bool> listCheck = <bool>[];
 
   @override
   void initState() {
-    setState(() {
-      for (int i = 0; i < tileTitles.length; i++) {
-        listCheck.add(false);
-      }
-    });
+    setState(
+      () {
+        for (int i = 0; i < tileTitles.length; i++) {
+          listCheck.add(false);
+        }
+      },
+    );
     super.initState();
   }
 
-  void setSessionPreferences(String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("session", value);
+  static Future<bool> setSessionPreferences(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString('session', value);
   }
 
   @override
@@ -49,18 +55,18 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
     return Stack(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: Consts.avatarRadius + Consts.padding,
             bottom: Consts.padding,
             left: Consts.padding,
             right: Consts.padding,
           ),
-          margin: EdgeInsets.only(top: Consts.avatarRadius),
-          decoration: new BoxDecoration(
-            color: Colors.white,
+          margin: const EdgeInsets.only(top: Consts.avatarRadius),
+          decoration: BoxDecoration(
+            color: Theme.of(context).secondaryHeaderColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(Consts.padding),
-            boxShadow: [
+            boxShadow: <BoxShadow>[
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10.0,
@@ -76,44 +82,49 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w700,
+                  color: Theme.of(context).accentColor,
                 ),
               ),
-              SizedBox(height: 3.0),
+              const SizedBox(height: 3.0),
               Container(
-                height: 150,
-                width: 300,
-                child: ListView.builder(
-                  itemCount: tileTitles.length,
-                  itemBuilder: (context, index) {
-                    return new CheckboxListTile(
-                      activeColor: Colors.deepPurpleAccent,
-                      title: new Text(tileTitles[index],
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 12)
-                      ),
-                      value: listCheck[index],
-                      onChanged: (value) {
-                        widget.onTopicChanged(tileTitles[index]);
-                        setState(() {
-                          timeDilation = value ? 1.0 : 0.5;
-                          _uncheck(listCheck, index);
-                          listCheck[index] = !listCheck[index];
-                        });
-                      }
-                    );
-                  }
-                )
-              ),
-              SizedBox(height: 24.0),
+                  height: 150,
+                  width: 300,
+                  child: ListView.builder(
+                      itemCount: tileTitles.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return CheckboxListTile(
+                            activeColor: Theme.of(context).primaryColor,
+                            title: Text(
+                              tileTitles[index],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            value: listCheck[index],
+                            onChanged: (bool value) {
+                              widget.onTopicChanged(tileTitles[index]);
+                              setState(() {
+                                timeDilation = value ? 1.0 : 0.5;
+                                _uncheck(listCheck, index);
+                                listCheck[index] = !listCheck[index];
+                              });
+                            });
+                      })),
+              const SizedBox(height: 24.0),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: RaisedButton(
-                  color: Colors.deepPurpleAccent,
+                  color: Theme.of(context).primaryColor,
                   onPressed: () {
-                    setSessionPreferences("In Session");
+                    setSessionPreferences('In Session');
                     Navigator.of(context).pop();
                   },
-                  child: Text(buttonText),
+                  child: Text(
+                    buttonText,
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
                 ),
               ),
             ],
@@ -124,7 +135,7 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
   }
 }
 
-_uncheck(List<bool> listCheck, int index) {
+void _uncheck(List<bool> listCheck, int index) {
   for (int i = 0; i < listCheck.length; i++) {
     if (listCheck[index] != listCheck[i]) {
       listCheck[i] = false;
