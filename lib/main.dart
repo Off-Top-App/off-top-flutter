@@ -6,8 +6,7 @@ import 'package:syncfusion_flutter_core/core.dart';
 
 void main() {
   SyncfusionLicense.registerLicense(
-      'NT8mJyc2IWhia31ifWN9Z2FoZnxha3xhY2Fjc2JiaWZlaWdlcwMeaDImOzE8PRM0PjI6P30wPD4=');
-
+      'NT8mJyc2IWhia31ifWN9Z2FoYmF8YGJ8ampqanNiYmlmamlmanMDHmggJzYlNj0+MiEiJjYpYmpqaxM0PjI6P30wPD4=');
   runApp(MyApp());
 }
 
