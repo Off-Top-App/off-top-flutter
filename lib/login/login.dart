@@ -25,20 +25,19 @@ class _LoginPageState extends State<LoginPage> {
   String userEmail;
   String name;
   bool showLoading = false;
-  UserAuth auth;
+  UserAuthentication auth;
 
   @override
   void initState() {
     super.initState();
-    auth = UserAuth();
+    auth = UserAuthentication();
     auth.googleSignIn = GoogleSignIn();
     auth.firebaseAuth = FirebaseAuth.instance;
   }
 
-  Future<void> makeLoginRequest() async {
+  Future<void> getUserData() async {
     final String userEmail = this.userEmail;
     final String url = 'http://localhost:9000/user/$userEmail';
-    //String url = 'http://10.0.2.2:9000/user/${userEmail}/';
     final http.Response response = await http.get(Uri.encodeFull(url),
         headers: <String, String>{'Accept': 'application/json'});
     final dynamic userData = json.decode(response.body);
@@ -113,8 +112,8 @@ class _LoginPageState extends State<LoginPage> {
           showLoading = true;
         },
       );
-      userEmail = await auth.onGoogleSignIn(context);
-      await makeLoginRequest();
+      userEmail = await auth.signInWithGoogle(context);
+      await getUserData();
       Navigator.push(
         context,
         MaterialPageRoute<void>(

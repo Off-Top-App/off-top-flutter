@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class UserAuth {
-  UserAuth({
+class UserAuthentication {
+  UserAuthentication({
     @required this.googleSignIn,
     @required this.firebaseAuth,
   });
@@ -11,27 +11,32 @@ class UserAuth {
   GoogleSignIn googleSignIn;
   FirebaseAuth firebaseAuth;
 
-  Future<FirebaseUser> signInWithGoogle() async {
+  Future<FirebaseUser> firebaseAuthentication() async {
     FirebaseUser user;
     final bool isSignedIn = await googleSignIn.isSignedIn();
     if (isSignedIn) {
       user = await firebaseAuth.currentUser();
-    } else {
-      final GoogleSignInAccount googleUser = await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-
-      user = (await firebaseAuth.signInWithCredential(credential)).user;
+    }
+    else {
+      user = authenticateUser() as FirebaseUser;
     }
 
     return user;
   }
+  Future<FirebaseUser> authenticateUser() async{
+    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-  Future<String> onGoogleSignIn(BuildContext context) async {
-    final FirebaseUser user = await signInWithGoogle();
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+        idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+
+    return (await firebaseAuth.signInWithCredential(credential)).user;
+  }
+
+
+  Future<String> signInWithGoogle(BuildContext context) async {
+    final FirebaseUser user = await firebaseAuthentication();
     return user.email;
   }
 
