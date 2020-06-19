@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/recordingSession.dart';
 import 'package:off_top_mobile/routing/routing_constants.dart';
 import 'package:off_top_mobile/components/offTopTitle.dart';
+//import 'package:off_top_mobile/lib/settings_page.dart'; // will edit to sign-up page
 
 import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
@@ -14,6 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+int repoNumber;
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
 
@@ -62,10 +65,26 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> makeLoginRequest() async {
     final String userEmail = this.userEmail;
     final String url = 'http://localhost:9000/user/$userEmail';
+    debugPrint('working before lines 68 and 69');
     //String url = 'http://10.0.2.2:9000/user/${userEmail}/';
-    final http.Response response = await http.get(Uri.encodeFull(url),
+    final http.Response response = await http.get(Uri.encodeFull(url), //lines 68-69 breaks when a google sign-in email does not exist in db 
         headers: <String, String>{'Accept': 'application/json'});
+    repoNumber = response.statusCode;
+    debugPrint('This is the respone number: '+ repoNumber.toString());
+    if(response.statusCode == 200){
+      debugPrint('Code is working respone accpted');
+    }
+    else{
+      //throw Exception('Response failed to load');
+      return;
+    }
+    
+    
     final dynamic userData = json.decode(response.body);
+    /*Create a way to check if the user google email is in our database(db)*/
+    //if(userData == null){// needs fixing
+      
+    //}
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(
       'name',
@@ -98,8 +117,12 @@ class _LoginPageState extends State<LoginPage> {
                       showLoading = true;
                     },
                   );
+                  //debugPrint('working before google sign in');
                   await onGoogleSignIn(context);
+                 // debugPrint('Will shoot error after google sign-in');
                   await makeLoginRequest();
+                   
+                  debugPrint('jumped out of method');
                   if (userId == null) {
                     setState(() {
                       const Center(
@@ -115,10 +138,15 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   );
+                  if(repoNumber != 200){
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => signUp()),);
+                  debugPrint("is in signUp");
+                   }
                   setState(() {
                     showLoading = false;
                   });
                 } catch (e) {
+                  print(e);
                   setState(() {
                     showLoading = false;
                   });
@@ -147,5 +175,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+}
+
+class signUp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    );
   }
 }
