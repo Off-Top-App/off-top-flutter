@@ -5,14 +5,14 @@ import 'package:off_top_mobile/models/ListTileModel.dart';
 import 'package:off_top_mobile/DynamicListTile/ListTileFields.dart';
 import 'package:off_top_mobile/themes/ColorFields.dart';
 
-class HomeScreen extends StatefulWidget {
+class PrefScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeScreen();
+    return _PrefScreen();
   }
 }
 
-class _HomeScreen extends State<HomeScreen> {
+class _PrefScreen extends State<PrefScreen> {
   @override
   void initState() {
     super.initState();
@@ -22,24 +22,26 @@ class _HomeScreen extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<ListTileModel> listTileFields = ListTileFields().fields;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: ListView.builder(
-        itemCount: listTileFields.length,
-        itemBuilder: (BuildContext context, int i) {
-          return ExpansionTile(
-            key: GlobalKey(),
-            title: Text(
-              listTileFields[i].title,
-              style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
-            ),
-            children: <Widget>[
-              Column(
-                children: _buildExpandableContent(listTileFields[i]),
+    return Visibility(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: ListView.builder(
+          itemCount: listTileFields.length,
+          itemBuilder: (BuildContext context, int i) {
+            return ExpansionTile(
+              key: GlobalKey(),
+              title: Text(
+                listTileFields[i].title,
+                style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
               ),
-            ],
-          );
-        },
+              children: <Widget>[
+                Column(
+                  children: _buildExpandableContent(listTileFields[i]),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
