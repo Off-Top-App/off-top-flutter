@@ -5,7 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/DynamicListTile/DynamicListTile.dart';
-import 'package:off_top_mobile/login.dart';
+import 'package:off_top_mobile/login/login.dart';
+import 'package:off_top_mobile/login/googleSignIn.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(MySettingsPage());
 
@@ -21,12 +25,17 @@ class _MySettingsPageState extends State<MySettingsPage> {
   bool _showProfile;
   bool _showSettings;
   bool _showPreferences;
+  UserAuthentication auth;
 
   @override
   void initState() {
     _showProfile = false;
     _showSettings = true;
     _showPreferences = false;
+    auth = UserAuthentication();
+/*     auth.googleSignIn = GoogleSignIn();
+    auth.firebaseAuth = FirebaseAuth.instance; */
+
     super.initState();
   }
 
@@ -52,7 +61,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     setState(() {
       _showPreferences = !_showPreferences;
       if (_showPreferences) {
-        PrefScreen();
+        PreferenceScreen();
       }
     });
   }
@@ -124,7 +133,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
           ],
         ),
         onPressed: () {
-          signOutGoogle();
+          auth.signOutGoogle();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute<Widget>(
@@ -155,7 +164,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
           visible: _showPreferences,
           child: Expanded(
             child: Container(
-              child: PrefScreen(),
+              child: PreferenceScreen(),
             ),
           ),
         ),

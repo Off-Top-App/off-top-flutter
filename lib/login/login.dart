@@ -31,8 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     auth = UserAuthentication();
-    auth.googleSignIn = GoogleSignIn();
-    auth.firebaseAuth = FirebaseAuth.instance;
+/*     auth.googleSignIn = GoogleSignIn();
+    auth.firebaseAuth = FirebaseAuth.instance; */
   }
 
   Future<void> getUserData() async {
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  onPressed: () => signInRequest(),
+                  onPressed: () async => signInRequest(),
                   color: Colors.lightBlue,
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -114,7 +114,8 @@ class _LoginPageState extends State<LoginPage> {
       );
       userEmail = await auth.signInWithGoogle(context);
       await getUserData();
-      Navigator.push(
+
+      await Navigator.push(
         context,
         MaterialPageRoute<void>(
           builder: (BuildContext context) => BottomNavigationTabs(
