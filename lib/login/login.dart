@@ -8,8 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:off_top_mobile/login/googleSignIn.dart';
 
@@ -31,8 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     auth = UserAuthentication();
-/*     auth.googleSignIn = GoogleSignIn();
-    auth.firebaseAuth = FirebaseAuth.instance; */
   }
 
   Future<void> getUserData() async {

@@ -32,10 +32,6 @@ class _MySettingsPageState extends State<MySettingsPage> {
     _showProfile = false;
     _showSettings = true;
     _showPreferences = false;
-    auth = UserAuthentication();
-/*     auth.googleSignIn = GoogleSignIn();
-    auth.firebaseAuth = FirebaseAuth.instance; */
-
     super.initState();
   }
 
