@@ -22,26 +22,24 @@ class _PrefScreen extends State<PreferenceScreen> {
   Widget build(BuildContext context) {
     final List<ListTileModel> listTileFields = ListTileFields().fields;
 
-    return Visibility(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: ListView.builder(
-          itemCount: listTileFields.length,
-          itemBuilder: (BuildContext context, int i) {
-            return ExpansionTile(
-              key: GlobalKey(),
-              title: Text(
-                listTileFields[i].title,
-                style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: ListView.builder(
+        itemCount: listTileFields.length,
+        itemBuilder: (BuildContext context, int i) {
+          return ExpansionTile(
+            key: GlobalKey(),
+            title: Text(
+              listTileFields[i].title,
+              style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+            ),
+            children: <Widget>[
+              Column(
+                children: _buildExpandableContent(listTileFields[i]),
               ),
-              children: <Widget>[
-                Column(
-                  children: _buildExpandableContent(listTileFields[i]),
-                ),
-              ],
-            );
-          },
-        ),
+            ],
+          );
+        },
       ),
     );
   }
