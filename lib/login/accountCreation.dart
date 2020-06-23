@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-//import 'package:off_top_mobile/lib/login.dart'; // will edit to sign-up page
 
 import 'package:http/http.dart' as http;
-import 'package:off_top_mobile/login.dart';
+import 'package:off_top_mobile/login/login.dart';
 
 int repoNumber;
 
