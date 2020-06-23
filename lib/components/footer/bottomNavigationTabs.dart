@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:off_top_mobile/login.dart';
 import 'package:off_top_mobile/recordingSession.dart';
 import 'package:off_top_mobile/settings_page.dart';
+import '../../reports.dart';
 
 class BottomNavigationTabs extends StatelessWidget {
   const BottomNavigationTabs(this.homePage);
@@ -17,7 +18,7 @@ class BottomNavigationTabs extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
             homePage,
-            const RecordingPage(),
+            ReportsPage(),
             MySettingsPage(),
           ],
         ),
@@ -58,3 +59,5 @@ class BottomNavigationTabs extends StatelessWidget {
     );
   }
 }
+
+
