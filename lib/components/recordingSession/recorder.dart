@@ -93,7 +93,7 @@ class _RecorderState extends State<Recorder> {
 
   Future<void> startRecorder() async {
     ws.sendFirstMessage(userId);
-    final String now = DateFormat('yyyy-MM-dd_H:m').format(DateTime.now());
+    final String now = DateFormat('yyyy-MM-dd_HH:Mm').format(DateTime.now());
     try {
       final PermissionStatus status = await Permission.microphone.request();
       if (status != PermissionStatus.granted) {
@@ -131,7 +131,6 @@ class _RecorderState extends State<Recorder> {
 
       setState(() {
         _isRecording = true;
-        //_path[_codec.index] = path;
       });
     } catch (err) {
       print('startRecorder error: $err');
@@ -146,59 +145,6 @@ class _RecorderState extends State<Recorder> {
     }
   }
 
-  /* Future<void> startRecorder() async {
-    ws.sendFirstMessage(userId);
-    try {
-      final DateTime now = DateTime.now();
-      final String date = DateFormat('yyyy-MM-ddThh:mm').format(now);
-      final Directory tempDir = await getTemporaryDirectory();
-      setState(() {
-        directory = tempDir;
-      });
-      print('tempdir: $tempDir');
-      final String path = await flutterSound.startRecorder(
-          uri: tempDir.path +
-              '/' +
-              date.toString() +
-              '_' +
-              userId.toString() +
-              '_sound.aac',
-          codec: t_CODEC.CODEC_AAC);
-      print('path: $path');
-      _recorderSubscription = flutterSound.onRecorderStateChanged.listen(
-        (RecordStatus e) {
-          final DateTime date = DateTime.fromMillisecondsSinceEpoch(
-              e.currentPosition.toInt(),
-              isUtc: true);
-          final String formattedDate = DateFormat('mm:ss:SS', 'en_US').format(date);
-          setState(
-            () {
-              _recorderTxt = formattedDate.substring(0, 8);
-            },
-          );
-        },
-      );
-      _dbPeakSubscription = flutterSound.onRecorderDbPeakChanged.listen(
-        (double value) {
-          print('got update -> $value');
-          setState(
-            () {
-              _dbLevel = value;
-            },
-          );
-        },
-      );
-
-      setState(
-        () {
-          _isRecording = true;
-        },
-      );
-    } catch (err) {
-      print('startRecorder error: $err');
-    }
-  } */
-
   Future<void> stopRecorder() async {
     try {
       await recorderModule.stopRecorder();
@@ -212,59 +158,6 @@ class _RecorderState extends State<Recorder> {
       _isRecording = false;
     });
   }
-
-  Future<bool> fileExists(String path) async {
-    return await File(path).exists();
-  }
-
-  Future<Uint8List> makeBuffer(String path) async {
-    try {
-      if (!await fileExists(path)) {
-        return null;
-      }
-      final File file = File(path);
-      file.openRead();
-      final Uint8List contents = await file.readAsBytes();
-      print('The file is ${contents.length} bytes long.');
-      return contents;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  /* Future<void> stopRecorder() async {
-    print('STOP RECORDER');
-    setState(() {
-      sessionCounter += 1;
-    });
-    print('Counter here $sessionCounter');
-    if (sessionCounter > 2) {
-      // this.setSessionPreferences('Session Complete!');
-    }
-    try {
-      final String result = await flutterSound.stopRecorder();
-      final String filePath = result.replaceRange(0, 7, '');
-      ws.sendAudioFile(filePath, userId, topic);
-
-      if (_recorderSubscription != null) {
-        _recorderSubscription.cancel();
-        _recorderSubscription = null;
-      }
-      if (_dbPeakSubscription != null) {
-        _dbPeakSubscription.cancel();
-        _dbPeakSubscription = null;
-      }
-
-      setState(
-        () {
-          _isRecording = false;
-        },
-      );
-    } catch (err) {
-      print('stopRecorder error: $err');
-    }
-  } */
 
   Future<void> setSessionPreferences(String value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
