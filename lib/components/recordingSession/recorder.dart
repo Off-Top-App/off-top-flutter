@@ -1,24 +1,27 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show DateFormat;
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart' show DateFormat;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/components/popup/TopicPopup.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 typedef RecordingCallback = void Function(bool);
 
 class Recorder extends StatefulWidget {
-  const Recorder({Key key, @required this.userId, @required this.ws})
-      : super(key: key);
+  const Recorder({
+    @required this.userId,
+    @required this.ws,
+  });
 
   final MyWebSocket ws;
   final int userId;
@@ -28,40 +31,122 @@ class Recorder extends StatefulWidget {
 }
 
 class _RecorderState extends State<Recorder> {
-  MyWebSocket ws;
-  Directory directory;
   bool _isRecording = false;
-  StreamSubscription<RecordStatus> _recorderSubscription;
-  StreamSubscription<double> _dbPeakSubscription;
-  //StreamSubscription _playerSubscription;
-  FlutterSound flutterSound;
-  int userId;
-  String topic;
+
+  StreamSubscription<dynamic> _recorderSubscription;
+
+  FlutterSoundRecorder recorderModule = FlutterSoundRecorder();
+
   String _recorderTxt = '00:00:00';
   double _dbLevel;
-  int sessionCounter = 0;
 
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
+  final Codec _codec = Codec.aacADTS;
+
+  int userId;
+  String topic;
+  MyWebSocket ws;
+  String savePath;
+
+  int sessionCounter = 0;
+
+  Future<void> init() async {
+    recorderModule.openAudioSession(
+        focus: AudioFocus.requestFocusTransient,
+        category: SessionCategory.playAndRecord,
+        mode: SessionMode.modeDefault,
+        device: AudioDevice.speaker);
+  }
 
   @override
   void initState() {
     super.initState();
-    flutterSound = FlutterSound();
-    flutterSound.setSubscriptionDuration(0.01);
-    flutterSound.setDbPeakLevelUpdate(0.8);
-    flutterSound.setDbLevelEnabled(true);
+    init();
     initializeDateFormatting();
     userId = widget.userId;
     ws = widget.ws;
   }
 
+  void cancelRecorderSubscriptions() {
+    if (_recorderSubscription != null) {
+      _recorderSubscription.cancel();
+      _recorderSubscription = null;
+    }
+  }
+
+  Future<void> releaseFlauto() async {
+    try {
+      await recorderModule.closeAudioSession();
+    } catch (e) {
+      print('Released unsuccessful');
+      print(e);
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
+    cancelRecorderSubscriptions();
+    releaseFlauto();
   }
 
   Future<void> startRecorder() async {
+    ws.sendFirstMessage(userId);
+    final String now = DateFormat('yyyy-MM-dd_H:m').format(DateTime.now());
+    try {
+      final PermissionStatus status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        throw RecordingPermissionException('Microphone permission not granted');
+      }
+
+      final Directory tempDir = await getApplicationDocumentsDirectory();
+      final String path = '${tempDir.path}/$now-recording${ext[_codec.index]}';
+      await recorderModule.startRecorder(
+        toFile: path,
+        codec: _codec,
+        bitRate: 16000,
+        sampleRate: 16000,
+        audioSource: AudioSource.voice_communication,
+      );
+      print('startRecorder');
+      print('Path: ' + path);
+      savePath = path;
+
+      _recorderSubscription =
+          recorderModule.onProgress.listen((RecordingDisposition e) {
+        if (e != null && e.duration != null) {
+          final DateTime date = DateTime.fromMillisecondsSinceEpoch(
+              e.duration.inMilliseconds,
+              isUtc: true);
+          final String formattedDate =
+              DateFormat('mm:ss:SS', 'en_US').format(date);
+
+          setState(() {
+            _recorderTxt = formattedDate.substring(0, 8);
+            _dbLevel = e.decibels;
+          });
+        }
+      });
+
+      setState(() {
+        _isRecording = true;
+        //_path[_codec.index] = path;
+      });
+    } catch (err) {
+      print('startRecorder error: $err');
+      setState(() {
+        stopRecorder();
+        _isRecording = false;
+        if (_recorderSubscription != null) {
+          _recorderSubscription.cancel();
+          _recorderSubscription = null;
+        }
+      });
+    }
+  }
+
+  /* Future<void> startRecorder() async {
     ws.sendFirstMessage(userId);
     try {
       final DateTime now = DateTime.now();
@@ -85,10 +170,10 @@ class _RecorderState extends State<Recorder> {
           final DateTime date = DateTime.fromMillisecondsSinceEpoch(
               e.currentPosition.toInt(),
               isUtc: true);
-          final String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
+          final String formattedDate = DateFormat('mm:ss:SS', 'en_US').format(date);
           setState(
             () {
-              _recorderTxt = txt.substring(0, 8);
+              _recorderTxt = formattedDate.substring(0, 8);
             },
           );
         },
@@ -112,9 +197,43 @@ class _RecorderState extends State<Recorder> {
     } catch (err) {
       print('startRecorder error: $err');
     }
-  }
+  } */
 
   Future<void> stopRecorder() async {
+    try {
+      await recorderModule.stopRecorder();
+      print('stopRecorder');
+      await ws.sendAudioFile(savePath, userId, topic);
+      cancelRecorderSubscriptions();
+    } catch (err) {
+      print('stopRecorder error: $err');
+    }
+    setState(() {
+      _isRecording = false;
+    });
+  }
+
+  Future<bool> fileExists(String path) async {
+    return await File(path).exists();
+  }
+
+  Future<Uint8List> makeBuffer(String path) async {
+    try {
+      if (!await fileExists(path)) {
+        return null;
+      }
+      final File file = File(path);
+      file.openRead();
+      final Uint8List contents = await file.readAsBytes();
+      print('The file is ${contents.length} bytes long.');
+      return contents;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  /* Future<void> stopRecorder() async {
     print('STOP RECORDER');
     setState(() {
       sessionCounter += 1;
@@ -145,7 +264,7 @@ class _RecorderState extends State<Recorder> {
     } catch (err) {
       print('stopRecorder error: $err');
     }
-  }
+  } */
 
   Future<void> setSessionPreferences(String value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
