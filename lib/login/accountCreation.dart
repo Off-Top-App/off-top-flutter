@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/login/login.dart';
 
-int repoNumber;
-
 class SignUp extends StatefulWidget {
   const SignUp({@required this.email});
   final String email;
@@ -16,8 +14,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  // Getting value from TextField widget.
-  //final idController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
@@ -33,8 +29,6 @@ class _SignUpState extends State<SignUp> {
     });
     debugPrint('In postrequest');
 
-    // Getting value from Controller
-    //String Id = idController.text;
     final String firstName = firstNameController.text;
     final String lastName = lastNameController.text;
     final String city = cityController.text;
@@ -45,7 +39,6 @@ class _SignUpState extends State<SignUp> {
     final DateTime now = DateTime.now();
     final String formatDate =
         '${now.month.toString()}/${now.day.toString()}/${now.year.toString()}';
-    //String email = emailController.text;
 
     // API
     const String address = 'http://localhost:9000/setUser';
@@ -67,12 +60,9 @@ class _SignUpState extends State<SignUp> {
       'deletedAt': 'null',
     };
 
-    // Make respone
-    //final http.Response response = await http.get(Uri.encodeFull(url),
-    final http.Response call = await http.post(address,
-        headers: headers, body: json.encode(data)); // webcall
+    final http.Response call =
+        await http.post(address, headers: headers, body: json.encode(data));
 
-    //final dynamic message = jsonDecode(call.body); // API response
     final int check = call.statusCode;
     if (check == 200) {
       debugPrint('call accepted');
@@ -116,7 +106,6 @@ class _SignUpState extends State<SignUp> {
                   child: Text('Fill All Information in Form',
                       style: TextStyle(fontSize: 22))),
               Container(
-                // for testing
                 width: 280.0,
                 padding: const EdgeInsets.all(10.0),
                 child: Text('email: ' + widget.email,
@@ -193,7 +182,6 @@ class _SignUpState extends State<SignUp> {
                     controller: usernameController,
                     autocorrect: true,
                     keyboardType: TextInputType.text,
-                    //textCapitalization: TextCapitalization.sentences,
                     decoration:
                         const InputDecoration(hintText: 'Create a username'),
                   )),

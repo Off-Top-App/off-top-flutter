@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   String name;
   bool showLoading = false;
   UserAuthentication auth;
-  int repoNumber;
+  int responseCode;
 
   @override
   void initState() {
@@ -42,11 +42,13 @@ class _LoginPageState extends State<LoginPage> {
     final String url = 'http://localhost:9000/user/$userEmail';
     final http.Response response = await http.get(Uri.encodeFull(url),
         headers: <String, String>{'Accept': 'application/json'});
-    repoNumber = response.statusCode;
+    responseCode = response.statusCode;
     if (response.statusCode == 200) {
       debugPrint('Code is working respone accpted');
+    } else if (responseCode == 404) {
+      throw Exception('Response failed to load code 404');
     } else {
-      //throw Exception('Response failed to load');
+      debugPrint('ResposneCode is: ' + responseCode.toString());
       return;
     }
     final dynamic userData = json.decode(response.body);
@@ -131,8 +133,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      if (repoNumber != 200) {
-        // jumps to signup
+      if (responseCode == 500) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SignUp(email: userEmail)),
