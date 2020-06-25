@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:off_top_mobile/models/User.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/login/login.dart';
@@ -29,6 +30,9 @@ class _SignUpState extends State<SignUp> {
     });
     debugPrint('In postrequest');
 
+    final String email = widget.email;
+    final String password = 'HoldTheDoor';
+    final String deletedAt = 'null';
     final String firstName = firstNameController.text;
     final String lastName = lastNameController.text;
     final String city = cityController.text;
@@ -45,23 +49,14 @@ class _SignUpState extends State<SignUp> {
     final Map<String, String> headers = <String, String>{
       'Content-type': 'application/json'
     };
-    final dynamic data = {
-      'id': 1,
-      'age': age,
-      'city': city,
-      'firstName': firstName,
-      'lastName': lastName,
-      'gender': gender,
-      'professional': professional,
-      'email': widget.email,
-      'username': username,
-      'password': 'HoldTheDoor',
-      'createdAt': formatDate,
-      'deletedAt': 'null',
-    };
 
-    final http.Response call =
-        await http.post(address, headers: headers, body: json.encode(data));
+    final dynamic userObject = User(age, city, formatDate, deletedAt, email,
+        firstName, gender, lastName, password, professional, username);
+
+    //userObject.age = age;
+
+    final http.Response call = await http.post(address,
+        headers: headers, body: json.encode(userObject.toJson()));
 
     final int check = call.statusCode;
     if (check == 200) {
