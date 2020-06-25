@@ -8,11 +8,11 @@ import 'package:off_top_mobile/themes/ColorFields.dart';
 class PreferenceScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _PrefScreen();
+    return _PreferenceScreenState();
   }
 }
 
-class _PrefScreen extends State<PreferenceScreen> {
+class _PreferenceScreenState extends State<PreferenceScreen> {
   @override
   void initState() {
     super.initState();
