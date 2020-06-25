@@ -166,23 +166,16 @@ class _MySettingsPageState extends State<MySettingsPage> {
   }
 
   Visibility profileTab() {
-    return Visibility(
-      child: Expanded(
-        child: widgets.buildProfileForm(),
-      ),
-      visible: _showProfile,
+    return widgets.buildTabs(
+      widgets.buildProfileForm(),
+      _showProfile,
     );
   }
 
   Visibility settingsTab() {
-    return Visibility(
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
-          child: buildSettingsPage(),
-        ),
-      ),
-      visible: _showSettings,
+    return widgets.buildTabs(
+      buildSettingsPage(),
+      _showSettings,
     );
   }
 

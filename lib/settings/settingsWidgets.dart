@@ -89,4 +89,13 @@ class SettingsWidgets {
       ),
     );
   }
+
+  Visibility buildTabs(Widget child, bool visible) {
+    return Visibility(
+      child: Expanded(
+        child: child,
+      ),
+      visible: visible,
+    );
+  }
 }
