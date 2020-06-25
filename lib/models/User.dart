@@ -5,7 +5,7 @@ class User {
   String firstName;
   String lastName;
   String gender;
-  String professional;
+  String profession;
   String email;
   String username;
   String password;
@@ -23,7 +23,7 @@ class User {
       this.gender,
       this.lastName,
       this.password,
-      this.professional,
+      this.profession,
       this.username) {}
 
   Map<String, dynamic> toJson() => {
@@ -33,7 +33,7 @@ class User {
         'firstName': firstName,
         'lastName': lastName,
         'gender': gender,
-        'professional': professional,
+        'profession': profession,
         'email': email,
         'username': username,
         'password': 'HoldTheDoor',

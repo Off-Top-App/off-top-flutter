@@ -20,15 +20,15 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
-  final TextEditingController professionalController = TextEditingController();
+  final TextEditingController professionController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
 
   bool visible = false;
-  Future<void> makePostRequest() async {
+  Future<void> createAccount() async {
     setState(() {
       visible = true;
     });
-    debugPrint('In postrequest');
+    debugPrint('Inserting new user: {}');
 
     final String email = widget.email;
     final String password = 'HoldTheDoor';
@@ -38,7 +38,7 @@ class _SignUpState extends State<SignUp> {
     final String city = cityController.text;
     final String age = ageController.text;
     final String gender = genderController.text;
-    final String professional = professionalController.text;
+    final String profession = professionController.text;
     final String username = usernameController.text;
     final DateTime now = DateTime.now();
     final String formatDate =
@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
     };
 
     final dynamic userObject = User(age, city, formatDate, deletedAt, email,
-        firstName, gender, lastName, password, professional, username);
+        firstName, gender, lastName, password, profession, username);
 
     //userObject.age = age;
 
@@ -98,12 +98,12 @@ class _SignUpState extends State<SignUp> {
             children: <Widget>[
               const Padding(
                   padding: EdgeInsets.all(12.0),
-                  child: Text('Fill All Information in Form',
+                  child: Text('Create OFF-TOP Account',
                       style: TextStyle(fontSize: 22))),
               Container(
                 width: 280.0,
                 padding: const EdgeInsets.all(10.0),
-                child: Text('email: ' + widget.email,
+                child: Text('Welcome: ' + widget.email,
                     style: const TextStyle(fontSize: 15.0)),
               ),
               Container(
@@ -163,12 +163,12 @@ class _SignUpState extends State<SignUp> {
                   width: 280.0,
                   padding: const EdgeInsets.all(10.0),
                   child: TextField(
-                    controller: professionalController,
+                    controller: professionController,
                     autocorrect: true,
                     keyboardType: TextInputType.text,
                     textCapitalization: TextCapitalization.sentences,
                     decoration:
-                        const InputDecoration(hintText: 'Enter professional'),
+                        const InputDecoration(hintText: 'Enter Profession'),
                   )),
               Container(
                   width: 280.0,
@@ -181,11 +181,11 @@ class _SignUpState extends State<SignUp> {
                         const InputDecoration(hintText: 'Create a username'),
                   )),
               RaisedButton(
-                onPressed: makePostRequest,
-                color: Colors.pink,
+                onPressed: createAccount,
+                color: Colors.purple,
                 textColor: Colors.white,
                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                child: const Text('Click Here To Submit Data To Server'),
+                child: const Text('Create Account'),
               ),
               Visibility(
                   visible: visible,
