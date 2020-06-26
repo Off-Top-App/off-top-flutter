@@ -93,7 +93,9 @@ class _RecorderState extends State<Recorder> {
 
   Future<void> startRecorder() async {
     ws.sendFirstMessage(userId);
-    final String now = DateFormat('yyyy-MM-dd_HH:mm').format(DateTime.now());
+
+    final String now =
+        DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
     try {
       final PermissionStatus status = await Permission.microphone.request();
       if (status != PermissionStatus.granted) {
@@ -101,7 +103,9 @@ class _RecorderState extends State<Recorder> {
       }
 
       final Directory tempDir = await getApplicationDocumentsDirectory();
-      final String path = '${tempDir.path}/$now-recording${ext[_codec.index]}';
+      final String path =
+          '${tempDir.path}/${now}_user_${userId}_recording${ext[_codec.index]}';
+
       await recorderModule.startRecorder(
         toFile: path,
         codec: _codec,
@@ -111,25 +115,28 @@ class _RecorderState extends State<Recorder> {
       );
       print('startRecorder');
       print('Path: ' + path);
-      savePath = path;
 
-      _recorderSubscription =
-          recorderModule.onProgress.listen((RecordingDisposition e) {
-        if (e != null && e.duration != null) {
-          final DateTime date = DateTime.fromMillisecondsSinceEpoch(
-              e.duration.inMilliseconds,
-              isUtc: true);
-          final String formattedDate =
-              DateFormat('mm:ss:SS', 'en_US').format(date);
+      _recorderSubscription = recorderModule.onProgress.listen(
+        (RecordingDisposition e) {
+          if (e != null && e.duration != null) {
+            final DateTime date = DateTime.fromMillisecondsSinceEpoch(
+                e.duration.inMilliseconds,
+                isUtc: true);
+            final String formattedDate =
+                DateFormat('mm:ss:SS', 'en_US').format(date);
 
-          setState(() {
-            _recorderTxt = formattedDate.substring(0, 8);
-            _dbLevel = e.decibels;
-          });
-        }
-      });
+            //print('got update -> ${e.decibels}');
+
+            setState(() {
+              _recorderTxt = formattedDate.substring(0, 8);
+              _dbLevel = e.decibels;
+            });
+          }
+        },
+      );
 
       setState(() {
+        savePath = path;
         _isRecording = true;
       });
     } catch (err) {
@@ -146,10 +153,19 @@ class _RecorderState extends State<Recorder> {
   }
 
   Future<void> stopRecorder() async {
+    setState(() {
+      sessionCounter += 1;
+    });
+    print('Counter here $sessionCounter');
+    if (sessionCounter > 2) {
+      // this.setSessionPreferences("Session Complete!");
+    }
     try {
       await recorderModule.stopRecorder();
       print('stopRecorder');
-      await ws.sendAudioFile(savePath, userId, topic);
+
+      ws.sendAudioFile(savePath, userId, topic);
+
       cancelRecorderSubscriptions();
     } catch (err) {
       print('stopRecorder error: $err');
@@ -157,26 +173,6 @@ class _RecorderState extends State<Recorder> {
     setState(() {
       _isRecording = false;
     });
-  }
-
-  Future<bool> fileExists(String path) async {
-    return await File(path).exists();
-  }
-
-  Future<Uint8List> makeBuffer(String path) async {
-    try {
-      if (!await fileExists(path)) {
-        return null;
-      }
-      final File file = File(path);
-      file.openRead();
-      final Uint8List contents = await file.readAsBytes();
-      print('The file is ${contents.length} bytes long.');
-      return contents;
-    } catch (e) {
-      print(e);
-      return null;
-    }
   }
 
   Future<void> setSessionPreferences(String value) async {
