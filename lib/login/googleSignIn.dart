@@ -3,27 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserAuthentication {
-  UserAuthentication({
-    @required this.googleSignIn,
-    @required this.firebaseAuth,
-  });
+  GoogleSignIn googleSignIn = GoogleSignIn();
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  GoogleSignIn googleSignIn;
-  FirebaseAuth firebaseAuth;
-
-  Future<FirebaseUser> firebaseAuthentication() async {
-    FirebaseUser user;
+  Future<dynamic> firebaseAuthentication() async {
+    dynamic user;
     final bool isSignedIn = await googleSignIn.isSignedIn();
     if (isSignedIn) {
       user = await firebaseAuth.currentUser();
-    }
-    else {
-      user = authenticateUser() as FirebaseUser;
+    } else {
+      user = authenticateUser();
     }
 
     return user;
   }
-  Future<FirebaseUser> authenticateUser() async{
+
+  Future<FirebaseUser> authenticateUser() async {
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -34,10 +29,9 @@ class UserAuthentication {
     return (await firebaseAuth.signInWithCredential(credential)).user;
   }
 
-
   Future<String> signInWithGoogle(BuildContext context) async {
-    final FirebaseUser user = await firebaseAuthentication();
-    return user.email;
+    final dynamic user = await firebaseAuthentication();
+    return user.email.toString();
   }
 
   Future<void> signOutGoogle() async {
