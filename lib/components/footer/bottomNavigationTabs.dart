@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/login/login.dart';
-import 'package:off_top_mobile/recordingSession.dart';
+import 'package:off_top_mobile/reports.dart';
 import 'package:off_top_mobile/settingsPage.dart';
 
 class BottomNavigationTabs extends StatelessWidget {
@@ -17,7 +16,7 @@ class BottomNavigationTabs extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
             homePage,
-            const RecordingPage(),
+            ReportsPage(),
             MySettingsPage(),
           ],
         ),
@@ -52,7 +51,6 @@ class BottomNavigationTabs extends StatelessWidget {
           labelColor: Theme.of(context).accentColor,
           indicatorColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).secondaryHeaderColor,
-          //indicatorWeight: 0.00001,
         ),
       ),
     );
