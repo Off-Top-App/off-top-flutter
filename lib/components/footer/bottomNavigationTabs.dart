@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/login/login.dart';
 import 'package:off_top_mobile/recordingSession.dart';
-import 'file:///C:/Users/Tony/Desktop/Off-Top/off-top-flutter/lib/settingsPage.dart';
+import 'package:off_top_mobile/settingsPage.dart';
 
 class BottomNavigationTabs extends StatelessWidget {
   const BottomNavigationTabs(this.homePage);

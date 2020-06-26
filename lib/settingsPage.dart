@@ -7,7 +7,7 @@ import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/DynamicListTile/DynamicListTile.dart';
 import 'package:off_top_mobile/login/login.dart';
 import 'package:off_top_mobile/login/googleSignIn.dart';
-import 'package:off_top_mobile/settings/settingsWidgets.dart';
+import 'package:off_top_mobile/components/settings/settingsWidgets.dart';
 
 class MySettingsPage extends StatefulWidget {
   //constructor

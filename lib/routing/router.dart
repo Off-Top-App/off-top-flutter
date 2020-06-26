@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/main.dart';
 import 'package:off_top_mobile/login/login.dart';
-import 'file:///C:/Users/Tony/Desktop/Off-Top/off-top-flutter/lib/settingsPage.dart';
+import 'package:off_top_mobile/settingsPage.dart';
 import 'package:off_top_mobile/recordingSession.dart';
 
 import 'routing_constants.dart';
