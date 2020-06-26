@@ -3,9 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/models/User.dart';
+import 'package:off_top_mobile/components/popup/accountConfirmationPopup.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:off_top_mobile/login/login.dart';
+//import 'package:off_top_mobile/login/login.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({@required this.email});
@@ -23,6 +24,11 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController professionController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   bool visible = false;
   Future<void> createAccount() async {
     setState(() {
@@ -33,15 +39,15 @@ class _SignUpState extends State<SignUp> {
     final String email = widget.email;
     final String password = 'HoldTheDoor';
     final String deletedAt = 'null';
-    final String firstName = firstNameController.text;
+    final String _firstName = firstNameController.text;
     final String lastName = lastNameController.text;
     final String city = cityController.text;
-    final String age = ageController.text;
-    final String gender = genderController.text;
-    final String profession = professionController.text;
+    final String _age = ageController.text;
+    final String _gender = genderController.text;
+    final String _profession = professionController.text;
     final String username = usernameController.text;
     final DateTime now = DateTime.now();
-    final String formatDate =
+    final String createdAt =
         '${now.month.toString()}/${now.day.toString()}/${now.year.toString()}';
 
     // API
@@ -50,10 +56,11 @@ class _SignUpState extends State<SignUp> {
       'Content-type': 'application/json'
     };
 
-    final dynamic userObject = User(age, city, formatDate, deletedAt, email,
-        firstName, gender, lastName, password, profession, username);
+    final dynamic userObject = User(_age, city, createdAt, deletedAt, email,
+        _firstName, _gender, lastName, password, _profession, username);
 
-    //userObject.age = age;
+    //userObject.createdAt = formatDate;
+    //debugPrint('this is date: ' + userObject.createdAt.toString());
 
     final http.Response call = await http.post(address,
         headers: headers, body: json.encode(userObject.toJson()));
@@ -66,31 +73,16 @@ class _SignUpState extends State<SignUp> {
       throw Exception('Response failed to load');
     }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Welcome'),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute<Widget>(
-                        builder: (BuildContext context) => const LoginPage()),
-                    (Route<void> route) => false);
-              },
-            ),
-          ],
-        );
-      },
-    );
+    // call dialog
+    Show_dialog_Popup(context);
   }
+
+  final _fromKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _fromKey,
         appBar: AppBar(title: const Text('Sign-Up Page')),
         body: SingleChildScrollView(
             child: Center(

@@ -11,7 +11,6 @@ class User {
   String password;
   String createdAt;
   String deletedAt;
-  String formatDate;
 
   User(
       this.age,
@@ -37,7 +36,7 @@ class User {
         'email': email,
         'username': username,
         'password': 'HoldTheDoor',
-        'createdAt': formatDate,
+        'createdAt': createdAt,
         'deletedAt': 'null',
       };
 }
