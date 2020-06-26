@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/models/userSession.dart';
+import 'components/reports/getTableDataWidget.dart';
 
 class UserReportTable extends StatefulWidget {
   @override
@@ -8,36 +9,23 @@ class UserReportTable extends StatefulWidget {
 }
 
 class _UserReportTableState extends State<UserReportTable> {
-  Color getFocusColor(String focus) {
-    if (focus == 'GOOD') {
-      return Colors.green;
-    }
-    if (focus == 'OK') {
-      return Colors.orange;
-    }
-    if (focus == 'BAD') {
-      return Colors.red;
-    }
-    return Colors.black;
-  }
-
   final List<UserSession> mockData = [
     UserSession('11/11/2020', '20 MIN', 'GOOD'),
     UserSession('11/12/2020', '25 MIN', 'OK'),
     UserSession('11/13/2020', '30 MIN', 'BAD'),
     UserSession('11/14/2020', '35 MIN', 'BAD'),
     UserSession('11/15/2020', '40 MIN', 'OK'),
-    UserSession('11/16/2020', '45 MIN', 'OK'),
+    UserSession('11/16/2020', '45 MIN', 'GOOD'),
     UserSession('11/17/2020', '20 MIN', 'OK'),
     UserSession('11/18/2020', '25 MIN', 'BAD'),
     UserSession('11/19/2020', '30 MIN', 'GOOD'),
-    UserSession('11/20/2020', '35 MIN', 'GOOD'),
+    UserSession('11/20/2020', '35 MIN', 'BAD'),
     UserSession('11/11/2020', '20 MIN', 'GOOD'),
     UserSession('11/12/2020', '25 MIN', 'OK'),
     UserSession('11/13/2020', '30 MIN', 'BAD'),
     UserSession('11/14/2020', '35 MIN', 'BAD'),
     UserSession('11/15/2020', '40 MIN', 'OK'),
-    UserSession('11/16/2020', '45 MIN', 'OK'),
+    UserSession('11/16/2020', '45 MIN', 'BAD'),
     UserSession('11/17/2020', '20 MIN', 'OK'),
     UserSession('11/18/2020', '25 MIN', 'BAD'),
     UserSession('11/21/2020', '40 MIN', 'GOOD')
@@ -50,61 +38,17 @@ class _UserReportTableState extends State<UserReportTable> {
     for (final UserSession rowData in mockData) {
       if (columnTitles == false) {
         rows.add(TableRow(children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
-            child: Column(children: [
-              const Text(
-                'Date',
-                style: TextStyle(fontSize: 19, color: Colors.black),
-              )
-            ]),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
-            child: Column(children: [
-              Text(
-                'Duration',
-                style: const TextStyle(fontSize: 19, color: Colors.black),
-              )
-            ]),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
-            child: Column(children: [
-              const Text('Focus',
-                  style: TextStyle(fontSize: 19, color: Colors.black)),
-            ]),
-          ),
+          getTableData(19.0, 'Date', Colors.black),
+          getTableData(19.0, 'Duration', Colors.black),
+          getTableData(19.0, 'Focus', Colors.black),
         ]));
         columnTitles = true;
       }
-
-      rows.add(
-        TableRow(children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
-            child: Column(children: [
-              Text(rowData.date,
-                  style: const TextStyle(fontSize: 17, color: Colors.black)),
-            ]),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
-            child: Column(children: [
-              Text(rowData.duration,
-                  style: const TextStyle(fontSize: 17, color: Colors.black)),
-            ]),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
-            child: Column(children: [
-              Text(rowData.focus,
-                  style: TextStyle(
-                      fontSize: 17, color: getFocusColor(rowData.focus))),
-            ]),
-          ),
-        ]),
-      );
+      rows.add(TableRow(children: [
+        getTableData(17.0, rowData.date, Colors.black),
+        getTableData(17.0, rowData.duration, Colors.black),
+        getTableData(17.0, rowData.focus, getFocusColor(rowData.focus)),
+      ]));
     }
     return MaterialApp(
       home: Scaffold(

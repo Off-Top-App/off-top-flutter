@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/user_report_table.dart';
+import 'package:off_top_mobile/userReportTable.dart';
 
 class ReportsPage extends StatefulWidget {
   @override
