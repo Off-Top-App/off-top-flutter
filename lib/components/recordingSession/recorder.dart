@@ -47,11 +47,13 @@ class _RecorderState extends State<Recorder> {
   int userId;
   String topic;
   MyWebSocket ws;
+  Directory tempDir;
   String savePath;
 
   int sessionCounter = 0;
 
   Future<void> init() async {
+    tempDir = await getApplicationDocumentsDirectory();
     recorderModule.openAudioSession(
         focus: AudioFocus.requestFocusTransient,
         category: SessionCategory.playAndRecord,
@@ -102,7 +104,7 @@ class _RecorderState extends State<Recorder> {
         throw RecordingPermissionException('Microphone permission not granted');
       }
 
-      final Directory tempDir = await getApplicationDocumentsDirectory();
+      //tempDir = await getApplicationDocumentsDirectory();
       final String path =
           '${tempDir.path}/${now}_user_${userId}_recording${ext[_codec.index]}';
 

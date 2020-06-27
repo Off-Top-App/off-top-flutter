@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
@@ -9,7 +10,22 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MyWebSocket {
   MyWebSocket(String channel) {
-    this.channel = IOWebSocketChannel.connect(channel);
+    try {
+      this.channel = IOWebSocketChannel.connect(channel);
+      /*  this.channel.listen(
+        (dynamic message) {
+          print('message $message');
+        },
+        onDone: () {
+          print('ws channel closed');
+        },
+        onError: (dynamic error) {
+          print('ws error $error');
+        },
+      ); */
+    } catch (e) {
+      print('Connection exception $e');
+    }
   }
 
   WebSocketChannel channel;
@@ -24,20 +40,24 @@ class MyWebSocket {
     );
   }
 
-  void sendFirstMessage(int user_id) {
+  void sendFirstMessage(int userId) {
     // sleep(const Duration(seconds: 3));
     channel.sink.add(
       json.encode(
-        {'user_id': user_id.toInt()},
+        {'user_id': userId.toInt()},
       ),
     );
   }
 
   Future<List<int>> processAudioFile(String audioData) async {
-    final ByteData file = await rootBundle.load(audioData);
+    final File file = File(audioData);
+    file.openRead();
+    final Uint8List uint8list = file.readAsBytesSync();
+    /* ByteData file;
+      file = await rootBundle.load(audioData);
+      final Uint8List uint8list =
+          file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes); */
 
-    final Uint8List uint8list =
-        file.buffer.asUint8List(file.offsetInBytes, file.lengthInBytes);
     final List<int> fileBytes = uint8list.cast<int>();
 
     return fileBytes;
