@@ -16,12 +16,20 @@ class _ReportsState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: SingleChildScrollView(
+            child: SingleChildScrollView(
       child: Column(
         children: <Widget>[
-                      SizedBox( height: 600,
-          child: UserReportTable(),),
-          const Divider(thickness: 1.0,), SizedBox(height: 600, child: ReportsGraph(),)
+          SizedBox(
+            height: 600,
+            child: UserReportTable(),
+          ),
+          const Divider(
+            thickness: 1.0,
+          ),
+          SizedBox(
+            height: 600,
+            child: ReportsGraph(),
+          )
         ],
       ),
     )));
