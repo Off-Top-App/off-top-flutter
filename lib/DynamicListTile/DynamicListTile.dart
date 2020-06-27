@@ -5,14 +5,14 @@ import 'package:off_top_mobile/models/ListTileModel.dart';
 import 'package:off_top_mobile/DynamicListTile/ListTileFields.dart';
 import 'package:off_top_mobile/themes/ColorFields.dart';
 
-class HomeScreen extends StatefulWidget {
+class PreferenceScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeScreen();
+    return _PreferenceScreenState();
   }
 }
 
-class _HomeScreen extends State<HomeScreen> {
+class _PreferenceScreenState extends State<PreferenceScreen> {
   @override
   void initState() {
     super.initState();
