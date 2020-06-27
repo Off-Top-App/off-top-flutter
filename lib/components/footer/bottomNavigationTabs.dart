@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/login/login.dart';
 import 'package:off_top_mobile/recordingSession.dart';
-import 'package:off_top_mobile/settings_page.dart';
 import '../../reports.dart';
+import 'package:off_top_mobile/reports.dart';
+import 'package:off_top_mobile/settingsPage.dart';
 
 class BottomNavigationTabs extends StatelessWidget {
   const BottomNavigationTabs(this.homePage);
@@ -53,7 +54,6 @@ class BottomNavigationTabs extends StatelessWidget {
           labelColor: Theme.of(context).accentColor,
           indicatorColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).secondaryHeaderColor,
-          //indicatorWeight: 0.00001,
         ),
       ),
     );
