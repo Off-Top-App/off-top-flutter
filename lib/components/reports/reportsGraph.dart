@@ -14,21 +14,21 @@ class _ReportsState extends State<ReportsGraph> {
   List<charts.Series<Scores, int>> _seriesLineData;
   void _generateData() {
     var linesscoresdata1 = [
-      new Scores(0, 45),
-      new Scores(1, 56),
-      new Scores(2, 55),
-      new Scores(3, 60),
-      new Scores(4, 61),
-      new Scores(5, 70),
+      Scores(0, 45),
+      Scores(1, 56),
+      Scores(2, 55),
+      Scores(3, 60),
+      Scores(4, 61),
+      Scores(5, 70),
     ];
 
     var linesscoresdata2 = [
-      new Scores(0, 35),
-      new Scores(1, 46),
-      new Scores(2, 45),
-      new Scores(3, 50),
-      new Scores(4, 51),
-      new Scores(5, 60),
+      Scores(0, 35),
+      Scores(1, 46),
+      Scores(2, 45),
+      Scores(3, 50),
+      Scores(4, 51),
+      Scores(5, 60),
     ];
 
     _seriesLineData.add(
@@ -72,28 +72,29 @@ class _ReportsState extends State<ReportsGraph> {
             ),
             Expanded(
               child: charts.LineChart(_seriesLineData,
-                  defaultRenderer: new charts.LineRendererConfig(
+                  defaultRenderer: charts.LineRendererConfig(
                       includeArea: true, stacked: true),
                   animate: true,
-                  animationDuration: Duration(seconds: 5),
+                  animationDuration: Duration(seconds: 1),
                   behaviors: [
-                    new charts.SeriesLegend(
+                    charts.SeriesLegend(
                       position: charts.BehaviorPosition.bottom,
                       outsideJustification:
                           charts.OutsideJustification.middleDrawArea,
                       horizontalFirst: false,
                       desiredMaxRows: 1,
-                      cellPadding: new EdgeInsets.only(right: 100.0,bottom: 5.0, top: 10.0),
+                      cellPadding:
+                          EdgeInsets.only(right: 100.0, bottom: 5.0, top: 10.0),
                       entryTextStyle: charts.TextStyleSpec(
                           color: charts.Color(r: 127, g: 63, b: 191),
                           fontFamily: 'sans-serif',
                           fontSize: 12),
                     ),
-                    new charts.ChartTitle('Time(min)',
+                    charts.ChartTitle('Time(min)',
                         behaviorPosition: charts.BehaviorPosition.bottom,
                         titleOutsideJustification:
                             charts.OutsideJustification.middleDrawArea),
-                    new charts.ChartTitle('Score',
+                    charts.ChartTitle('Score',
                         behaviorPosition: charts.BehaviorPosition.start,
                         titleOutsideJustification:
                             charts.OutsideJustification.middleDrawArea),
