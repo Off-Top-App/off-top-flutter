@@ -10,7 +10,7 @@ class ThemePreference {
   static const String ACCENT_THEME = 'ACCENT_THEME';
   static const String BACKGROUND_THEME = 'BACKGROUND_THEME';
 
-  Future<bool> setPrimaryTheme(int theme) async {
+  Future<void> setPrimaryTheme(int theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PRIMARY_THEME, theme);
   }
@@ -20,7 +20,7 @@ class ThemePreference {
     return prefs.getInt(PRIMARY_THEME);
   }
 
-  Future<bool> setSecondaryTheme(int theme) async {
+  Future<void> setSecondaryTheme(int theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(SECONDARY_THEME, theme);
   }
@@ -30,7 +30,7 @@ class ThemePreference {
     return prefs.getInt(SECONDARY_THEME);
   }
 
-  Future<bool> setAccentTheme(int theme) async {
+  Future<void> setAccentTheme(int theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(ACCENT_THEME, theme);
   }
@@ -40,7 +40,7 @@ class ThemePreference {
     return prefs.getInt(ACCENT_THEME);
   }
 
-  Future<bool> setBackgroundTheme(int theme) async {
+  Future<void> setBackgroundTheme(int theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(BACKGROUND_THEME, theme);
   }

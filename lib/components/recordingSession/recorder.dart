@@ -35,7 +35,7 @@ class _RecorderState extends State<Recorder> {
 
   StreamSubscription<dynamic> _recorderSubscription;
 
-  FlutterSoundRecorder recorderModule = FlutterSoundRecorder();
+  FlutterSoundRecorder recorderModule;
 
   String _recorderTxt = '00:00:00';
   double _dbLevel;
@@ -54,11 +54,7 @@ class _RecorderState extends State<Recorder> {
 
   Future<void> init() async {
     tempDir = await getApplicationDocumentsDirectory();
-    recorderModule.openAudioSession(
-        focus: AudioFocus.requestFocusTransient,
-        category: SessionCategory.playAndRecord,
-        mode: SessionMode.modeDefault,
-        device: AudioDevice.speaker);
+    recorderModule = FlutterSoundRecorder();
   }
 
   @override
@@ -68,6 +64,14 @@ class _RecorderState extends State<Recorder> {
     initializeDateFormatting();
     userId = widget.userId;
     ws = widget.ws;
+  }
+
+  Future<void> startAudioSession() async {
+    recorderModule.openAudioSession(
+        focus: AudioFocus.requestFocusTransient,
+        category: SessionCategory.playAndRecord,
+        mode: SessionMode.modeDefault,
+        device: AudioDevice.speaker);
   }
 
   void cancelRecorderSubscriptions() {
@@ -99,12 +103,12 @@ class _RecorderState extends State<Recorder> {
     final String now =
         DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
     try {
+      await startAudioSession();
       final PermissionStatus status = await Permission.microphone.request();
       if (status != PermissionStatus.granted) {
         throw RecordingPermissionException('Microphone permission not granted');
       }
 
-      //tempDir = await getApplicationDocumentsDirectory();
       final String path =
           '${tempDir.path}/${now}_user_${userId}_recording${ext[_codec.index]}';
 
@@ -160,7 +164,7 @@ class _RecorderState extends State<Recorder> {
     });
     print('Counter here $sessionCounter');
     if (sessionCounter > 2) {
-      // this.setSessionPreferences("Session Complete!");
+      // this.setSessionPreferences('Session Complete!');
     }
     try {
       await recorderModule.stopRecorder();
