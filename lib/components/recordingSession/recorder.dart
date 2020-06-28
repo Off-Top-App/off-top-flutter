@@ -74,14 +74,14 @@ class _RecorderState extends State<Recorder> {
         device: AudioDevice.speaker);
   }
 
-  void cancelRecorderSubscriptions() {
+  Future<void> cancelRecorderSubscriptions() async {
     if (_recorderSubscription != null) {
       _recorderSubscription.cancel();
       _recorderSubscription = null;
     }
   }
 
-  Future<void> releaseFlauto() async {
+  Future<void> closeAudioSession() async {
     try {
       await recorderModule.closeAudioSession();
     } catch (e) {
@@ -94,7 +94,7 @@ class _RecorderState extends State<Recorder> {
   void dispose() {
     super.dispose();
     cancelRecorderSubscriptions();
-    releaseFlauto();
+    closeAudioSession();
   }
 
   Future<void> startRecorder() async {
@@ -172,7 +172,8 @@ class _RecorderState extends State<Recorder> {
 
       ws.sendAudioFile(savePath, userId, topic);
 
-      cancelRecorderSubscriptions();
+      await cancelRecorderSubscriptions();
+      await closeAudioSession();
     } catch (err) {
       print('stopRecorder error: $err');
     }
