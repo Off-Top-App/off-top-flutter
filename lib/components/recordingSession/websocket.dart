@@ -12,17 +12,6 @@ class MyWebSocket {
   MyWebSocket(String channel) {
     try {
       this.channel = IOWebSocketChannel.connect(channel);
-      /*  this.channel.listen(
-        (dynamic message) {
-          print('message $message');
-        },
-        onDone: () {
-          print('ws channel closed');
-        },
-        onError: (dynamic error) {
-          print('ws error $error');
-        },
-      ); */
     } catch (e) {
       print('Connection exception $e');
     }
@@ -53,6 +42,10 @@ class MyWebSocket {
     final File file = File(audioData);
     file.openRead();
     final Uint8List uint8list = file.readAsBytesSync();
+
+    //This commented out code below is the old way that audio was sent to the
+    //websocket. I suggest to keep it around in the event that the new way
+    //doesn't work properly.
     /* ByteData file;
       file = await rootBundle.load(audioData);
       final Uint8List uint8list =
