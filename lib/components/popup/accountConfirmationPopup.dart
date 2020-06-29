@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/models/User.dart';
 
-import 'package:off_top_mobile/login/login.dart';
+import 'package:off_top_mobile/login.dart';
 
-Future<dynamic> Show_dialog_Popup(BuildContext context) {
+Future<dynamic> showDialogPopup(BuildContext context) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {

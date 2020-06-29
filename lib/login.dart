@@ -44,11 +44,11 @@ class _LoginPageState extends State<LoginPage> {
         headers: <String, String>{'Accept': 'application/json'});
     responseCode = response.statusCode;
     if (response.statusCode == 200) {
-      debugPrint('Code is working respone accpted');
+      debugPrint('Code is working response accpted');
     } else if (responseCode == 404) {
       throw Exception('Response failed to load code 404');
     } else {
-      debugPrint('ResposneCode is: ' + responseCode.toString());
+      debugPrint('ResponseCode is: ' + responseCode.toString());
       return;
     }
     final dynamic userData = json.decode(response.body);
