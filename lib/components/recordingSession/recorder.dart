@@ -92,9 +92,9 @@ class _RecorderState extends State<Recorder> {
 
   @override
   void dispose() {
-    super.dispose();
     cancelRecorderSubscriptions();
     closeAudioSession();
+    super.dispose();
   }
 
   Future<void> startRecorder() async {

@@ -30,7 +30,7 @@ class _RecordingPageState extends State<RecordingPage> {
 
   @override
   void dispose() {
-    //ws.channel.sink.close();
+    ws.channel.sink.close();
     super.dispose();
   }
 

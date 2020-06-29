@@ -34,6 +34,11 @@ class _MySettingsPageState extends State<MySettingsPage> {
     super.initState();
   }
 
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   void showProfile() {
     setState(() {
       _showProfile = !_showProfile;
