@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
@@ -32,27 +31,21 @@ class Recorder extends StatefulWidget {
 
 class _RecorderState extends State<Recorder> {
   bool _isRecording = false;
-
   StreamSubscription<dynamic> _recorderSubscription;
-
   FlutterSoundRecorder recorderModule;
-
   String _recorderTxt = '00:00:00';
   double _dbLevel;
-
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
   final Codec _codec = Codec.aacADTS;
-
   int userId;
   String topic;
   MyWebSocket ws;
   Directory tempDir;
   String savePath;
-
   int sessionCounter = 0;
 
-  Future<void> init() async {
+  Future<void> intializeRecorder() async {
     tempDir = await getApplicationDocumentsDirectory();
     recorderModule = FlutterSoundRecorder();
   }
@@ -60,7 +53,7 @@ class _RecorderState extends State<Recorder> {
   @override
   void initState() {
     super.initState();
-    init();
+    intializeRecorder();
     initializeDateFormatting();
     userId = widget.userId;
     ws = widget.ws;
@@ -115,8 +108,8 @@ class _RecorderState extends State<Recorder> {
       await recorderModule.startRecorder(
         toFile: path,
         codec: _codec,
-        bitRate: 16000,
-        sampleRate: 16000,
+        bitRate: 16,
+        sampleRate: 16,
         audioSource: AudioSource.voice_communication,
       );
       print('startRecorder');
@@ -130,9 +123,6 @@ class _RecorderState extends State<Recorder> {
                 isUtc: true);
             final String formattedDate =
                 DateFormat('mm:ss:SS', 'en_US').format(date);
-
-            //print('got update -> ${e.decibels}');
-
             setState(() {
               _recorderTxt = formattedDate.substring(0, 8);
               _dbLevel = e.decibels;
@@ -140,7 +130,6 @@ class _RecorderState extends State<Recorder> {
           }
         },
       );
-
       setState(() {
         savePath = path;
         _isRecording = true;
@@ -150,10 +139,7 @@ class _RecorderState extends State<Recorder> {
       setState(() {
         stopRecorder();
         _isRecording = false;
-        if (_recorderSubscription != null) {
-          _recorderSubscription.cancel();
-          _recorderSubscription = null;
-        }
+        cancelRecorderSubscriptions();
       });
     }
   }
@@ -164,7 +150,7 @@ class _RecorderState extends State<Recorder> {
     });
     print('Counter here $sessionCounter');
     if (sessionCounter > 2) {
-      // this.setSessionPreferences('Session Complete!');
+      setSessionPreferences('Session Complete!');
     }
     try {
       await recorderModule.stopRecorder();
