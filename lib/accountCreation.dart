@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/components/accountCreation/UserInputContainer.dart';
 import 'package:off_top_mobile/models/User.dart';
 import 'package:off_top_mobile/components/popup/accountConfirmationPopup.dart';
-
 import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
@@ -76,11 +74,11 @@ class _SignUpState extends State<SignUp> {
     final http.Response call = await http.post(address,
         headers: headers, body: json.encode(userObject.toJson()));
 
-    final int check = call.statusCode;
-    if (check == 200) {
+    final int checkCode = call.statusCode;
+    if (checkCode == 200) {
       debugPrint('call accepted');
     } else {
-      debugPrint(check.toString());
+      debugPrint(checkCode.toString());
       throw Exception('Response failed to load');
     }
 

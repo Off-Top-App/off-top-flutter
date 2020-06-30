@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'package:off_top_mobile/login.dart';
 
 Future<dynamic> showDialogPopup(BuildContext context) {

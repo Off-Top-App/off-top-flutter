@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
       userEmail = await auth.signInWithGoogle(context);
       await getUserData();
 
-      await Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute<void>(
           builder: (BuildContext context) => BottomNavigationTabs(
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       if (responseCode == 500) {
-        Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SignUp(email: userEmail)),
         );

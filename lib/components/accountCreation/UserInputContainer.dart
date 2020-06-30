@@ -23,7 +23,9 @@ class UserInput {
             keyboardType: keyBoardtype == false
                 ? TextInputType.text
                 : TextInputType.number,
-            textCapitalization: TextCapitalization.sentences,
+            textCapitalization: finalField == false
+                ? TextCapitalization.sentences
+                : TextCapitalization.none,
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(hintText: hintText),
             validator: (String value) {
