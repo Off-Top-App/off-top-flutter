@@ -35,6 +35,6 @@ class User {
         'username': username,
         'password': 'HoldTheDoor',
         'createdAt': createdAt,
-        'deletedAt': 'null',
+        'deletedAt': null,
       };
 }
