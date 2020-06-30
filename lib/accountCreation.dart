@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:off_top_mobile/components/accountCreation/UserInputContainer.dart';
 import 'package:off_top_mobile/models/User.dart';
 import 'package:off_top_mobile/components/popup/accountConfirmationPopup.dart';
 
@@ -14,6 +15,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  UserInput input;
   final String password = 'HoldTheDoor';
   final String deletedAt = null;
   String firstName;
@@ -36,6 +38,7 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
+    input = UserInput(context);
   }
 
   @override
@@ -84,35 +87,6 @@ class _SignUpState extends State<SignUp> {
     showDialogPopup(context);
   }
 
-  String check(String value, String hintText) {
-    if (value.isEmpty) {
-      return hintText;
-    }
-    return null;
-  }
-
-  Container textForm(String hintText, String requiredText,
-      TextEditingController userValue, bool keyBoardtype, bool finalField) {
-    return Container(
-        width: 280.0,
-        padding: const EdgeInsets.all(10.0),
-        child: TextFormField(
-          controller: userValue,
-          autocorrect: true,
-          keyboardType:
-              keyBoardtype == false ? TextInputType.text : TextInputType.number,
-          textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(hintText: hintText),
-          validator: (String value) {
-            return check(value, hintText);
-          },
-          onFieldSubmitted: finalField == false
-              ? (_) => FocusScope.of(context).nextFocus()
-              : (_) => saveAndSubmit(),
-        ));
-  }
-
   Future<void> saveAndSubmit() async {
     if (!_formKey.currentState.validate()) {
       return;
@@ -141,19 +115,19 @@ class _SignUpState extends State<SignUp> {
                   child: Text('Welcome: ' + widget.email,
                       style: const TextStyle(fontSize: 15.0)),
                 ),
-                textForm('Enter your First Name', 'First name required',
+                input.textForm('Enter your First Name', 'First name required',
                     firstNameController, false, false),
-                textForm('Enter your Last Name', 'Last name required',
+                input.textForm('Enter your Last Name', 'Last name required',
                     lastNameController, false, false),
-                textForm('Enter your Age', 'Age required', ageController, true,
-                    false),
-                textForm('Enter your City', 'City name required',
+                input.textForm('Enter your Age', 'Age required', ageController,
+                    true, false),
+                input.textForm('Enter your City', 'City name required',
                     cityController, false, false),
-                textForm('Enter your Gender', 'Gender required',
+                input.textForm('Enter your Gender', 'Gender required',
                     genderController, false, false),
-                textForm('Enter your Profession', 'Profession required',
+                input.textForm('Enter your Profession', 'Profession required',
                     professionalController, false, false),
-                textForm('Enter your Username', 'Username required',
+                input.textForm('Enter your Username', 'Username required',
                     usernameController, false, true),
                 RaisedButton(
                   onPressed: saveAndSubmit,
