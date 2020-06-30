@@ -108,8 +108,8 @@ class _RecorderState extends State<Recorder> {
       await recorderModule.startRecorder(
         toFile: path,
         codec: _codec,
-        bitRate: 16,
-        sampleRate: 16,
+        bitRate: 16000,
+        sampleRate: 16000,
         audioSource: AudioSource.voice_communication,
       );
       print('startRecorder');
