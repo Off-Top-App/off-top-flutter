@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/recordingSession.dart';
-import 'package:off_top_mobile/login/accountCreation.dart';
+import 'package:off_top_mobile/accountCreation.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
