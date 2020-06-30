@@ -45,7 +45,7 @@ class _RecorderState extends State<Recorder> {
   String savePath;
   int sessionCounter = 0;
 
-  Future<void> intializeRecorder() async {
+  Future<void> initializeRecorder() async {
     tempDir = await getApplicationDocumentsDirectory();
     recorderModule = FlutterSoundRecorder();
   }
@@ -53,7 +53,7 @@ class _RecorderState extends State<Recorder> {
   @override
   void initState() {
     super.initState();
-    intializeRecorder();
+    initializeRecorder();
     initializeDateFormatting();
     userId = widget.userId;
     ws = widget.ws;
