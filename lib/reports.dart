@@ -12,6 +12,16 @@ class ReportsPage extends StatefulWidget {
 }
 
 class _ReportsState extends State<ReportsPage> {
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
