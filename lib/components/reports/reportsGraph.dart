@@ -60,6 +60,11 @@ class _ReportsState extends State<ReportsGraph> {
   }
 
   @override
+  void dispose(){
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),

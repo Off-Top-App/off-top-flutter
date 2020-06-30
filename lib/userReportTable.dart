@@ -9,6 +9,17 @@ class UserReportTable extends StatefulWidget {
 }
 
 class _UserReportTableState extends State<UserReportTable> {
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   final List<UserSession> mockData = [
     UserSession('11/11/2020', '20 MIN', 'GOOD'),
     UserSession('11/12/2020', '25 MIN', 'OK'),
