@@ -1,24 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show DateFormat;
+import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart' show DateFormat;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:off_top_mobile/components/popup/TopicPopup.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 typedef RecordingCallback = void Function(bool);
 
 class Recorder extends StatefulWidget {
-  const Recorder({Key key, @required this.userId, @required this.ws})
-      : super(key: key);
+  const Recorder({
+    @required this.userId,
+    @required this.ws,
+  });
 
   final MyWebSocket ws;
   final int userId;
@@ -28,123 +30,142 @@ class Recorder extends StatefulWidget {
 }
 
 class _RecorderState extends State<Recorder> {
-  MyWebSocket ws;
-  Directory directory;
   bool _isRecording = false;
-  StreamSubscription<RecordStatus> _recorderSubscription;
-  StreamSubscription<double> _dbPeakSubscription;
-  //StreamSubscription _playerSubscription;
-  FlutterSound flutterSound;
-  int userId;
-  String topic;
+  StreamSubscription<dynamic> _recorderSubscription;
+  FlutterSoundRecorder recorderModule;
   String _recorderTxt = '00:00:00';
   double _dbLevel;
-  int sessionCounter = 0;
-
   double sliderCurrentPosition = 0.0;
   double maxDuration = 1.0;
+  final Codec _codec = Codec.aacADTS;
+  int userId;
+  String topic;
+  MyWebSocket ws;
+  Directory tempDir;
+  String savePath;
+  int sessionCounter = 0;
+
+  Future<void> initializeRecorder() async {
+    tempDir = await getApplicationDocumentsDirectory();
+    recorderModule = FlutterSoundRecorder();
+  }
 
   @override
   void initState() {
     super.initState();
-    flutterSound = FlutterSound();
-    flutterSound.setSubscriptionDuration(0.01);
-    flutterSound.setDbPeakLevelUpdate(0.8);
-    flutterSound.setDbLevelEnabled(true);
+    initializeRecorder();
     initializeDateFormatting();
     userId = widget.userId;
     ws = widget.ws;
   }
 
+  Future<void> startAudioSession() async {
+    recorderModule.openAudioSession(
+        focus: AudioFocus.requestFocusTransient,
+        category: SessionCategory.playAndRecord,
+        mode: SessionMode.modeDefault,
+        device: AudioDevice.speaker);
+  }
+
+  Future<void> cancelRecorderSubscriptions() async {
+    if (_recorderSubscription != null) {
+      _recorderSubscription.cancel();
+      _recorderSubscription = null;
+    }
+  }
+
+  Future<void> closeAudioSession() async {
+    try {
+      await recorderModule.closeAudioSession();
+    } catch (e) {
+      print('Released unsuccessful');
+      print(e);
+    }
+  }
+
   @override
   void dispose() {
+    cancelRecorderSubscriptions();
+    closeAudioSession();
     super.dispose();
   }
 
   Future<void> startRecorder() async {
     ws.sendFirstMessage(userId);
-    try {
-      final DateTime now = DateTime.now();
-      final String date = DateFormat('yyyy-MM-ddThh:mm').format(now);
-      final Directory tempDir = await getTemporaryDirectory();
-      setState(() {
-        directory = tempDir;
-      });
-      print('tempdir: $tempDir');
-      final String path = await flutterSound.startRecorder(
-          uri: tempDir.path +
-              '/' +
-              date.toString() +
-              '_' +
-              userId.toString() +
-              '_sound.aac',
-          codec: t_CODEC.CODEC_AAC);
-      print('path: $path');
-      _recorderSubscription = flutterSound.onRecorderStateChanged.listen(
-        (RecordStatus e) {
-          final DateTime date = DateTime.fromMillisecondsSinceEpoch(
-              e.currentPosition.toInt(),
-              isUtc: true);
-          final String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
-          setState(
-            () {
-              _recorderTxt = txt.substring(0, 8);
-            },
-          );
-        },
-      );
-      _dbPeakSubscription = flutterSound.onRecorderDbPeakChanged.listen(
-        (double value) {
-          print('got update -> $value');
-          setState(
-            () {
-              _dbLevel = value;
-            },
-          );
-        },
-      );
 
-      setState(
-        () {
-          _isRecording = true;
+    final String now =
+        DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
+    try {
+      await startAudioSession();
+      final PermissionStatus status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        throw RecordingPermissionException('Microphone permission not granted');
+      }
+
+      final String path =
+          '${tempDir.path}/${now}_user_${userId}_recording${ext[_codec.index]}';
+
+      await recorderModule.startRecorder(
+        toFile: path,
+        codec: _codec,
+        bitRate: 16000,
+        sampleRate: 16000,
+        audioSource: AudioSource.voice_communication,
+      );
+      print('startRecorder');
+      print('Path: ' + path);
+
+      _recorderSubscription = recorderModule.onProgress.listen(
+        (RecordingDisposition e) {
+          if (e != null && e.duration != null) {
+            final DateTime date = DateTime.fromMillisecondsSinceEpoch(
+                e.duration.inMilliseconds,
+                isUtc: true);
+            final String formattedDate =
+                DateFormat('mm:ss:SS', 'en_US').format(date);
+            setState(() {
+              _recorderTxt = formattedDate.substring(0, 8);
+              _dbLevel = e.decibels;
+            });
+          }
         },
       );
+      setState(() {
+        savePath = path;
+        _isRecording = true;
+      });
     } catch (err) {
       print('startRecorder error: $err');
+      setState(() {
+        stopRecorder();
+        _isRecording = false;
+        cancelRecorderSubscriptions();
+      });
     }
   }
 
   Future<void> stopRecorder() async {
-    print('STOP RECORDER');
     setState(() {
       sessionCounter += 1;
     });
     print('Counter here $sessionCounter');
     if (sessionCounter > 2) {
-      // this.setSessionPreferences('Session Complete!');
+      setSessionPreferences('Session Complete!');
     }
     try {
-      final String result = await flutterSound.stopRecorder();
-      final String filePath = result.replaceRange(0, 7, '');
-      ws.sendAudioFile(filePath, userId, topic);
+      await recorderModule.stopRecorder();
+      print('stopRecorder');
 
-      if (_recorderSubscription != null) {
-        _recorderSubscription.cancel();
-        _recorderSubscription = null;
-      }
-      if (_dbPeakSubscription != null) {
-        _dbPeakSubscription.cancel();
-        _dbPeakSubscription = null;
-      }
+      ws.sendAudioFile(savePath, userId, topic);
 
-      setState(
-        () {
-          _isRecording = false;
-        },
-      );
+      await cancelRecorderSubscriptions();
+      await closeAudioSession();
     } catch (err) {
       print('stopRecorder error: $err');
     }
+    setState(() {
+      _isRecording = false;
+    });
   }
 
   Future<void> setSessionPreferences(String value) async {
