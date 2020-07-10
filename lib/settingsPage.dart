@@ -151,7 +151,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
             SizedBox(
               width: 10.0,
             ),
-            FaIcon(FontAwesomeIcons.signOutAlt),git
+            FaIcon(FontAwesomeIcons.signOutAlt),
           ],
         ),
         onPressed: () => signOutAndRedirect(),
