@@ -8,7 +8,7 @@ class MyTopicDialog extends StatefulWidget {
   const MyTopicDialog({Key key, this.onTopicChanged}) : super(key: key);
 
   final ValueChanged<String> onTopicChanged;
-
+  
   @override
   _MyTopicDialogState createState() => _MyTopicDialogState();
 }
@@ -24,14 +24,26 @@ class _MyTopicDialogState extends State<MyTopicDialog> {
 
   @override
   void initState() {
-    setState(
-      () {
-        for (int i = 0; i < tileTitles.length; i++) {
-          listCheck.add(false);
-        }
-      },
-    );
     super.initState();
+    initLengthOfTiles();
+  }
+
+  @override
+  void dispose(){
+    initLengthOfTiles();
+    super.dispose();
+  }
+
+  void initLengthOfTiles(){
+    if(mounted){
+      setState(
+        () {
+          for (int i = 0; i < tileTitles.length; i++) {
+            listCheck.add(false);
+          }
+        },
+      );
+    }
   }
 
   static Future<bool> setSessionPreferences(String value) async {

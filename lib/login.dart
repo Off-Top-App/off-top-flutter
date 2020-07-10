@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:off_top_mobile/recordingSession.dart';
+import 'package:off_top_mobile/accountCreation.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:off_top_mobile/components/footer/bottomNavigationTabs.dart';
@@ -24,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   String name;
   bool showLoading = false;
   UserAuthentication auth;
+  int responseCode;
 
   @override
   void initState() {
@@ -36,6 +38,15 @@ class _LoginPageState extends State<LoginPage> {
     final String url = 'http://localhost:9000/user/$userEmail';
     final http.Response response = await http.get(Uri.encodeFull(url),
         headers: <String, String>{'Accept': 'application/json'});
+    responseCode = response.statusCode;
+    if (response.statusCode == 200) {
+      debugPrint('Code is working response accpted');
+    } else if (responseCode == 404) {
+      throw Exception('Response failed to load code 404');
+    } else {
+      debugPrint('ResponseCode is: ' + responseCode.toString());
+      return;
+    }
     final dynamic userData = json.decode(response.body);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(
@@ -111,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
       userEmail = await auth.signInWithGoogle(context);
       await getUserData();
 
-      await Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute<void>(
           builder: (BuildContext context) => BottomNavigationTabs(
@@ -119,6 +130,13 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
+      if (responseCode == 500) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SignUp(email: userEmail)),
+        );
+        debugPrint('is in SignUp');
+      }
       setState(() {
         showLoading = false;
       });
