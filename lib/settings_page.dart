@@ -1,9 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:off_top_mobile/models/UserSettings.dart';
 
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/DynamicListTile/DynamicListTile.dart';
+import 'package:off_top_mobile/HttpService.dart';
 
 void main() => runApp(MySettingsPage());
 
@@ -15,15 +23,22 @@ class MySettingsPage extends StatefulWidget {
 }
 
 class _MySettingsPageState extends State<MySettingsPage> {
+
+  Future<UserSettings> futureUserSettings;
   //State and Behavior
   bool _showProfile;
   bool _showSettings;
+
+
+
 
   @override
   void initState() {
     _showProfile = false;
     _showSettings = false;
     super.initState();
+    getSettings();
+
   }
 
   void showProfile() {
@@ -44,6 +59,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
         if (_showProfile) {
           _showProfile = !_showProfile;
         }
+
       },
     );
   }
@@ -193,4 +209,18 @@ Widget _buildSelectionList() {
       ListTile(onTap: null, title: Text('COMPUTER SCIENCE'))
     ],
   );
+
 }
+Future<void> getSettings() async{
+  final String url = "http://localhost:3000/api/userSettings/email?user_email=davidsquines@gmail.com";
+  final http.Response response = await http.get(Uri.encodeFull(url),
+      headers: <String, String>{'Accept': 'application/json'});
+  dynamic userData = json.decode(response.body);
+  userData = UserSettings();
+  print(userData);
+
+}
+
+
+
+

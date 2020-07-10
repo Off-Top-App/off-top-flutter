@@ -6,13 +6,15 @@ class HttpService{
   final String userSettingsUrl = "http://localhost:3000/api/userSettings";
 
   Future<List<UserSettings>> getSettings() async{
-    Response res = await get(postUrl);
+    final Response res = await get(userSettingsUrl);
     if(res.statusCode == 200){
-      List<dynamic> body = jsonDecode(res.body);
+      final List<dynamic> body = jsonDecode(res.body) as List;
 
-      List<UserSettings> settings = body.map((map))
-
+      List<UserSettings> settings =
+      body.map((dynamic item) => UserSettings.fromJson(item as Map<String, dynamic>)).toList();
+      return settings;
+    }else{
+      throw 'Cannot get settings.';
     }
-
   }
 }
