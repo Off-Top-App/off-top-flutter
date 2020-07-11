@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:off_top_mobile/components/recordingSession/websocket.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:off_top_mobile/components/recordingSession/vibration.dart';
+import 'package:vibration/vibration.dart';
 
 class Meter extends StatefulWidget {
   const Meter({Key key, @required this.ws}) : super(key: key);
@@ -18,8 +20,11 @@ class MeterState extends State<Meter> {
   double meterScore = 50;
   MyWebSocket ws;
 
+CustomVibration vibrate;
+
   @override
   void initState() {
+    vibrate = CustomVibration();
     ws = widget.ws;
     ws.channel.stream.listen(
       (dynamic onData) {
@@ -36,6 +41,7 @@ class MeterState extends State<Meter> {
       () {
         if (5 <= meterScore && !isOnTopic) {
           meterScore -= 5;
+          vibrate.PatternVibrate();
         } else if (isOnTopic && meterScore <= 95) {
           meterScore += 5;
         }
