@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> getUserData() async {
     final String userEmail = this.userEmail;
-    final String url = 'http://localhost:9000/user/$userEmail';
+    final String url = 'http://localhost:8000/user/$userEmail';
     final http.Response response = await http.get(Uri.encodeFull(url),
         headers: <String, String>{'Accept': 'application/json'});
     responseCode = response.statusCode;
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
     );
     setState(
       () {
-        userId = int.parse(userData['Id'].toString());
+        userId = int.parse(userData['id'].toString());
       },
     );
   }

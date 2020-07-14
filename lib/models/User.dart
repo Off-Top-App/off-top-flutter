@@ -25,12 +25,12 @@ class User {
   String deletedAt;
 
   Map<String, dynamic> toJson() => {
-        'age': age,
-        'city': city,
         'firstName': firstName,
         'lastName': lastName,
+        'city': city,
+        'age': age,
         'gender': gender,
-        'professional': profession,
+        'profession': profession,
         'email': email,
         'username': username,
         'password': 'HoldTheDoor',

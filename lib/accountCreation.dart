@@ -63,7 +63,7 @@ class _SignUpState extends State<SignUp> {
         '${now.month.toString()}/${now.day.toString()}/${now.year.toString()}';
 
     // API
-    const String address = 'http://localhost:9000/setUser';
+    const String address = 'http://localhost:8000/setUser';
     final Map<String, String> headers = <String, String>{
       'Content-type': 'application/json'
     };
