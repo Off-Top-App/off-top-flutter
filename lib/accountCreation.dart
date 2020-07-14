@@ -4,6 +4,7 @@ import 'package:off_top_mobile/components/accountCreation/UserInputContainer.dar
 import 'package:off_top_mobile/models/User.dart';
 import 'package:off_top_mobile/components/popup/accountConfirmationPopup.dart';
 import 'package:http/http.dart' as http;
+import 'package:off_top_mobile/services/userService.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({@required this.email});
@@ -13,30 +14,24 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  UserService userService;
   UserInput input;
-  final String password = 'HoldTheDoor';
   final String deletedAt = null;
-  String firstName;
-  String lastName;
-  String city;
-  String email;
-  String gender;
-  String professional;
-  String username;
-  String age;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
-  final TextEditingController professionalController = TextEditingController();
+  final TextEditingController professionController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
+  bool visible = false;
 
   @override
   void initState() {
     super.initState();
     input = UserInput(context);
+    userService = UserService();
   }
 
   @override
@@ -44,53 +39,35 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  bool visible = false;
-  Future<void> createAccount() async {
+  void createAccount() {
     setState(() {
       visible = true;
     });
-    debugPrint('Inserting new user: {}');
-    firstName = firstNameController.text;
-    lastName = lastNameController.text;
-    city = cityController.text;
-    age = ageController.text;
-    gender = genderController.text;
-    professional = professionalController.text;
-    username = usernameController.text;
-    email = widget.email;
     final DateTime now = DateTime.now();
     final String createdAt =
         '${now.month.toString()}/${now.day.toString()}/${now.year.toString()}';
-
-    // API
-    const String address = 'http://localhost:8000/setUser';
-    final Map<String, String> headers = <String, String>{
-      'Content-type': 'application/json'
-    };
-
-    final dynamic userObject = User(age, city, createdAt, deletedAt, email,
-        firstName, gender, lastName, password, professional, username);
-
-    final http.Response call = await http.post(address,
-        headers: headers, body: json.encode(userObject.toJson()));
-
-    final int checkCode = call.statusCode;
-    if (checkCode == 200) {
-      debugPrint('call accepted');
-    } else {
-      debugPrint(checkCode.toString());
-      throw Exception('Response failed to load');
-    }
-
+    final User userObject = userService.setUserData(
+      ageController.text,
+      cityController.text,
+      createdAt,
+      null,
+      widget.email,
+      firstNameController.text,
+      genderController.text,
+      lastNameController.text,
+      professionController.text,
+      usernameController.text
+    );
+    userService.insertNewUser(userObject);
     showDialogPopup(context);
   }
 
-  Future<void> saveAndSubmit() async {
+  void saveAndSubmit() {
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
-    await createAccount();
+    createAccount();
   }
 
   @override
@@ -124,7 +101,7 @@ class _SignUpState extends State<SignUp> {
                 input.textForm('Enter your Gender', 'Gender required',
                     genderController, false, false),
                 input.textForm('Enter your Profession', 'Profession required',
-                    professionalController, false, false),
+                    professionController, false, false),
                 input.textForm('Enter your Username', 'Username required',
                     usernameController, false, true),
                 RaisedButton(

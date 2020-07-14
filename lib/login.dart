@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         headers: <String, String>{'Accept': 'application/json'});
     responseCode = response.statusCode;
     if (response.statusCode == 200) {
-      debugPrint('Code is working response accpted');
+      debugPrint('Code is working response accepted');
     } else if (responseCode == 404) {
       throw Exception('Response failed to load code 404');
     } else {

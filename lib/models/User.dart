@@ -1,16 +1,16 @@
 class User {
   User(
-      this.age,
-      this.city,
-      this.createdAt,
-      this.deletedAt,
-      this.email,
-      this.firstName,
-      this.gender,
-      this.lastName,
-      this.password,
-      this.profession,
-      this.username);
+    this.age,
+    this.city,
+    this.createdAt,
+    this.deletedAt,
+    this.email,
+    this.firstName,
+    this.gender,
+    this.lastName,
+    this.profession,
+    this.username
+  );
 
   String age;
   String city;
@@ -20,7 +20,6 @@ class User {
   String profession;
   String email;
   String username;
-  String password;
   String createdAt;
   String deletedAt;
 
@@ -33,7 +32,6 @@ class User {
         'profession': profession,
         'email': email,
         'username': username,
-        'password': 'HoldTheDoor',
         'createdAt': createdAt,
         'deletedAt': null,
       };
