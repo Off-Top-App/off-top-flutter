@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/pushNotifications.dart';
+import 'package:off_top_mobile/components/pushNotifications/pushNotificationsManager.dart';
 import 'package:off_top_mobile/login.dart';
 import 'package:off_top_mobile/themes/themeProvider.dart';
 import 'package:provider/provider.dart';
