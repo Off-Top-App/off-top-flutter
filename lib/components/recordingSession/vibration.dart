@@ -10,14 +10,9 @@ class CustomVibration {
 
   PatternVibrate() {
     HapticFeedback.mediumImpact();
- 
     sleep(
       const Duration(milliseconds: 400),
     );
-
-    print('medium impact vibration');
-
-
-
+    print('Read Low Focus Score');
   }
 }

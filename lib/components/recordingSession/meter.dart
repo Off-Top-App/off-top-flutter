@@ -19,8 +19,7 @@ class MeterState extends State<Meter> {
   bool isOnTopic;
   double meterScore = 50;
   MyWebSocket ws;
-
-CustomVibration vibrate;
+  CustomVibration vibrate;
 
   @override
   void initState() {
@@ -35,6 +34,7 @@ CustomVibration vibrate;
     );
     super.initState();
   }
+
 
   void updateScore(bool isOnTopic) {
     setState(
