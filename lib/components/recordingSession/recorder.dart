@@ -154,9 +154,15 @@ class _RecorderState extends State<Recorder> {
     }
     try {
       await recorderModule.stopRecorder();
-      print('stopRecorder');
+      DateTime now = DateTime.now();
+      DateTime date = DateTime(
+          now.year, now.month, now.day, now.hour, now.minute, now.second);
+      print('''<stopRecorder method invoked>
+             stopped on <dd/mm/yy> :${date.day}/${date.month}/${date.year}
+             ticker stopped at <hh/mm/ss>: ${date.hour}/${date.minute}/${date.second}
+             ''');
 
-      ws.sendAudioFile(savePath, userId, topic);
+      ws.sendAudioFile(savePath, userId, topic, date);
 
       await cancelRecorderSubscriptions();
       await closeAudioSession();
