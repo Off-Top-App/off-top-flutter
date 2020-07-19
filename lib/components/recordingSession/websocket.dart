@@ -18,11 +18,16 @@ class MyWebSocket {
   WebSocketChannel channel;
 
   Future<void> sendAudioFile(
-      String exportedAudioData, int userID, String topic) async {
+      String exportedAudioData, int userID, String topic, DateTime date) async {
     final List<int> audioData = await processAudioFile(exportedAudioData);
     channel.sink.add(
       json.encode(
-        {'audio_data': audioData, 'user_id': userID.toInt(), 'topic': topic},
+        {
+          'audio_data': audioData,
+          'user_id': userID.toInt(),
+          'topic': topic,
+          'time_exported': date.toString()
+        },
       ),
     );
   }
