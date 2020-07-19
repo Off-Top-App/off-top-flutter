@@ -44,8 +44,7 @@ class _SignUpState extends State<SignUp> {
       visible = true;
     });
     final DateTime now = DateTime.now();
-    final String createdAt =
-        '${now.month.toString()}/${now.day.toString()}/${now.year.toString()}';
+    final String createdAt = now.toString();
     final User userObject = userService.setUserData(
       ageController.text,
       cityController.text,
