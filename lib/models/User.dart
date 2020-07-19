@@ -33,6 +33,6 @@ class User {
         'email': email,
         'username': username,
         'created_at': createdAt,
-        'deletedAt': null,
+        'deleted_at': null,
       };
 }
