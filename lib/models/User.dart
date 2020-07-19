@@ -32,7 +32,7 @@ class User {
         'profession': profession,
         'email': email,
         'username': username,
-        'createdAt': createdAt,
+        'created_at': createdAt,
         'deletedAt': null,
       };
 }
