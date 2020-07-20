@@ -27,8 +27,7 @@ class _RecordingPageState extends State<RecordingPage> {
     pushNotificationsManager.getMessage();
     userId = widget.userId;
     super.initState();
-    ws = MyWebSocket('ws://localhost:9000/name');
-    //"ws://10.0.2.2:9000/name");
+    ws = MyWebSocket('ws://localhost:9000/session-handler');
   }
 
   @override
