@@ -91,10 +91,10 @@ class _RecorderState extends State<Recorder> {
   }
 
   Future<void> startRecorder() async {
-    final String now = DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
-    ws.sendFirstMessage(userId);
+    final String now =
+        DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
+    ws.initializeWebsocketCommunication(userId);
 
-    
     try {
       await startAudioSession();
       final PermissionStatus status = await Permission.microphone.request();
@@ -154,9 +154,8 @@ class _RecorderState extends State<Recorder> {
     }
     try {
       await recorderModule.stopRecorder();
-      print('stopRecorder');
-      final String now = DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
-      ws.sendAudioFile(savePath, userId, topic, now);
+      final DateTime exportedTime = getExportedTime();
+      ws.sendAudioFile(savePath, userId, topic, exportedTime);
 
       await cancelRecorderSubscriptions();
       await closeAudioSession();
@@ -225,5 +224,18 @@ class _RecorderState extends State<Recorder> {
         ],
       ),
     );
+  }
+
+  DateTime getExportedTime() {
+    final DateTime now = DateTime.now();
+    final DateTime date = DateTime(
+      now.year, 
+      now.month, 
+      now.day, 
+      now.hour, 
+      now.minute, 
+      now.second
+    );
+    return date;
   }
 }
