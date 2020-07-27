@@ -20,6 +20,7 @@ class MyWebSocket {
   Future<void> sendAudioFile(
       String exportedAudioData, int userID, String topic) async {
     final List<int> audioData = await processAudioFile(exportedAudioData);
+    print(audioData.toString() + '\n'); // array of integers/bytes
     channel.sink.add(
       json.encode(
         {'audio_data': audioData, 'user_id': userID.toInt(), 'topic': topic},

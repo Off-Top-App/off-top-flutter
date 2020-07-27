@@ -31,6 +31,9 @@ class Recorder extends StatefulWidget {
 
 class _RecorderState extends State<Recorder> {
   bool _isRecording = false;
+  // added code
+  FlutterSoundHelper soundHelper = FlutterSoundHelper();
+  //end code
   StreamSubscription<dynamic> _recorderSubscription;
   FlutterSoundRecorder recorderModule;
   String _recorderTxt = '00:00:00';
@@ -59,12 +62,21 @@ class _RecorderState extends State<Recorder> {
     ws = widget.ws;
   }
 
+// audio session opened
   Future<void> startAudioSession() async {
     recorderModule.openAudioSession(
         focus: AudioFocus.requestFocusTransient,
         category: SessionCategory.playAndRecord,
         mode: SessionMode.modeDefault,
         device: AudioDevice.speaker);
+  }
+
+  Future<void> getAudioData() async {
+    while (_isRecording) {
+      await recorderModule.startRecorder();
+      sleep(const Duration(seconds: 10));
+      await recorderModule.stopRecorder();
+    }
   }
 
   Future<void> cancelRecorderSubscriptions() async {
@@ -110,6 +122,7 @@ class _RecorderState extends State<Recorder> {
         codec: _codec,
         bitRate: 16000,
         sampleRate: 16000,
+        numChannels: 2,
         audioSource: AudioSource.voice_communication,
       );
       print('startRecorder');
@@ -123,6 +136,10 @@ class _RecorderState extends State<Recorder> {
                 isUtc: true);
             final String formattedDate =
                 DateFormat('mm:ss:SS', 'en_US').format(date);
+            // added code here
+            getAudioData(); //int return
+            // change e.duration for varying times.
+            // end of added code
             setState(() {
               _recorderTxt = formattedDate.substring(0, 8);
               _dbLevel = e.decibels;
