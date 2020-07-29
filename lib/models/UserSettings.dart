@@ -5,33 +5,56 @@ class UserSettings {
   UserSettings({
     this.appColor,
     this.vibrationType,
-    this.defaultCatgories,
+    this.defaultCategories,
     this.alertType,
     this.userEmail,
   });
 
   String appColor;
   String vibrationType;
-  List<String> defaultCatgories;
+  List<String> defaultCategories;
   String alertType;
   String userEmail;
 
-  factory UserSettings.fromJson(Map<String, dynamic> json){
-    return UserSettings(
-      appColor: json["app_color"] as String,
-      vibrationType: json['vibration_type'] as String,
-      defaultCatgories: List<String>.from(json["default_catgories"] as List<String>),
-      alertType: json["alert_type"] as String,
-      userEmail: json["user_email"] as String,
-    );
+  void setUserSettingsData(dynamic json){
+    appColor = json['data']['app_color'].toString();
+    vibrationType = json['data']['vibration_type'].toString();
+    defaultCategories = json['data']['default_categories'].toString().replaceAll("[", "").replaceAll("]", "").split(', ').map((String text) => text.toString()).toList();
+    alertType = json['data']['alert_type'].toString();
+    userEmail = json['data']['user_email'].toString();
+
+
   }
+  List<String> returnAppCollor(){
+    List<String> desiredData = List<String>();
+    desiredData.add(appColor.toString());
+    print(appColor);
+  }
+  List<String> returnDefaultCategories(){
+    return defaultCategories;
+  }
+  List<String> returnVibrationType(){
+    List<String> desiredData = List<String>();
+    desiredData.add(vibrationType);
+    print(vibrationType);
+  }
+  List<String> returnAlertType(){
+    List<String> desiredData = List<String>();
+    desiredData.add(alertType);
+    print(alertType);
+  }
+
+
 
   Map<String, dynamic> toJson() => {
     "app_color": appColor,
     "vibration_type": vibrationType,
-    "default_catgories": List<dynamic>.from(defaultCatgories.map((x) => x)),
+    "default_catgories": List<dynamic>.from(defaultCategories.map((x) => x)),
     "alert_type": alertType,
     "user_email": userEmail,
   };
+
+
+
 
 }

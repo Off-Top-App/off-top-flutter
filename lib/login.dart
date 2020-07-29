@@ -54,14 +54,15 @@ class _LoginPageState extends State<LoginPage> {
       'name',
       userData['firstName'].toString(),
     );
+    print(userData['email'].toString());
     prefs.setString('email',
         userData['email'].toString()
     );
     setState(
       () {
         userId = int.parse(userData['Id'].toString());
-        userEmail = (userData['user_email']).toString();
-        print(userEmail);
+        userEmail = (userData['email']).toString();
+
       },
     );
   }

@@ -9,10 +9,12 @@ import 'package:off_top_mobile/models/User.dart';
 import 'package:off_top_mobile/models/UserSettings.dart';
 
 import 'package:off_top_mobile/components/offTopTitle.dart';
-import 'package:off_top_mobile/DynamicListTile/DynamicListTile.dart';
+import 'package:off_top_mobile/DynamicListTile/PreferenceScreen.dart';
 import 'package:off_top_mobile/login.dart';
 import 'package:off_top_mobile/login/googleSignIn.dart';
 import 'package:off_top_mobile/components/settings/settingsWidgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:off_top_mobile/userSettingsHTTP.dart';
 
 class MySettingsPage extends StatefulWidget {
   //constructor
@@ -30,6 +32,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
   SettingsWidgets widgets;
   UserSettings _userSettings;
   int responseCode;
+  String email = '';
+  HttpSettings userSet;
 
   @override
   void initState() {
@@ -39,35 +43,37 @@ class _MySettingsPageState extends State<MySettingsPage> {
     _showSettings = true;
     _showPreferences = false;
     _userSettings =  UserSettings();
+    init();
     super.initState();
   }
+
+  Future<void> init() async{
+    await getEmailPreference().then(updateEmail);
+    //print('email' + email);
+    userSet = HttpSettings(email);
+    print(userSet.email);
+    await userSet.getUserData(_userSettings);
+
+
+
+  }
+  Future<String> getEmailPreference() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String email = prefs.getString('email');
+    return email;
+  }
+  void updateEmail(String incomingEmail) {
+    setState(
+          () {
+        email = incomingEmail;
+      },
+    );
+  }
+
 
   @override
   void dispose(){
     super.dispose();
-
-  }
-
-  Future<void> getUserData() async {
-    final String url = "http://localhost:3000/api/userSettings/email?user_email=davidsquines@gmail.com";
-    final http.Response response = await http.get(Uri.encodeFull(url),
-        headers: <String, String>{'Accept': 'application/json'});
-    responseCode = response.statusCode;
-    if (response.statusCode == 200) {
-      debugPrint('Code is working response accpted');
-    } else if (responseCode == 404) {
-      throw Exception('Response failed to load code 404');
-    } else {
-      debugPrint('ResponseCode is: ' + responseCode.toString());
-      return;
-    }
-    dynamic settingsData = json.decode(response.body);
-
-    _userSettings.userEmail = settingsData['data']['user_email'].toString();
-    _userSettings.alertType = settingsData['data']['alert_type'].toString();
-    _userSettings.appColor = settingsData['data']['app_color'].toString();
-    _userSettings.vibrationType = settingsData['data']['vibration_type'].toString();
-    _userSettings.defaultCatgories = List<String>.from(settingsData['data']["default_catgories"] as List<String>);
 
   }
 
@@ -80,10 +86,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
     });
   }
 
-  void showSettings()  {
-    setState(() async {
-      await getUserData();
-      print(_userSettings);
+  void showSettings() async {
+    setState(() {
       _showSettings = !_showSettings;
       if (_showProfile) {
         _showProfile = !_showProfile;
@@ -95,7 +99,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     setState(() {
       _showPreferences = !_showPreferences;
       if (_showPreferences) {
-        PreferenceScreen();
+        PreferenceScreen(_userSettings);
       }
     });
   }
@@ -179,7 +183,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
           visible: _showPreferences,
           child: Expanded(
             child: Container(
-              child: PreferenceScreen(),
+              child: PreferenceScreen(_userSettings),
             ),
           ),
         ),

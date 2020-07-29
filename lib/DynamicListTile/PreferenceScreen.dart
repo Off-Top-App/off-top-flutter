@@ -4,23 +4,40 @@ import 'package:off_top_mobile/models/ColorModel.dart';
 import 'package:off_top_mobile/models/ListTileModel.dart';
 import 'package:off_top_mobile/DynamicListTile/ListTileFields.dart';
 import 'package:off_top_mobile/themes/ColorFields.dart';
+import 'package:off_top_mobile/models/UserSettings.dart';
+import 'package:off_top_mobile/userSettingsHTTP.dart';
 
 class PreferenceScreen extends StatefulWidget {
+  UserSettings userSettings;
+  HttpSettings ob;
+  String email;
+
+
+  PreferenceScreen(this.userSettings);
+
   @override
   State<StatefulWidget> createState() {
-    return _PreferenceScreenState();
+    print('color from passed user Settings: '+ userSettings.appColor);
+    print(userSettings.userEmail);
+    ob = HttpSettings(email);
+    //print(ob.email);
+    return _PreferenceScreenState(userSettings);
   }
 }
 
 class _PreferenceScreenState extends State<PreferenceScreen> {
+  UserSettings objectFromUser;
+  _PreferenceScreenState(this.objectFromUser);
+
   @override
   void initState() {
     super.initState();
+    //print('passed email' + objectFromUser.email);
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<ListTileModel> listTileFields = ListTileFields().fields;
+    final List<ListTileModel> listTileFields = ListTileFields(objectFromUser).fields;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -47,8 +64,8 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
   List<Widget> _buildExpandableContent(ListTileModel listTileFields) {
     final List<Widget> columnContent = <Widget>[];
 
-    _noColorListTileBuilder(listTileFields, columnContent);
-    _hasColorListTileBuilder(listTileFields, columnContent);
+    _noColorListTileBuilder(listTileFields, columnContent);//when color is not set
+    _hasColorListTileBuilder(listTileFields, columnContent);//when color is set
 
     return columnContent;
   }
@@ -59,10 +76,13 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
       for (final String content in fields.dataList) {
         columnContent.add(
           ListTileBuilder(
+            userSettings: objectFromUser,
             text: content,
             icon: fields.icon,
             color: Theme.of(context).secondaryHeaderColor,
             isColor: false,
+            typeOfData: fields.dataName,
+
           ),
         );
       }
@@ -77,12 +97,25 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
           ListTileBuilder(
             text: listModelFields.dataList[i],
             icon: listModelFields.icon,
-            color: listModelFields.iconColor[i],
+            color: listModelFields.iconColor[i],//builds the color here
             isColor: true,
             index: i,
+            typeOfData: listModelFields.dataName,
           ),
         );
       }
     }
   }
+  void _buildUserListTile(UserSettings userSettings){
+
+
+  }
+
+
+
+
+
 }
+
+//Color[i].toString() == widget.userSettings.appColor.toUpperCase() ?
+//            Icons.check:listModelFields.icon
