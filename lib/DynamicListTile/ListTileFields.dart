@@ -8,11 +8,7 @@ class ListTileFields {
   UserSettings settingsFromData;
   ListTileFields(this.settingsFromData);
 
-  List<String> returnAppColor(){
-    HttpSettings ob = HttpSettings(settingsFromData.userEmail);
-    ob.getUserData(settingsFromData);
-    settingsFromData.returnAppCollor();
-  }
+
   List<ListTileModel> fields = <ListTileModel>[
     ListTileModel(
       'default_categories',

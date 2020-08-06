@@ -44,23 +44,39 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
 
     return Container(
       color: Theme.of(context).backgroundColor,
-      child: ListTile(
+      child: CheckboxListTile(
+
+        value: checkFromUser(settingsFromUser, widget.text, widget.typeOfData),
         title: Text(
           widget.text,
           style: TextStyle(
               fontSize: 12.0, fontWeight: FontWeight.bold),
         ),
-        leading: Icon(
+        secondary: Icon(
           widget.icon,
           color: widget.color,
         ),
+        onChanged:(bool val){
+          setState(() {
+            _isChecked = !val;
+          });
+        },
+        /*
         trailing: Checkbox(
-            value: checkFromUser(settingsFromUser, widget.text, widget.typeOfData,),
+            value: checkFromUser(settingsFromUser, widget.text, widget.typeOfData),
             onChanged: (bool val) {
               setState(() {
-                _isChecked = val;
+                if(val){
+                  _isChecked = false;
+                }
+                else{
+                  _isChecked = true;
+                }
+
               });
             }),
+
+         */
         ),
         /*
         onTap: (){
@@ -77,45 +93,42 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
          */
     );
   }
+
   bool checkFromUser(UserSettings user, String textLine, String dataType){
-    //print(textLine.toLowerCase());
-    //print(dataType);
-    //print(user.defaultCategories);
     List<String> dataFromUser = <String>[];
-    print(dataType);
-    print(textLine);
     if(dataType == 'default_categories'){
       dataFromUser = user.returnDefaultCategories();
-
-      print(dataFromUser.length);
       int l = dataFromUser.length;
-      for(int i; i < l != null;i++){
+      for(int i = 0; i < l;i++){
         if(dataFromUser[i] == textLine.toLowerCase()){
           print(dataFromUser[i]);
+
           return true;
         }
       }
       return false;
     }
     if(dataType == 'app_color'){
-      return true;
+      //colorSetter();
+      String data = user.appColor;
+      if(data.toString() == textLine.toLowerCase()) {
+
+        return true;
+      }
+      return false;
     }
     if(dataType == 'vibration_type'){
       String data = user.vibrationType;
-
-      print('user vibration type' + data);
       if(data==textLine.toLowerCase()){
-        print('TRUE');
+
         return true;
       }
       else{
-        print('FALSE');
         return false;
       }
     }
     if(dataType == 'alert_type'){
       String data = user.alertType;
-
       print('alert type: ' + data);
       if(data==textLine.toLowerCase()){
         print('TRUE');
@@ -126,15 +139,7 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
         return false;
       }
     }
-    return false;
-
-
-
   }
-
-
-
-
   void colorSetter() {
 
     if (widget.isColor) {
