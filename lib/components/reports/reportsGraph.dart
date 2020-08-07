@@ -4,13 +4,25 @@ import 'package:flutter/rendering.dart';
 import 'package:off_top_mobile/components/subnavbar.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:off_top_mobile/components/reports/scores.dart';
+import 'package:off_top_mobile/components/reports/getTableDataWidget.dart';
+import 'package:off_top_mobile/models/userSession.dart';
+import 'package:off_top_mobile/userReportTable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ReportsGraph extends StatefulWidget {
+  const ReportsGraph(this.date);
+  final String date;
   @override
   _ReportsState createState() => _ReportsState();
 }
 
+
+
+
 class _ReportsState extends State<ReportsGraph> {
+  String date;
+
   List<charts.Series<Scores, int>> _seriesLineData;
   void _generateData() {
     var linesscoresdata1 = [
@@ -31,6 +43,7 @@ class _ReportsState extends State<ReportsGraph> {
       Scores(5, 60),
     ];
 
+
     _seriesLineData.add(
       charts.Series(
         colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff990099)),
@@ -40,6 +53,7 @@ class _ReportsState extends State<ReportsGraph> {
         measureFn: (Scores scores, _) => scores.beatsval,
       ),
     );
+
 
     _seriesLineData.add(
       charts.Series(
@@ -61,15 +75,22 @@ class _ReportsState extends State<ReportsGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(leading:
+          IconButton(icon:Icon (Icons.arrow_back),
+          onPressed:() {Navigator.pop(context);})),
+        body: Container(
       padding: const EdgeInsets.only(top: 40.0, bottom: 20.0),
       child: Center(
         child: Column(
           children: <Widget>[
             Text(
-              'Focus Score Graph',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              widget.date,
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
+           
+
             Expanded(
               child: charts.LineChart(_seriesLineData,
                   defaultRenderer: charts.LineRendererConfig(
@@ -103,6 +124,6 @@ class _ReportsState extends State<ReportsGraph> {
           ],
         ),
       ),
-    );
+    )));
   }
 }
