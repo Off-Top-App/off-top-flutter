@@ -31,9 +31,8 @@ class Recorder extends StatefulWidget {
 
 class _RecorderState extends State<Recorder> {
   bool _isRecording = false;
-  // added code
-  FlutterSoundHelper soundHelper = FlutterSoundHelper();
-  //end code
+  bool _recording = false;
+  Stopwatch stopwatch = new Stopwatch();
   StreamSubscription<dynamic> _recorderSubscription;
   FlutterSoundRecorder recorderModule;
   String _recorderTxt = '00:00:00';
@@ -47,6 +46,7 @@ class _RecorderState extends State<Recorder> {
   Directory tempDir;
   String savePath;
   int sessionCounter = 0;
+  int elapsedTime;
 
   Future<void> initializeRecorder() async {
     tempDir = await getApplicationDocumentsDirectory();
@@ -62,21 +62,12 @@ class _RecorderState extends State<Recorder> {
     ws = widget.ws;
   }
 
-// audio session opened
   Future<void> startAudioSession() async {
     recorderModule.openAudioSession(
         focus: AudioFocus.requestFocusTransient,
         category: SessionCategory.playAndRecord,
         mode: SessionMode.modeDefault,
         device: AudioDevice.speaker);
-  }
-
-  Future<void> getAudioData() async {
-    while (_isRecording) {
-      await recorderModule.startRecorder();
-      sleep(const Duration(seconds: 10));
-      await recorderModule.stopRecorder();
-    }
   }
 
   Future<void> cancelRecorderSubscriptions() async {
@@ -103,10 +94,10 @@ class _RecorderState extends State<Recorder> {
   }
 
   Future<void> startRecorder() async {
-    ws.sendFirstMessage(userId);
-
     final String now =
         DateFormat('yyyy-MMMM-dd_HH:mm:ss:SSS').format(DateTime.now());
+    ws.initializeWebsocketCommunication(userId);
+
     try {
       await startAudioSession();
       final PermissionStatus status = await Permission.microphone.request();
@@ -122,7 +113,6 @@ class _RecorderState extends State<Recorder> {
         codec: _codec,
         bitRate: 16000,
         sampleRate: 16000,
-        numChannels: 2,
         audioSource: AudioSource.voice_communication,
       );
       print('startRecorder');
@@ -136,10 +126,6 @@ class _RecorderState extends State<Recorder> {
                 isUtc: true);
             final String formattedDate =
                 DateFormat('mm:ss:SS', 'en_US').format(date);
-            // added code here
-            getAudioData(); //int return
-            // change e.duration for varying times.
-            // end of added code
             setState(() {
               _recorderTxt = formattedDate.substring(0, 8);
               _dbLevel = e.decibels;
@@ -171,10 +157,8 @@ class _RecorderState extends State<Recorder> {
     }
     try {
       await recorderModule.stopRecorder();
-      print('stopRecorder');
-
-      ws.sendAudioFile(savePath, userId, topic);
-
+      final DateTime exportedTime = getExportedTime();
+      ws.sendAudioFile(savePath, userId, topic, exportedTime);
       await cancelRecorderSubscriptions();
       await closeAudioSession();
     } catch (err) {
@@ -190,6 +174,44 @@ class _RecorderState extends State<Recorder> {
     prefs.setString('session', value);
   }
 
+  Future<void> recorderPressed() async {
+    if (!_isRecording) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => MyTopicDialog(
+          onTopicChanged: (String childTopic) {
+            topic = childTopic;
+          },
+        ),
+      );
+      setState(() {
+        _recording = true;
+        stopwatch.reset();
+        stopwatch.start();
+      });
+      while (_recording) {
+        await startRecorder();
+        await Future.delayed(
+            const Duration(seconds: 5), () async => await stopRecorder());
+      }
+    } else {
+      if (_isRecording) {
+        setState(() {
+          _recording = false;
+          stopwatch.stop();
+        });
+        stopRecorder();
+      }
+    }
+  }
+
+  DateTime getExportedTime() {
+    final DateTime now = DateTime.now();
+    final DateTime date = DateTime(
+        now.year, now.month, now.day, now.hour, now.minute, now.second);
+    return date;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -198,22 +220,8 @@ class _RecorderState extends State<Recorder> {
         children: <Widget>[
           FloatingActionButton(
             heroTag: 'recorder',
-            onPressed: () async {
-              if (!_isRecording) {
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) => MyTopicDialog(
-                    onTopicChanged: (String childTopic) {
-                      topic = childTopic;
-                    },
-                  ),
-                );
-                return startRecorder();
-              } else {
-                stopRecorder();
-              }
-            },
-            child: _isRecording
+            onPressed: () async => await recorderPressed(),
+            child: _recording
                 ? Icon(Icons.stop)
                 : Icon(
                     Icons.mic,
@@ -223,7 +231,7 @@ class _RecorderState extends State<Recorder> {
           ),
           Container(
             child: AutoSizeText(
-              _recorderTxt,
+              stopwatch.elapsed.toString().substring(2, 10),
               style: TextStyle(
                 fontSize: 22.0,
                 color: Colors.black,
@@ -231,7 +239,7 @@ class _RecorderState extends State<Recorder> {
             ),
           ),
           Container(
-            child: _isRecording
+            child: _recording
                 ? LinearProgressIndicator(
                     value: 100.0 / 160.0 * (_dbLevel ?? 1) / 100,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.green),

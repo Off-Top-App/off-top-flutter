@@ -1,4 +1,4 @@
-# Off Top Flutter mobile application
+# OFF-TOP Flutter mobile application
 
 A new Flutter project.
 
