@@ -40,43 +40,29 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
   Widget build(BuildContext context) {
     bool _isChecked = false;
     themeChange = Provider.of<ThemeProvider>(context);
-
-
     return Container(
       color: Theme.of(context).backgroundColor,
-      child: CheckboxListTile(
-
-        value: checkFromUser(settingsFromUser, widget.text, widget.typeOfData),
+      child: ListTile(
         title: Text(
           widget.text,
           style: TextStyle(
               fontSize: 12.0, fontWeight: FontWeight.bold),
         ),
-        secondary: Icon(
+        leading: Icon(
           widget.icon,
           color: widget.color,
+       ),
+        trailing: Icon(
+          //_isChecked ? Icons.check_box : Icons.check_box_outline_blank,
+          Icons.check_box,
         ),
-        onChanged:(bool val){
-          setState(() {
-            _isChecked = !val;
-          });
+        onTap: (){
+          setState(
+                () {
+              _isChecked = true;
+            },
+          );
         },
-        /*
-        trailing: Checkbox(
-            value: checkFromUser(settingsFromUser, widget.text, widget.typeOfData),
-            onChanged: (bool val) {
-              setState(() {
-                if(val){
-                  _isChecked = false;
-                }
-                else{
-                  _isChecked = true;
-                }
-
-              });
-            }),
-
-         */
         ),
         /*
         onTap: (){
@@ -90,7 +76,7 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
         },
       ),
 
-         */
+     */
     );
   }
 
@@ -102,7 +88,6 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
       for(int i = 0; i < l;i++){
         if(dataFromUser[i] == textLine.toLowerCase()){
           print(dataFromUser[i]);
-
           return true;
         }
       }
@@ -112,7 +97,6 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
       //colorSetter();
       String data = user.appColor;
       if(data.toString() == textLine.toLowerCase()) {
-
         return true;
       }
       return false;
@@ -120,7 +104,6 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
     if(dataType == 'vibration_type'){
       String data = user.vibrationType;
       if(data==textLine.toLowerCase()){
-
         return true;
       }
       else{
@@ -140,8 +123,8 @@ class _ListTileBuilderState extends State<ListTileBuilder> {
       }
     }
   }
-  void colorSetter() {
 
+  void colorSetter() {
     if (widget.isColor) {
       themeChange.primaryColor = color[widget.index].color[0];
       themeChange.secondaryColor = color[widget.index].color[1];
