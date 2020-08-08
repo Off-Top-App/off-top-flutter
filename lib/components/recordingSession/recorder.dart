@@ -46,7 +46,6 @@ class _RecorderState extends State<Recorder> {
   Directory tempDir;
   String savePath;
   int sessionCounter = 0;
-  int elapsedTime;
 
   Future<void> initializeRecorder() async {
     tempDir = await getApplicationDocumentsDirectory();
