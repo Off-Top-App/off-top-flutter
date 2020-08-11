@@ -20,7 +20,7 @@ class _ReportsState extends State<ReportsPage> {
       child: Column(
         children: <Widget>[
             SizedBox(
-              height: 600,
+              height: MediaQuery.of(context).size.height,
                 child: UserReportTable(),
             ),
         ],

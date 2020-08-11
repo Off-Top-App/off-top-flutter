@@ -4,10 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:off_top_mobile/components/subnavbar.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:off_top_mobile/components/reports/scores.dart';
-import 'package:off_top_mobile/components/reports/getTableDataWidget.dart';
-import 'package:off_top_mobile/models/userSession.dart';
-import 'package:off_top_mobile/userReportTable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 class ReportsGraph extends StatefulWidget {
@@ -17,15 +14,12 @@ class ReportsGraph extends StatefulWidget {
   _ReportsState createState() => _ReportsState();
 }
 
-
-
-
 class _ReportsState extends State<ReportsGraph> {
   String date;
 
   List<charts.Series<Scores, int>> _seriesLineData;
   void _generateData() {
-    var linesscoresdata1 = [
+    List<Scores> linesscoresdata1 = [
       Scores(0, 45),
       Scores(1, 56),
       Scores(2, 55),
@@ -34,7 +28,7 @@ class _ReportsState extends State<ReportsGraph> {
       Scores(5, 70),
     ];
 
-    var linesscoresdata2 = [
+    List<Scores> linesscoresdata2 = [
       Scores(0, 35),
       Scores(1, 46),
       Scores(2, 45),

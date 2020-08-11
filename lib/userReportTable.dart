@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:off_top_mobile/components/reports/reportsGraph.dart';
 import 'package:off_top_mobile/models/userSession.dart';
-import 'package:off_top_mobile/settingsPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'components/reports/getTableDataWidget.dart';
-import 'components/reports/reportsGraph.dart';
 
 class UserReportTable extends StatefulWidget {
   @override
@@ -13,6 +9,8 @@ class UserReportTable extends StatefulWidget {
 }
 
 class _UserReportTableState extends State<UserReportTable> {
+  bool columnTitles = false;
+  final List<TableRow> rows = <TableRow>[];
   final List<UserSession> mockData = [
     UserSession('11/11/2020', '20 MIN', 'GOOD'),
     UserSession('11/12/2020', '25 MIN', 'OK'),
@@ -35,11 +33,7 @@ class _UserReportTableState extends State<UserReportTable> {
     UserSession('11/21/2020', '40 MIN', 'GOOD')
   ];
 
-
-  @override
-  Widget build(BuildContext context) {
-    bool columnTitles = false;
-    final List<TableRow> rows = <TableRow>[];
+void tableData(){
     for (final UserSession rowData in mockData) {
       if (columnTitles == false) {
         rows.add(TableRow(children: [
@@ -55,8 +49,14 @@ class _UserReportTableState extends State<UserReportTable> {
         getTableData(17.0, rowData.duration, Colors.black, context, rowData.date),
         getTableData(17.0, rowData.focus, getFocusColor(rowData.focus), context, rowData.date),
       ]));
-
     }
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+  tableData();
+
     return MaterialApp(
       home: Scaffold(
         body: Container(
