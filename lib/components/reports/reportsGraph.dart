@@ -66,6 +66,11 @@ class _ReportsState extends State<ReportsGraph> {
   }
 
   @override
+  void dispose(){
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(

@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:off_top_mobile/components/offTopTitle.dart';
 import 'package:off_top_mobile/DynamicListTile/DynamicListTile.dart';
-import 'package:off_top_mobile/login/login.dart';
+import 'package:off_top_mobile/login.dart';
 import 'package:off_top_mobile/login/googleSignIn.dart';
 import 'package:off_top_mobile/components/settings/settingsWidgets.dart';
 
@@ -32,6 +32,11 @@ class _MySettingsPageState extends State<MySettingsPage> {
     _showSettings = true;
     _showPreferences = false;
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   void showProfile() {
