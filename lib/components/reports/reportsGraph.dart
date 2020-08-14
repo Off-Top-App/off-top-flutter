@@ -5,8 +5,6 @@ import 'package:off_top_mobile/components/subnavbar.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:off_top_mobile/components/reports/scores.dart';
 
-
-
 class ReportsGraph extends StatefulWidget {
   const ReportsGraph(this.date);
   final String date;
@@ -83,8 +81,6 @@ class _ReportsState extends State<ReportsGraph> {
               widget.date,
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-           
-
             Expanded(
               child: charts.LineChart(_seriesLineData,
                   defaultRenderer: charts.LineRendererConfig(

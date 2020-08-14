@@ -27,7 +27,7 @@ Widget getTableData(double fontSize, String data, Color dataColor, BuildContext 
     onTap: () {
       Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => SizedBox(height: 600,
+    MaterialPageRoute(builder: (context) => SizedBox(height: MediaQuery.of(context).size.height,
     child: ReportsGraph(date)),
   ));
     },

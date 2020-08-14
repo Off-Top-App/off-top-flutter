@@ -51,8 +51,6 @@ void tableData(){
       ]));
     }
 }
-
-
   @override
   Widget build(BuildContext context) {
   tableData();
