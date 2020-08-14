@@ -9,6 +9,8 @@ class UserReportTable extends StatefulWidget {
 }
 
 class _UserReportTableState extends State<UserReportTable> {
+  bool columnTitles = false;
+  final List<TableRow> rows = <TableRow>[];
 
   @override
   void initState(){
@@ -42,25 +44,28 @@ class _UserReportTableState extends State<UserReportTable> {
     UserSession('11/21/2020', '40 MIN', 'GOOD')
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    bool columnTitles = false;
-    final List<TableRow> rows = <TableRow>[];
+void tableData(){
     for (final UserSession rowData in mockData) {
       if (columnTitles == false) {
         rows.add(TableRow(children: [
-          getTableData(19.0, 'Date', Colors.black),
-          getTableData(19.0, 'Duration', Colors.black),
-          getTableData(19.0, 'Focus', Colors.black),
+          getTableData(19.0, 'Date', Colors.black, context, ''),
+          getTableData(19.0, 'Duration', Colors.black, context, ''),
+          getTableData(19.0, 'Focus', Colors.black, context, ''),
         ]));
         columnTitles = true;
-      }
+        }
+        
       rows.add(TableRow(children: [
-        getTableData(17.0, rowData.date, Colors.black),
-        getTableData(17.0, rowData.duration, Colors.black),
-        getTableData(17.0, rowData.focus, getFocusColor(rowData.focus)),
+        getTableData(17.0, rowData.date, Colors.black, context, rowData.date),
+        getTableData(17.0, rowData.duration, Colors.black, context, rowData.date),
+        getTableData(17.0, rowData.focus, getFocusColor(rowData.focus), context, rowData.date),
       ]));
     }
+}
+  @override
+  Widget build(BuildContext context) {
+  tableData();
+
     return MaterialApp(
       home: Scaffold(
         body: Container(
@@ -89,9 +94,11 @@ class _UserReportTableState extends State<UserReportTable> {
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: rows,
                 )
+                
               ]),
             )),
       ),
     );
   }
 }
+

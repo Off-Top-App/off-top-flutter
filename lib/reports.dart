@@ -29,17 +29,10 @@ class _ReportsState extends State<ReportsPage> {
             child: SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          SizedBox(
-            height: 600,
-            child: UserReportTable(),
-          ),
-          const Divider(
-            thickness: 1.0,
-          ),
-          SizedBox(
-            height: 600,
-            child: ReportsGraph(),
-          )
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+                child: UserReportTable(),
+            ),
         ],
       ),
     )));
