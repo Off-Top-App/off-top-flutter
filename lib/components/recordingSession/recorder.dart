@@ -31,6 +31,8 @@ class Recorder extends StatefulWidget {
 
 class _RecorderState extends State<Recorder> {
   bool _isRecording = false;
+  bool _recording = false;
+  Stopwatch stopwatch = new Stopwatch();
   StreamSubscription<dynamic> _recorderSubscription;
   FlutterSoundRecorder recorderModule;
   String _recorderTxt = '00:00:00';
@@ -156,7 +158,6 @@ class _RecorderState extends State<Recorder> {
       await recorderModule.stopRecorder();
       final DateTime exportedTime = getExportedTime();
       ws.sendAudioFile(savePath, userId, topic, exportedTime);
-
       await cancelRecorderSubscriptions();
       await closeAudioSession();
     } catch (err) {
@@ -172,6 +173,44 @@ class _RecorderState extends State<Recorder> {
     prefs.setString('session', value);
   }
 
+  Future<void> recorderPressed() async {
+    if (!_isRecording) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => MyTopicDialog(
+          onTopicChanged: (String childTopic) {
+            topic = childTopic;
+          },
+        ),
+      );
+      setState(() {
+        _recording = true;
+        stopwatch.reset();
+        stopwatch.start();
+      });
+      while (_recording) {
+        await startRecorder();
+        await Future.delayed(
+            const Duration(seconds: 5), () async => await stopRecorder());
+      }
+    } else {
+      if (_isRecording) {
+        setState(() {
+          _recording = false;
+          stopwatch.stop();
+        });
+        stopRecorder();
+      }
+    }
+  }
+
+  DateTime getExportedTime() {
+    final DateTime now = DateTime.now();
+    final DateTime date = DateTime(
+        now.year, now.month, now.day, now.hour, now.minute, now.second);
+    return date;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -180,22 +219,8 @@ class _RecorderState extends State<Recorder> {
         children: <Widget>[
           FloatingActionButton(
             heroTag: 'recorder',
-            onPressed: () async {
-              if (!_isRecording) {
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) => MyTopicDialog(
-                    onTopicChanged: (String childTopic) {
-                      topic = childTopic;
-                    },
-                  ),
-                );
-                return startRecorder();
-              } else {
-                stopRecorder();
-              }
-            },
-            child: _isRecording
+            onPressed: () async => await recorderPressed(),
+            child: _recording
                 ? Icon(Icons.stop)
                 : Icon(
                     Icons.mic,
@@ -205,7 +230,7 @@ class _RecorderState extends State<Recorder> {
           ),
           Container(
             child: AutoSizeText(
-              _recorderTxt,
+              stopwatch.elapsed.toString().substring(2, 10),
               style: TextStyle(
                 fontSize: 22.0,
                 color: Colors.black,
@@ -213,7 +238,7 @@ class _RecorderState extends State<Recorder> {
             ),
           ),
           Container(
-            child: _isRecording
+            child: _recording
                 ? LinearProgressIndicator(
                     value: 100.0 / 160.0 * (_dbLevel ?? 1) / 100,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
@@ -224,18 +249,5 @@ class _RecorderState extends State<Recorder> {
         ],
       ),
     );
-  }
-
-  DateTime getExportedTime() {
-    final DateTime now = DateTime.now();
-    final DateTime date = DateTime(
-      now.year, 
-      now.month, 
-      now.day, 
-      now.hour, 
-      now.minute, 
-      now.second
-    );
-    return date;
   }
 }

@@ -21,16 +21,11 @@ class MyWebSocket {
   Future<void> sendAudioFile(
       String exportedAudioData, int userID, String topic, DateTime date) async {
     final List<int> audioData = await processAudioFile(exportedAudioData);
-    final IncomingAudioEvent incomingAudioEvent = IncomingAudioEvent(
-      audioData,
-      userID,
-      topic,
-      date.toString()
-    );
+    print(audioData.toString() + '\n'); // array of integers/bytes
+    final IncomingAudioEvent incomingAudioEvent =
+        IncomingAudioEvent(audioData, userID, topic, date.toString());
     channel.sink.add(
-      json.encode(
-        incomingAudioEvent.toJson()
-      ),
+      json.encode(incomingAudioEvent.toJson()),
     );
   }
 
